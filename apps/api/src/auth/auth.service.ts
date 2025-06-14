@@ -10,16 +10,19 @@ import { verify } from 'argon2';
 import {
   UserDetails,
   UserDetailsWithTimestamps,
-} from 'src/interface/user-details.interface';
+} from 'src/common/interface/user-details.interface';
 import { UserService } from 'src/user/user.service';
 import { ConfigType } from '@nestjs/config';
 import refreshConfig from './config/refresh.config';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { decrypt, encrypt } from 'src/common/utils/crypto.util';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly prisma: PrismaService,
     @Inject(refreshConfig.KEY)
     private readonly refreshTokenConfig: ConfigType<typeof refreshConfig>,
   ) {}
@@ -75,30 +78,57 @@ export class AuthService {
     return user;
   }
 
-  async loginUser(userId: string) {
-    const tokenData = await this.generateToken(userId);
-
-    if (!tokenData) {
-      throw new UnauthorizedException('Token generation failed.');
-    }
-
-    return tokenData;
-  }
-
   async generateToken(
     userId: string,
   ): Promise<{ accessToken: string; refreshToken: string } | null> {
-    if (!userId) {
-      return null;
-    }
+    if (!userId) return null;
 
     const payload = { sub: userId };
+
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
       this.jwtService.signAsync(payload, this.refreshTokenConfig),
     ]);
 
+    const encryptedRefreshToken = await encrypt(refreshToken);
+    if (!encryptedRefreshToken) return null;
+
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // 7 days
+
+    await this.prisma.refreshTokenSession.upsert({
+      where: { userId },
+      update: {
+        refreshTokenId: encryptedRefreshToken,
+        revoked: false,
+        expiresAt,
+        createdAt: new Date(),
+      },
+      create: {
+        userId,
+        refreshTokenId: encryptedRefreshToken,
+        revoked: false,
+        expiresAt,
+      },
+    });
+
     return { accessToken, refreshToken };
+  }
+
+  async findRefreshTokenSession(userId: string) {
+    const refreshToken = await this.prisma.refreshTokenSession.findUnique({
+      where: { userId },
+    });
+
+    if (refreshToken) {
+      const decryptedRefreshToken = await decrypt(refreshToken.refreshTokenId);
+
+      return {
+        ...refreshToken,
+        refreshTokenId: decryptedRefreshToken,
+      };
+    }
+
+    return null;
   }
 
   async validateRefreshToken(userId: string) {

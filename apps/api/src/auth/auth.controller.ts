@@ -1,30 +1,40 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { CreateUserDto } from '../common/dto/create-user.dto';
 import { Role } from 'generated/prisma';
-import { UserDetailsWithTimestamps } from 'src/interface/user-details.interface';
+import { UserDetailsWithTimestamps } from 'src/common/interface/user-details.interface';
 import { LocalAuthGuard } from './guard/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guard/refresh-auth/refresh-auth.guard';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiExcludeEndpoint,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { GoogleAuthGuard } from './guard/google-auth/google-auth.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /* Vendor - Signup */
+  @Post('signup/vendor')
   @ApiOperation({ summary: 'Register a new vendor' })
   @ApiResponse({ status: 201, description: 'Vendor registered successfully' })
   @ApiResponse({
     status: 409,
     description: 'User with this email already exists',
   })
-  @Post('signup/vendor')
   async signupVendor(
     @Body() createVendor: CreateUserDto,
   ): Promise<UserDetailsWithTimestamps | null> {
@@ -34,13 +44,14 @@ export class AuthController {
     });
   }
 
+  /* Buyer - Signup */
+  @Post('signup/buyer')
   @ApiOperation({ summary: 'Register a new buyer' })
   @ApiResponse({ status: 201, description: 'Buyer registered successfully' })
   @ApiResponse({
     status: 409,
     description: 'User with this email already exists',
   })
-  @Post('signup/buyer')
   async signupBuyer(
     @Body() createBuyer: CreateUserDto,
   ): Promise<UserDetailsWithTimestamps | null> {
@@ -50,6 +61,9 @@ export class AuthController {
     });
   }
 
+  /* User Login */
+  @Post('/signin')
+  @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'User login (email & password)' })
   @ApiResponse({
     status: 200,
@@ -82,12 +96,10 @@ export class AuthController {
       },
     },
   })
-  @UseGuards(LocalAuthGuard)
-  @Post('/signin')
   async signinUser(@Request() req: { user: UserDetailsWithTimestamps }) {
     const { id } = req.user;
 
-    const token = await this.authService.loginUser(id!);
+    const token = await this.authService.generateToken(id!);
 
     return {
       user: {
@@ -98,6 +110,55 @@ export class AuthController {
     };
   }
 
+  /* Google Authentication */
+  @Get('/google')
+  @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ summary: 'Initiate Google OAuth flow' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns user profile after successful authentication',
+    schema: {
+      example: {
+        user: {
+          email: 'user@example.com',
+          first_name: 'John',
+          last_name: 'Doe',
+        },
+        isNewUser: true,
+      },
+    },
+  })
+  async googleAuth() {
+    // Redirect to Google OAuth page
+  }
+
+  /* Google Authentication Redirect */
+  @Get('/google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  @ApiExcludeEndpoint()
+  async googleAuthRedirect(
+    @Request()
+    req: {
+      user: {
+        email: string;
+        firstName: string;
+        lastName: string;
+        isNewUser: boolean;
+      };
+    },
+  ) {
+    const path = req.user.isNewUser ? '/setup' : '/dashboard';
+    return {
+      email: req.user.email,
+      first_name: req.user.firstName,
+      last_name: req.user.lastName,
+      path,
+    };
+  }
+
+  /* Refresh Token */
+  @Post('/refreshToken')
+  @UseGuards(RefreshAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Refresh access token using refresh token' })
   @ApiResponse({
@@ -105,7 +166,7 @@ export class AuthController {
     description: 'Access token refreshed successfully',
     schema: {
       example: {
-        access: 'new-access-token-here',
+        token: 'new-access-token-here',
         refreshToken: 'new-refresh-token-here',
       },
     },
@@ -114,15 +175,13 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized or invalid refresh token',
   })
-  @UseGuards(RefreshAuthGuard)
-  @Post('/refreshToken')
   async refreshToken(@Request() req: { user: UserDetailsWithTimestamps }) {
     const { id } = req.user;
-    const token = await this.authService.loginUser(id!);
+    const token = await this.authService.generateToken(id!);
 
     return {
-      access: token.accessToken,
-      refreshToken: token.refreshToken,
+      token: token?.accessToken,
+      refreshToken: token?.refreshToken,
     };
   }
 }
