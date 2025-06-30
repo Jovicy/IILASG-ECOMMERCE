@@ -51,7 +51,7 @@ export class AuthService {
   async validateLocalUser(
     email: string,
     password: string,
-  ): Promise<UserDetailsWithTimestamps> {
+  ): Promise<UserDetailsWithTimestamps | null> {
     const existingUser = await this.userService.findByEmail(email);
 
     if (!existingUser) {
@@ -60,9 +60,7 @@ export class AuthService {
 
     const isPasswordValid = await verify(existingUser.password, password);
 
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid email or password');
-    }
+    if (!isPasswordValid) return null;
 
     return existingUser;
   }

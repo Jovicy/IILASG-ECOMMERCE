@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './auth/config/jwt.config';
 import refreshConfig from './auth/config/refresh.config';
+import { TokenGuard } from './common/guard/token/token.guard';
+import { TokenStrategy } from './common/strategy/token.strategy';
 
 @Module({
   imports: [
@@ -17,6 +19,13 @@ import refreshConfig from './auth/config/refresh.config';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    TokenStrategy,
+    {
+      provide: 'APP_GUARD',
+      useClass: TokenGuard,
+    },
+  ],
 })
 export class AppModule {}

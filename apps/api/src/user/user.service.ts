@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { argon2id, hash } from 'argon2';
 import { Role } from 'generated/prisma';
 import { CreateUserDto } from 'src/common/dto/create-user.dto';
+import { UpdateUserDto } from 'src/common/dto/update-user.dto';
 import {
   UserDetails,
   UserDetailsWithTimestamps,
@@ -44,5 +45,21 @@ export class UserService {
     });
 
     return user;
+  }
+
+  async updateUser(
+    userId: string,
+    updateData: UpdateUserDto,
+  ): Promise<UserDetailsWithTimestamps> {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: updateData,
+    });
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    await this.prisma.user.delete({
+      where: { id: userId },
+    });
   }
 }

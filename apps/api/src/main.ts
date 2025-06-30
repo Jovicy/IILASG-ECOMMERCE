@@ -18,7 +18,7 @@ async function bootstrap() {
       'API for managing authentication, products, and user roles (admin, vendor, buyer)',
     )
     .setVersion('1.0')
-    .addServer(`http://localhost:${process.env.PORT}/api`, 'Local development')
+    .addServer(`http://localhost:${process.env.PORT}`, 'Local development')
     .addBearerAuth()
     .build();
 

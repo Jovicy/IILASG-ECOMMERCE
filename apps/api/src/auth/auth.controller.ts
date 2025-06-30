@@ -21,7 +21,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { GoogleAuthGuard } from './guard/google-auth/google-auth.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 
+@Public()
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
