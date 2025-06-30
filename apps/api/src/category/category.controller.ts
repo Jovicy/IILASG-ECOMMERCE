@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Request,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import {
@@ -27,8 +28,12 @@ export class CategoryController {
   @Post()
   @ApiOperation({ summary: 'Create a new category' })
   @ApiResponse({ status: 201, description: 'Category created successfully' })
-  async create(@Body() CreateCategory: CreateCategoryDto) {
-    return this.categoryService.create(CreateCategory);
+  async create(
+    @Request() req: { user: { userId: string } },
+    @Body() CreateCategory: CreateCategoryDto,
+  ) {
+    const vendorId = req.user.userId;
+    return this.categoryService.create(vendorId, CreateCategory);
   }
 
   @Get()
@@ -37,13 +42,12 @@ export class CategoryController {
     status: 200,
     description: 'List of all categories returned successfully',
   })
-  async findAll() {
-    const categories = await this.categoryService.findAll();
-
+  async findAll(@Request() req: { user: { userId: string } }) {
+    const vendorId = req.user.userId;
+    const categories = await this.categoryService.findAll(vendorId);
     if (categories.length === 0) {
       return { message: 'No categories found', data: [] };
     }
-
     return categories;
   }
 
@@ -53,16 +57,22 @@ export class CategoryController {
   @ApiResponse({ status: 404, description: 'Category not found' })
   update(
     @Param('id', ParseIntPipe) id: number,
+    @Request() req: { user: { userId: string } },
     @Body() updateCategory: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(id, updateCategory);
+    const vendorId = req.user.userId;
+    return this.categoryService.update(id, updateCategory, vendorId);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a category by ID' })
   @ApiResponse({ status: 200, description: 'Category deleted successfully' })
   @ApiResponse({ status: 404, description: 'Category not found' })
-  delete(@Param('id', ParseIntPipe) id: number) {
-    return this.categoryService.delete(id);
+  delete(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req: { user: { userId: string } },
+  ) {
+    const vendorId = req.user.userId;
+    return this.categoryService.delete(id, vendorId);
   }
 }

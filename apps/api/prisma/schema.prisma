@@ -29,6 +29,7 @@ model User {
   refreshTokenSessions    RefreshTokenSession?   
 
   products Product[]
+  catogeries Category[]
 }
 
 model RefreshTokenSession {
@@ -53,6 +54,8 @@ model Category {
   id      Int    @id @default(autoincrement())
   name    String
 
+  vendorId     String
+  vendor       User     @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   products Product[]
 }
 
@@ -70,7 +73,7 @@ model Product {
   category    Category @relation(fields: [categoryId], references: [id])
 
   vendorId     String
-  vendor       User     @relation(fields: [vendorId], references: [id])
+  vendor       User     @relation(fields: [vendorId], references: [id], onDelete: Cascade)
 
   @@index([categoryId])
 }
