@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -8,6 +8,7 @@ import jwtConfig from './auth/config/jwt.config';
 import refreshConfig from './auth/config/refresh.config';
 import { TokenGuard } from './common/guard/token/token.guard';
 import { TokenStrategy } from './common/strategy/token.strategy';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TokenStrategy } from './common/strategy/token.strategy';
       isGlobal: true,
       load: [jwtConfig, refreshConfig],
     }),
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [
