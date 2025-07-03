@@ -1,9 +1,5 @@
-import React from 'react'
-
 const LogoutPage = () => {
-  return (
-    <div>LogoutPage</div>
-  )
-}
+  return <div>LogoutPage</div>;
+};
 
-export default LogoutPage
+export default LogoutPage;
