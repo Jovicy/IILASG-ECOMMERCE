@@ -1,4 +1,3 @@
-import React from "react";
 import { createRoot } from "react-dom/client";
 import "./style.css";
 import typescriptLogo from "/typescript.svg";
@@ -10,11 +9,7 @@ const App = () => (
       <img src="/vite.svg" className="logo" alt="Vite logo" />
     </a>
     <a href="https://www.typescriptlang.org/" target="_blank">
-      <img
-        src={typescriptLogo}
-        className="logo vanilla"
-        alt="TypeScript logo"
-      />
+      <img src={typescriptLogo} className="logo vanilla" alt="TypeScript logo" />
     </a>
     <Header title="Web" />
     <div className="card">
