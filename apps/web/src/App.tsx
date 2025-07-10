@@ -17,6 +17,9 @@ import SignUpPage from "@/pages/SignUpPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import VerifyEmailPage from "./pages/VerifyPage";
 import ResetPasswordConfirmPage from "./pages/ResetPasswordConfirmPage";
+import BuyerSignUpPage from "./pages/BuyerSignUpPage";
+import VendorSignUpPage from "./pages/VendorSignUpPage";
+import AccountCreatedWithGoogle from "./pages/AccountCreatedWithGoogle";
 
 const App = () => {
   return (
@@ -27,6 +30,10 @@ const App = () => {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/verify-email" element={ <VerifyEmailPage/> } />
       <Route path="/new-password" element={ <ResetPasswordConfirmPage /> } />
+      <Route path="/signup/buyer" element={ <BuyerSignUpPage /> } />
+      <Route path="/signup/vendor" element={ <VendorSignUpPage /> } />
+      <Route path="/account-created/google" element={ <AccountCreatedWithGoogle /> } />
+
 
       {/* Routes using Main Layout */}
       <Route path="/" element={<MainLayout />}>
