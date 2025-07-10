@@ -9,6 +9,7 @@ import refreshConfig from './auth/config/refresh.config';
 import { TokenGuard } from './common/guard/token/token.guard';
 import { TokenStrategy } from './common/strategy/token.strategy';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CategoryModule } from './category/category.module';
       load: [jwtConfig, refreshConfig],
     }),
     CategoryModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,9 +1,5 @@
-import React from 'react'
-
 const ForumsPage = () => {
-  return (
-    <div>ForumsPage</div>
-  )
-}
+  return <div>ForumsPage</div>;
+};
 
-export default ForumsPage
+export default ForumsPage;
