@@ -1,6 +1,7 @@
 import React from 'react';
 import Logo from "@/assets/Main-logo.svg";
-import { ArrowRight2, ArrowRight } from "iconsax-reactjs";
+import ModalImg from "@/assets/modal-img.svg"
+import { ArrowRight2, ArrowRight, ShoppingCart } from "iconsax-reactjs";
 import { useNavigate } from "react-router-dom";
 
 const AccountCreatedWithGoogle = () => {
@@ -232,18 +233,28 @@ const AccountCreatedWithGoogle = () => {
 
                 {/* Modal */}
                 {showModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                        <div className="bg-white rounded-xl p-8 w-[400px] text-center flex flex-col gap-4">
-                            <h2 className="text-lg font-semibold text-grey-900">Verification Submitted</h2>
-                            <p className="text-grey-600 text-sm">
-                                Thank you! We’ll review your submitted information and get back to you soon.
-                            </p>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="bg-primary-500 text-white rounded-full px-6 py-2 mt-4 hover:bg-primary-600 transition"
-                            >
-                                Close
-                            </button>
+                    <div className="fixed inset-0 bg-[rgba(0,0,0,0.4)] backdrop-blur-sm flex justify-center items-center z-50">
+                        <div className="bg-white rounded-xl p-6 w-[400px] text-center flex flex-col items-center gap-6">
+                            <div className='flex gap-6 flex-col'>
+                                <div>
+                                    <img src={ModalImg} alt="modal img" />
+                                </div>
+                                <div>
+                                    <p className="text-grey-600 text-base">
+                                        Thanks for submitting your details. Our team is currently reviewing your verification request. While we verify your information, you can start shopping!
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => navigate("/")}
+                                    className="cursor-pointer bg-success-700 text-white text-base rounded-full px-6 py-3 flex items-center gap-2"
+                                >
+                                    <ShoppingCart />
+                                    Start Shopping
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 )}

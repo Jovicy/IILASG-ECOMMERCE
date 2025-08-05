@@ -256,3 +256,30 @@ input:-webkit-autofill {
   box-shadow: 0 0 0px 1000px white inset !important;
   -webkit-text-fill-color: #000 !important;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  /* hide the default icon */
+  display: none;
+  /* optional */
+}
+
+input[type="date"],
+input[type="number"],
+input[type="search"] {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+/* In your global CSS file */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}

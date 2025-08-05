@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Box1, User, ArrowRight2 } from 'iconsax-reactjs'
 import AuthLayout from "@/layouts/AuthLayout";
 import { Link } from 'react-router-dom';
@@ -49,10 +48,3 @@ const SignUpPage = () => {
 }
 
 export default SignUpPage
-=======
-const SignUpPage = () => {
-  return <div>SignUpPage</div>;
-};
-
-export default SignUpPage;
->>>>>>> d8141b0505330ff6694a44bdd15338933b980614

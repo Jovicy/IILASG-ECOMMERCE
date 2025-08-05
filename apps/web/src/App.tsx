@@ -6,6 +6,7 @@ import MainLayout from "@/layouts/MainLayouts";
 // Pages
 import Homepage from "@/pages/HomePage";
 import OrdersPage from "@/pages/OrdersPage";
+import OrderDetailsPage from "@/pages/OrderDetailsPage";
 import PointsPage from "@/pages/PointsPage";
 import SavedItemsPage from "@/pages/SavedItemsPage";
 import ForumsPage from "@/pages/ForumsPage";
@@ -20,6 +21,7 @@ import ResetPasswordConfirmPage from "./pages/ResetPasswordConfirmPage";
 import BuyerSignUpPage from "./pages/BuyerSignUpPage";
 import VendorSignUpPage from "./pages/VendorSignUpPage";
 import AccountCreatedWithGoogle from "./pages/AccountCreatedWithGoogle";
+import AccountCreatedWithoutGoogle from "./pages/AccountCreatedWithoutGoogle";
 
 const App = () => {
   return (
@@ -28,17 +30,19 @@ const App = () => {
       <Route path="/signin" element={<SignInPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/verify-email" element={ <VerifyEmailPage/> } />
-      <Route path="/new-password" element={ <ResetPasswordConfirmPage /> } />
-      <Route path="/signup/buyer" element={ <BuyerSignUpPage /> } />
-      <Route path="/signup/vendor" element={ <VendorSignUpPage /> } />
-      <Route path="/account-created/google" element={ <AccountCreatedWithGoogle /> } />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/new-password" element={<ResetPasswordConfirmPage />} />
+      <Route path="/signup/buyer" element={<BuyerSignUpPage />} />
+      <Route path="/signup/vendor" element={<VendorSignUpPage />} />
+      <Route path="/account-created/google" element={<AccountCreatedWithGoogle />} />
+      <Route path="/account-not-created/google" element={<AccountCreatedWithoutGoogle />} />
 
 
       {/* Routes using Main Layout */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Homepage />} />
         <Route path="orders" element={<OrdersPage />} />
+        <Route path="orders/:orderId" element={<OrderDetailsPage />} />
         <Route path="points" element={<PointsPage />} />
         <Route path="saved" element={<SavedItemsPage />} />
         <Route path="forums" element={<ForumsPage />} />
