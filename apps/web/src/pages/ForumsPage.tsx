@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { forums } from "@/data/database";
+import { Link } from "react-router-dom";
 import { Camera, CloseSquare, Image, Link2, People, Trash } from "iconsax-reactjs";
 
 const yourForums = forums.filter((forum) => forum.createdBy === "currentUser");
@@ -23,75 +24,79 @@ const joinedForums = forums.filter(
 const exploreForums = forums.filter((forum) => !forum.joined);
 
 const ForumCard = ({
+  id,
   imgSrc,
   type,
   title,
   member,
 }: {
+  id: string;
   imgSrc: string;
   title: string;
   member: number;
   type: "your" | "joined" | "explore";
 }) => (
-  <div className="bg-grey-50 rounded-lg flex justify-between p-4">
-    <div className="flex items-center gap-4">
-      <div className="w-36 h-36">
-        <img
-          src={imgSrc}
-          alt="Forum"
-          className="object-cover rounded-md h-full"
-        />
-      </div>
-      <div className="flex flex-col justify-between gap-2">
-        <h3 className="font-medium text-grey-950 text-lg">{title}</h3>
-        <div className="text-base text-grey-700 flex items-center gap-2">
-          <People />
-          <p>{member}</p>
+  <Link to={`/forums/${id}`}>
+    <div className="bg-grey-50 rounded-lg flex justify-between p-4">
+      <div className="flex items-center gap-4">
+        <div className="w-36 h-36">
+          <img
+            src={imgSrc}
+            alt="Forum"
+            className="object-cover rounded-md h-full"
+          />
         </div>
-        {type === "explore" && (
-          <Button
-            size="sm"
-            variant="outline"
-            className="w-[151px] mt-6 h-12 rounded-full py-3 px-4 text-base text-white border-primary-500 bg-primary-500 hover:bg-primary-600"
-          >
-            Join
-          </Button>
-        )}
-      </div>
-    </div>
-    {(type === "your" || type === "joined") && (
-      <div className="relative">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <div className="flex flex-col justify-between gap-2">
+          <h3 className="font-medium text-grey-950 text-lg">{title}</h3>
+          <div className="text-base text-grey-700 flex items-center gap-2">
+            <People />
+            <p>{member}</p>
+          </div>
+          {type === "explore" && (
             <Button
-              variant="ghost"
-              className="h-8 w-8 p-0 focus:!bg-transparent hover:!bg-transparent"
+              size="sm"
+              variant="outline"
+              className="w-[151px] mt-6 h-12 rounded-full py-3 px-4 text-base text-white border-primary-500 bg-primary-500 hover:bg-primary-600"
             >
-              <MoreVertical className="h-5 w-5 text-[#4E4E4E]" />
+              Join
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="bottom"
-            align="end"
-            className="w-[175px] rounded-xl shadow-lg p-3 flex flex-col gap-1 z-50"
-          >
-            <DropdownMenuItem className="gap-2">
-              <Link2 size="16" color="#4E4E4E" />
-              <p className="text-xs font-normal text-[#4E4E4E]">
-                Copy link to forum
-              </p>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2 text-error-700 hover:!bg-error-50 hover:!text-error-700">
-              <Trash size="16" color="#E60007" />
-              <p className="text-xs font-normal">
-                {type === "joined" ? "Leave forum" : "Delete"}
-              </p>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          )}
+        </div>
       </div>
-    )}
-  </div>
+      {(type === "your" || type === "joined") && (
+        <div className="relative">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0 focus:!bg-transparent hover:!bg-transparent"
+              >
+                <MoreVertical className="h-5 w-5 text-[#4E4E4E]" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="bottom"
+              align="end"
+              className="w-[175px] rounded-xl shadow-lg p-3 flex flex-col gap-1 z-50"
+            >
+              <DropdownMenuItem className="gap-2">
+                <Link2 size="16" color="#4E4E4E" />
+                <p className="text-xs font-normal text-[#4E4E4E]">
+                  Copy link to forum
+                </p>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="gap-2 text-error-700 hover:!bg-error-50 hover:!text-error-700">
+                <Trash size="16" color="#E60007" />
+                <p className="text-xs font-normal">
+                  {type === "joined" ? "Leave forum" : "Delete"}
+                </p>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
+    </div>
+  </Link>
 );
 
 const ForumsPage = () => {
@@ -148,7 +153,7 @@ const ForumsPage = () => {
         <TabsContent value="your-forums" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {yourForums.map((forum) => (
-              <ForumCard key={forum.id} imgSrc={forum.image} title={forum.name} member={forum.members} type="your" />
+              <ForumCard key={forum.id} id={forum.id} imgSrc={forum.image} title={forum.name} member={forum.members} type="your" />
             ))}
           </div>
         </TabsContent>
@@ -157,7 +162,7 @@ const ForumsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {joinedForums.length ? (
               joinedForums.map((forum) => (
-                <ForumCard key={forum.id} imgSrc={forum.image} title={forum.name} member={forum.members} type="joined" />
+                <ForumCard key={forum.id} id={forum.id} imgSrc={forum.image} title={forum.name} member={forum.members} type="joined" />
               ))
             ) : (
               <p className="text-sm text-gray-500">
@@ -171,7 +176,7 @@ const ForumsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {exploreForums.length ? (
               exploreForums.map((forum) => (
-                <ForumCard key={forum.id} imgSrc={forum.image} title={forum.name} member={forum.members} type="explore" />
+                <ForumCard key={forum.id} id={forum.id} imgSrc={forum.image} title={forum.name} member={forum.members} type="explore" />
               ))
             ) : (
               <p className="text-sm text-gray-500">

@@ -10,6 +10,7 @@ import OrderDetailsPage from "@/pages/OrderDetailsPage";
 import PointsPage from "@/pages/PointsPage";
 import SavedItemsPage from "@/pages/SavedItemsPage";
 import ForumsPage from "@/pages/ForumsPage";
+import ForumChatPage from "./pages/ForumChatPage";
 import SettingsPage from "@/pages/SettingsPage";
 import SupportPage from "@/pages/SupportPage";
 import LogoutPage from "@/pages/LogoutPage";
@@ -46,6 +47,7 @@ const App = () => {
         <Route path="points" element={<PointsPage />} />
         <Route path="saved" element={<SavedItemsPage />} />
         <Route path="forums" element={<ForumsPage />} />
+        <Route path="/forums/:id" element={<ForumChatPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="support" element={<SupportPage />} />
         <Route path="logout" element={<LogoutPage />} />

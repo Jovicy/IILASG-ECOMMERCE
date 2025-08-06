@@ -85,16 +85,18 @@ const SignInPage = () => {
 
             {/* Submit Button */}
             <div className='flex flex-col items-center gap-4'>
-              <button
-                type='submit'
-                disabled={!isFormValid}
-                className={`py-3 px-6 rounded-full w-full text-base font-normal transition duration-200 ${isFormValid
+              <Link to="/" className='w-full'>
+                <button
+                  type='submit'
+                  disabled={!isFormValid}
+                  className={`py-3 px-6 rounded-full w-full text-base font-normal transition duration-200 ${isFormValid
                     ? 'bg-primary-500 text-white hover:bg-primary-600'
                     : 'bg-grey-100 text-grey-400 cursor-not-allowed'
-                  }`}
-              >
-                Log In
-              </button>
+                    }`}
+                >
+                  Log In
+                </button>
+              </Link>
               <p className='text-sm font-normal text-[#202020]'>
                 Don’t have an account? <Link to="/signup" className='text-primary-500 cursor-pointer pb-20'>Create Account</Link >
               </p>

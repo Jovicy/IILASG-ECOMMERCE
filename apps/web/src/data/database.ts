@@ -421,6 +421,7 @@ export const forums = [
     members: 124,
     createdBy: "currentUser",
     joined: true,
+    description: "A community for frontend developers to share resources, tips, and collaborate on projects."
   },
   {
     id: "2",
@@ -429,6 +430,7 @@ export const forums = [
     members: 88,
     createdBy: "currentUser",
     joined: true,
+    description: "Join passionate web developers tackling real-world problems using modern web tools."
   },
   {
     id: "3",
@@ -437,6 +439,7 @@ export const forums = [
     members: 76,
     createdBy: "currentUser",
     joined: true,
+    description: "Dedicated to CSS enthusiasts who love clean, beautiful, and responsive design."
   },
   {
     id: "4",
@@ -445,6 +448,7 @@ export const forums = [
     members: 143,
     createdBy: "currentUser",
     joined: true,
+    description: "A hub for fullstack engineers working across frontend, backend, and DevOps."
   },
   {
     id: "5",
@@ -453,6 +457,7 @@ export const forums = [
     members: 97,
     createdBy: "currentUser",
     joined: true,
+    description: "Nigeria's growing dev community discussing tech trends, jobs, and innovations."
   },
 
   // Joined Forums (9)
@@ -463,6 +468,7 @@ export const forums = [
     members: 98,
     createdBy: "anotherUser",
     joined: true,
+    description: "All things React in Nigeria. From newbies to professionals, everyone is welcome."
   },
   {
     id: "7",
@@ -471,6 +477,7 @@ export const forums = [
     members: 110,
     createdBy: "anotherUser",
     joined: true,
+    description: "Exploring the world of JavaScript – from ES6 to modern frameworks and beyond."
   },
   {
     id: "8",
@@ -479,6 +486,7 @@ export const forums = [
     members: 64,
     createdBy: "anotherUser",
     joined: true,
+    description: "A safe space for mastering TypeScript and building scalable JavaScript apps."
   },
   {
     id: "9",
@@ -487,6 +495,7 @@ export const forums = [
     members: 102,
     createdBy: "anotherUser",
     joined: true,
+    description: "Lounge for Next.js developers to exchange ideas, code, and showcase work."
   },
   {
     id: "10",
@@ -495,6 +504,7 @@ export const forums = [
     members: 140,
     createdBy: "anotherUser",
     joined: true,
+    description: "Tech professionals in Lagos collaborating on innovation and digital transformation."
   },
   {
     id: "11",
@@ -503,6 +513,7 @@ export const forums = [
     members: 86,
     createdBy: "anotherUser",
     joined: true,
+    description: "Deep dive into Node.js with tutorials, APIs, and best practices."
   },
   {
     id: "12",
@@ -511,6 +522,7 @@ export const forums = [
     members: 121,
     createdBy: "anotherUser",
     joined: true,
+    description: "Tailwind CSS experts and learners sharing layouts, themes, and components."
   },
   {
     id: "13",
@@ -519,6 +531,7 @@ export const forums = [
     members: 93,
     createdBy: "anotherUser",
     joined: true,
+    description: "Designers focused on UX principles, research, and enhancing user journeys."
   },
   {
     id: "14",
@@ -527,6 +540,7 @@ export const forums = [
     members: 77,
     createdBy: "anotherUser",
     joined: true,
+    description: "Stay up-to-date on blockchain, DApps, and Web3 development trends."
   },
 
   // Explore Forums (6)
@@ -537,6 +551,7 @@ export const forums = [
     members: 59,
     createdBy: "anotherUser",
     joined: false,
+    description: "Enthusiasts of Svelte and SvelteKit creating high-performance apps."
   },
   {
     id: "16",
@@ -545,6 +560,7 @@ export const forums = [
     members: 83,
     createdBy: "anotherUser",
     joined: false,
+    description: "African developers contributing to and creating impactful open-source tools."
   },
   {
     id: "17",
@@ -553,6 +569,7 @@ export const forums = [
     members: 112,
     createdBy: "anotherUser",
     joined: false,
+    description: "Designers and developers collaborating with Figma for seamless UI design."
   },
   {
     id: "18",
@@ -561,6 +578,7 @@ export const forums = [
     members: 96,
     createdBy: "anotherUser",
     joined: false,
+    description: "Experiment, ideate, and iterate on digital product design and user testing."
   },
   {
     id: "19",
@@ -569,6 +587,7 @@ export const forums = [
     members: 72,
     createdBy: "anotherUser",
     joined: false,
+    description: "Fast builds and dev server tips for projects powered by Vite."
   },
   {
     id: "20",
@@ -577,5 +596,7 @@ export const forums = [
     members: 68,
     createdBy: "anotherUser",
     joined: false,
+    description: "CI/CD, containers, and infrastructure as code – all things DevOps."
   },
 ];
+

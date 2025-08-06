@@ -63,10 +63,12 @@ const AccountCreationForm = ({ accountType = "User", onSubmit }: AccountCreation
                 </div>
 
                 {/* Google Auth */}
-                <button className="w-full flex items-center justify-center gap-2 bg-primary-50 text-primary-700 border border-primary-500 hover:border-primary-50 text-base font-normal rounded-full py-3 px-6 transition">
-                    <Google variant="Bold" />
-                    <span>Sign up with Google</span>
-                </button>
+                <Link to="/account-created/google">
+                    <button className="w-full flex items-center justify-center gap-2 bg-primary-50 text-primary-700 border border-primary-500 hover:border-primary-50 text-base font-normal rounded-full py-3 px-6 transition">
+                        <Google variant="Bold" />
+                        <span>Sign up with Google</span>
+                    </button>
+                </Link>
 
                 {/* OR Divider */}
                 <div className="flex items-center gap-4 my-6">
