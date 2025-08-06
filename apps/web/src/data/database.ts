@@ -17,6 +17,15 @@ import otherHead from "@/assets/products/otherhead.png";
 import airpod from "@/assets/products/airpod.png";
 import axe from "@/assets/products/axe.png";
 
+// Forum Images
+import forum1 from "@/assets/forum-1.svg";
+import forum2 from "@/assets/forum-2.svg";
+import forum3 from "@/assets/forum-3.svg";
+import forum4 from "@/assets/forum-4.svg";
+import forum5 from "@/assets/forum-5.svg";
+import forum6 from "@/assets/forum-6.svg";
+import forum7 from "@/assets/forum-7.svg";
+
 // Export categories array
 export const categories = [
   {
@@ -400,5 +409,173 @@ export const pointsRecord = [
     points: -150,
     description: "Shopping Points Used",
     remaining: 300,
+  },
+];
+
+export const forums = [
+  // Your Forums (5)
+  {
+    id: "1",
+    name: "Frontend Builders",
+    image: forum1,
+    members: 124,
+    createdBy: "currentUser",
+    joined: true,
+  },
+  {
+    id: "2",
+    name: "Web Warriors",
+    image: forum2,
+    members: 88,
+    createdBy: "currentUser",
+    joined: true,
+  },
+  {
+    id: "3",
+    name: "CSS Creators",
+    image: forum3,
+    members: 76,
+    createdBy: "currentUser",
+    joined: true,
+  },
+  {
+    id: "4",
+    name: "Fullstack Circle",
+    image: forum4,
+    members: 143,
+    createdBy: "currentUser",
+    joined: true,
+  },
+  {
+    id: "5",
+    name: "DevTalk Nigeria",
+    image: forum5,
+    members: 97,
+    createdBy: "currentUser",
+    joined: true,
+  },
+
+  // Joined Forums (9)
+  {
+    id: "6",
+    name: "React Nigeria",
+    image: forum6,
+    members: 98,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+  {
+    id: "7",
+    name: "JavaScript Minds",
+    image: forum7,
+    members: 110,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+  {
+    id: "8",
+    name: "Typescript Zone",
+    image: forum1,
+    members: 64,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+  {
+    id: "9",
+    name: "Next.js Lounge",
+    image: forum2,
+    members: 102,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+  {
+    id: "10",
+    name: "Tech Lagos",
+    image: forum3,
+    members: 140,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+  {
+    id: "11",
+    name: "NodeJS Core",
+    image: forum4,
+    members: 86,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+  {
+    id: "12",
+    name: "Tailwind Ninjas",
+    image: forum5,
+    members: 121,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+  {
+    id: "13",
+    name: "UX Flow",
+    image: forum6,
+    members: 93,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+  {
+    id: "14",
+    name: "Web3 Gurus",
+    image: forum7,
+    members: 77,
+    createdBy: "anotherUser",
+    joined: true,
+  },
+
+  // Explore Forums (6)
+  {
+    id: "15",
+    name: "Svelte Society",
+    image: forum1,
+    members: 59,
+    createdBy: "anotherUser",
+    joined: false,
+  },
+  {
+    id: "16",
+    name: "Open Source Africa",
+    image: forum2,
+    members: 83,
+    createdBy: "anotherUser",
+    joined: false,
+  },
+  {
+    id: "17",
+    name: "Figma Friends",
+    image: forum3,
+    members: 112,
+    createdBy: "anotherUser",
+    joined: false,
+  },
+  {
+    id: "18",
+    name: "Product Design Lab",
+    image: forum4,
+    members: 96,
+    createdBy: "anotherUser",
+    joined: false,
+  },
+  {
+    id: "19",
+    name: "Vite Nation",
+    image: forum5,
+    members: 72,
+    createdBy: "anotherUser",
+    joined: false,
+  },
+  {
+    id: "20",
+    name: "DevOps Corner",
+    image: forum6,
+    members: 68,
+    createdBy: "anotherUser",
+    joined: false,
   },
 ];
