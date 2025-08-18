@@ -60,6 +60,7 @@ export class AuthController {
     return await this.authService.registerUser({
       ...createBuyer,
       role: Role.BUYER,
+      isLagosian: false,
     });
   }
 

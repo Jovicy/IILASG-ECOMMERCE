@@ -7,7 +7,7 @@ export interface UserDetails {
   last_name: string;
   password: string;
   role: Role;
-  isLagosian: boolean;
+  isLagosian?: boolean;
   state?: string | null;
 }
 
