@@ -23,6 +23,8 @@ import BuyerSignUpPage from "./pages/BuyerSignUpPage";
 import VendorSignUpPage from "./pages/VendorSignUpPage";
 import AccountCreatedWithGoogle from "./pages/AccountCreatedWithGoogle";
 import AccountCreatedWithoutGoogle from "./pages/AccountCreatedWithoutGoogle";
+import CategoryPage from "./pages/CategoriesPage";
+import ProductPage from "./pages/ProductPage";
 
 const App = () => {
   return (
@@ -42,6 +44,8 @@ const App = () => {
       {/* Routes using Main Layout */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Homepage />} />
+        <Route path="/categories/:slug" element={<CategoryPage />} />
+        <Route path="/products/:id" element={<ProductPage />} />
         <Route path="orders" element={<OrdersPage />} />
         <Route path="orders/:orderId" element={<OrderDetailsPage />} />
         <Route path="points" element={<PointsPage />} />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import SealTick from "@/assets/seal.svg"
+import SealTick from "@/assets/seal.svg";
 import { Image, Camera, Eye, EyeSlash, Clock } from "iconsax-reactjs";
 import {
   Select,
@@ -269,7 +269,11 @@ const SettingsPage = () => {
                     onClick={() => setShowNewPassword(!showNewPassword)}
                     className="absolute right-3 top-9 text-grey-500"
                   >
-                    {showNewPassword ? <EyeSlash size="18" /> : <Eye size="18" />}
+                    {showNewPassword ? (
+                      <EyeSlash size="18" />
+                    ) : (
+                      <Eye size="18" />
+                    )}
                   </button>
                 </div>
 
@@ -292,7 +296,11 @@ const SettingsPage = () => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-9 text-grey-500"
                   >
-                    {showConfirmPassword ? <EyeSlash size="18" /> : <Eye size="18" />}
+                    {showConfirmPassword ? (
+                      <EyeSlash size="18" />
+                    ) : (
+                      <Eye size="18" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -309,8 +317,12 @@ const SettingsPage = () => {
           <div className="flex flex-col gap-8">
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex flex-col gap-6">
               <div className="flex items-center gap-4 border-b border-b-grey-100 pb-4">
-                <p className="text-[#4E4E4E] text-xs font-normal">Current Status:</p>
-                <button className="bg-error-50 border border-error-600 text-error-600 text-base font-normal rounded-full py-3 px-6">Not Verified</button>
+                <p className="text-[#4E4E4E] text-xs font-normal">
+                  Current Status:
+                </p>
+                <button className="bg-error-50 border border-error-600 text-error-600 text-base font-normal rounded-full py-3 px-6">
+                  Not Verified
+                </button>
               </div>
 
               <div className="flex flex-col gap-2 w-80">
@@ -323,7 +335,9 @@ const SettingsPage = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="agege">Agege</SelectItem>
-                    <SelectItem value="ajeromi-ifelodun">Ajeromi-Ifelodun</SelectItem>
+                    <SelectItem value="ajeromi-ifelodun">
+                      Ajeromi-Ifelodun
+                    </SelectItem>
                     <SelectItem value="alimosho">Alimosho</SelectItem>
                     <SelectItem value="amuwo-odofin">Amuwo-Odofin</SelectItem>
                     <SelectItem value="apapa">Apapa</SelectItem>
@@ -336,7 +350,9 @@ const SettingsPage = () => {
                     <SelectItem value="ikorodu">Ikorodu</SelectItem>
                     <SelectItem value="kosofe">Kosofe</SelectItem>
                     <SelectItem value="lagos-island">Lagos Island</SelectItem>
-                    <SelectItem value="lagos-mainland">Lagos Mainland</SelectItem>
+                    <SelectItem value="lagos-mainland">
+                      Lagos Mainland
+                    </SelectItem>
                     <SelectItem value="mushin">Mushin</SelectItem>
                     <SelectItem value="ojo">Ojo</SelectItem>
                     <SelectItem value="oshodi-isolo">Oshodi-Isolo</SelectItem>
@@ -358,17 +374,18 @@ const SettingsPage = () => {
         <TabsContent value="notifications" className="">
           <div className="flex flex-col gap-8">
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
-              <p className="text-[#4E4E4E] text-xs font-normal">Current Status:</p>
+              <p className="text-[#4E4E4E] text-xs font-normal">
+                Current Status:
+              </p>
               <button className="bg-primary-50 border border-primary-600 text-primary-600 text-base font-normal rounded-full py-3 px-6 flex items-center gap-2">
-                <Clock
-                  size="20"
-                  variant="Bold"
-                />
+                <Clock size="20" variant="Bold" />
                 Verification in progress
               </button>
             </div>
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
-              <p className="text-[#4E4E4E] text-xs font-normal">Current Status:</p>
+              <p className="text-[#4E4E4E] text-xs font-normal">
+                Current Status:
+              </p>
               <button className="bg-success-50 border border-success-600 text-success-600 text-base font-normal rounded-full py-3 px-6 flex items-center gap-2">
                 <div className="w-5">
                   <img src={SealTick} alt="verification-icon" />
@@ -396,41 +413,53 @@ const SettingsPage = () => {
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
               <button
                 onClick={() => setEnabled(!enabled)}
-                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${enabled ? "bg-primary-600" : "bg-gray-200"
-                  }`}
+                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${
+                  enabled ? "bg-primary-600" : "bg-gray-200"
+                }`}
               >
                 <span
-                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${enabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
+                    enabled ? "translate-x-6" : "translate-x-1"
+                  }`}
                 />
               </button>
-              <h3 className="text-grey-500 font-medium text-lg">Order Updates</h3>
+              <h3 className="text-grey-500 font-medium text-lg">
+                Order Updates
+              </h3>
             </div>
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
               <button
                 onClick={() => setEnabled(!enabled)}
-                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${enabled ? "bg-primary-600" : "bg-gray-200"
-                  }`}
+                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${
+                  enabled ? "bg-primary-600" : "bg-gray-200"
+                }`}
               >
                 <span
-                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${enabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
+                    enabled ? "translate-x-6" : "translate-x-1"
+                  }`}
                 />
               </button>
-              <h3 className="text-grey-500 font-medium text-lg">Promotions & Discounts</h3>
+              <h3 className="text-grey-500 font-medium text-lg">
+                Promotions & Discounts
+              </h3>
             </div>
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
               <button
                 onClick={() => setEnabled(!enabled)}
-                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${enabled ? "bg-primary-600" : "bg-gray-200"
-                  }`}
+                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${
+                  enabled ? "bg-primary-600" : "bg-gray-200"
+                }`}
               >
                 <span
-                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${enabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
+                    enabled ? "translate-x-6" : "translate-x-1"
+                  }`}
                 />
               </button>
-              <h3 className="text-grey-500 font-medium text-lg">Rewards Notifications</h3>
+              <h3 className="text-grey-500 font-medium text-lg">
+                Rewards Notifications
+              </h3>
             </div>
             <div className="flex items-center justify-end">
               <button className="bg-primary-500 py-3 px-6 rounded-full text-white text-base font-normal cursor-pointer">

@@ -43,7 +43,7 @@ const Homepage = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {categories.map((category, index) => (
-            <Link to="/categories" key={index}>
+            <Link to={`/categories/${category.name.replace(/\s+/g, "-").toLowerCase()}`} key={index}>
               <div
                 className="relative rounded-xl overflow-hidden group cursor-pointer"
                 style={{ aspectRatio: "1 / 1" }}
@@ -84,7 +84,7 @@ const Homepage = () => {
             </p>
             <div className="flex justify-end">
               <Link to={'/explore'} className="bg-bodies rounded-full flex items-center gap-2 w-fit text-primary-500 py-3 px-6 transition-transform duration-300 transform hover:scale-105">
-                <Messages2/>
+                <Messages2 />
                 <p>Explore Forums</p>
               </Link>
             </div>
