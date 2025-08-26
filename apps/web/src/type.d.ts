@@ -4,5 +4,6 @@ export interface Credentials {
   last_name: string;
   password: string;
   isLagosian: boolean;
-  state: string;
+  LGA?: string;
+  accountType?: string;
 }

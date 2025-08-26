@@ -1,6 +1,13 @@
-import { Body, Controller, Delete, Get, Put, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Put,
+  Request,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDetailsWithTimestamps } from 'src/common/interface/user-details.interface';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -8,6 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UpdateUserDto } from 'src/common/dto/update-user.dto';
+import { UserResponseDto } from 'src/common/dto/user-response.dto';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -21,15 +29,17 @@ export class UserController {
     description: 'Profile retrieved successfully',
     schema: {
       example: {
-        id: 'uuid',
-        email: 'user@example.com',
-        first_name: 'John',
-        last_name: 'Doe',
-        role: 'BUYER',
-        isLagosian: true,
-        state: 'Lagos',
-        createdAt: '2024-06-10T12:00:00.000Z',
-        updatedAt: '2024-06-10T12:00:00.000Z',
+        user: {
+          id: 'uuid',
+          email: 'user@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'BUYER',
+          isLagosian: true,
+          LGA: 'Victoria Island',
+          createdAt: '2024-06-10T12:00:00.000Z',
+          updatedAt: '2024-06-10T12:00:00.000Z',
+        },
       },
     },
   })
@@ -37,31 +47,18 @@ export class UserController {
   @Get('')
   async getProfile(
     @Request() req: { user: { userId: string } },
-  ): Promise<UserDetailsWithTimestamps | null> {
+  ): Promise<UserResponseDto | null> {
     const user = await this.userService.findById(req.user.userId);
     return user;
   }
 
-  @Put('')
+  @Patch('')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update user profile' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({
     status: 200,
     description: 'User updated successfully',
-    schema: {
-      example: {
-        id: 'uuid',
-        email: 'user@example.com',
-        first_name: 'John',
-        last_name: 'Doe',
-        role: 'BUYER',
-        isLagosian: true,
-        state: 'Lagos',
-        createdAt: '2024-06-10T12:00:00.000Z',
-        updatedAt: '2024-06-10T12:00:00.000Z',
-      },
-    },
   })
   async updateProfile(
     @Request() req: { user: { userId: string } },

@@ -2,7 +2,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
-import { UserDetailsWithTimestamps } from 'src/common/interface/user-details.interface';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google-auth') {
@@ -30,13 +29,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google-auth') {
       picture: photos[0].value,
     };
 
-    const existingUser: UserDetailsWithTimestamps | null =
-      await this.userService.findByEmail(userData.email);
-    const isNewUser = !existingUser;
-
-    done(null, {
-      ...(isNewUser ? userData : existingUser),
-      isNewUser,
-    });
+    done(null, userData);
   }
 }

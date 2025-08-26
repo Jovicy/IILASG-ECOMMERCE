@@ -2,8 +2,8 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { UserDetailsWithTimestamps } from 'src/common/interface/user-details.interface';
 import { Request } from 'express';
+import { UserResponseDto } from 'src/common/dto/user-response.dto';
 
 @Injectable()
 export class RefreshToken extends PassportStrategy(Strategy, 'refresh-token') {
@@ -16,10 +16,7 @@ export class RefreshToken extends PassportStrategy(Strategy, 'refresh-token') {
     });
   }
 
-  async validate(
-    req: Request,
-    payload: any,
-  ): Promise<UserDetailsWithTimestamps> {
+  async validate(req: Request, payload: any): Promise<UserResponseDto> {
     const userId = payload.sub;
 
     const tokenFromHeader = req.headers['authorization']!.split(' ')[1];
