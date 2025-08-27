@@ -31,6 +31,12 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string;
 
+  @ApiProperty({ example: '+23490675' })
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  phoneNumber?: string;
+
   @ApiProperty({ example: Role })
   @IsEnum(Role)
   @IsNotEmpty()

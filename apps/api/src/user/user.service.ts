@@ -45,9 +45,6 @@ export class UserService {
               create: {},
             },
           },
-          include: {
-            vendorProfile: true,
-          },
         });
         return newUser;
       });

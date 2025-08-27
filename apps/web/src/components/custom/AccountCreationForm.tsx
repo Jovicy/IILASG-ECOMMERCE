@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { Eye, EyeSlash, Google, ArrowLeft } from "iconsax-reactjs";
 import { Link } from "react-router-dom";
 import AuthLayout from "@/layouts/AuthLayout";
@@ -12,15 +10,14 @@ type AccountCreationFormProps = {
 };
 
 const AccountCreationForm = ({ accountType = "User", onSubmit }: AccountCreationFormProps) => {
-  const credentials = useSelector((state: RootState) => state.auth);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [form, setForm] = useState({
-    firstName: credentials.first_name || "",
-    lastName: credentials.last_name || "",
-    email: credentials.email || "",
-    password: credentials.password || "",
-    confirm: credentials.password || "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirm: "",
   });
 
   const isFormValid = form.firstName && form.lastName && form.email && form.password && form.confirm && form.password === form.confirm;
@@ -135,7 +132,7 @@ const AccountCreationForm = ({ accountType = "User", onSubmit }: AccountCreation
           <button
             type="submit"
             disabled={!isFormValid}
-            className={`w-full rounded-full py-3 px-6 text-base font-normal transition ${
+            className={`w-full rounded-full py-3 px-6 text-base font-normal  transition ${
               isFormValid ? "bg-primary-500 text-white hover:bg-primary-600" : "bg-grey-100 text-grey-300 cursor-not-allowed"
             }`}>
             Create {accountType} Account

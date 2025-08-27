@@ -1,9 +1,22 @@
-export interface Credentials {
+export interface CredentialsPayload {
   email: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   password: string;
-  isLagosian: boolean;
+  isLagosian?: boolean;
   LGA?: string;
   accountType?: string;
+  role: string;
 }
+
+export interface SigninPayload {
+  email: string;
+  password: string;
+}
+
+export interface UserResponsePayload {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export type PartialCredentialsPayload = Partial<Credentials>;

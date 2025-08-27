@@ -1,25 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { addIsLagosian, addLGA } from "@/store/authStore/signUpSlice";
+import { useUpdate } from "@/hooks/useUser";
 import Logo from "@/assets/Main-logo.svg";
 import ModalImg from "@/assets/modal-img.svg";
 import { ArrowRight, ShoppingCart } from "iconsax-reactjs";
-import { useSignUp } from "@/hooks/useAuth";
 
 const AccountCreatedWithoutGoogle = () => {
   const [showModal, setShowModal] = React.useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const credentials = useSelector((state: RootState) => state.auth);
-
-  const { mutate: signUp, data, isError, error, isSuccess } = useSignUp("/auth/signup/buyer");
+  const { mutate: updateUser } = useUpdate();
 
   const [form, setForm] = React.useState({
-    isLagosian: credentials.isLagosian ? "yes" : "no",
-    localGovernment: credentials.LGA || "",
+    isLagosian: "",
+    localGovernment: "",
   });
 
   const lagosLGAs = [
@@ -48,20 +41,20 @@ const AccountCreatedWithoutGoogle = () => {
   const isStepFilled = form.isLagosian === "yes" ? form.localGovernment.trim() !== "" : form.isLagosian.trim() !== "";
 
   const handleFinalAction = () => {
-    if (form.isLagosian === "yes" && form.localGovernment) {
-      dispatch(addIsLagosian(form.isLagosian === "yes"));
-      dispatch(addLGA(form.localGovernment));
-    } else if (form.isLagosian === "no") {
-      dispatch(addIsLagosian(false));
-    }
-    signUp(credentials, {
-      onSuccess: (response) => {
-        setShowModal(true);
+    updateUser(
+      {
+        LGA: form.localGovernment,
+        isLagosian: form.isLagosian === "yes" ? true : false,
       },
-      onError: (err) => {
-        console.error("Signup failed:", err);
-      },
-    });
+      {
+        onSuccess: () => {
+          setShowModal(true);
+        },
+        onError: (err) => {
+          console.error("Indigenous failed:", err);
+        },
+      }
+    );
   };
 
   return (

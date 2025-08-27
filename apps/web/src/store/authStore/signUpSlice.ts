@@ -1,21 +1,21 @@
-import { Credentials } from "@/type";
+import { CredentialsPayload } from "@/type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { add } from "date-fns";
 
-const initialState: Credentials = {
+const initialState: CredentialsPayload = {
   email: "",
-  first_name: "",
-  last_name: "",
+  firstName: "",
+  lastName: "",
   password: "",
   isLagosian: false,
   LGA: null,
+  role: "",
 };
 
 const signUpSlice = createSlice({
   name: "signUp",
   initialState,
   reducers: {
-    addSignUpCredentials: (state, action: PayloadAction<Credentials>) => {
+    addSignUpCredentials: (state, action: PayloadAction<CredentialsPayload>) => {
       return { ...state, ...action.payload };
     },
 

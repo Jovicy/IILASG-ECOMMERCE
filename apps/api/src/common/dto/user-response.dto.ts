@@ -10,6 +10,7 @@ export class UserResponseDto {
   verified: boolean;
   LGA?: string | null;
   isLagosian?: boolean;
+  phoneNumber?: string | null;
   createdAt: Date;
   updatedAt: Date;
   password: string;

@@ -36,10 +36,20 @@ export class AuthController {
     status: 409,
     description: 'User with this email already exists',
   })
-  async signupVendor(
-    @Body() CreateUserDto: CreateUserDto,
-  ): Promise<UserResponseDto | null> {
-    return await this.authService.registerUser(CreateUserDto);
+  async signupVendor(@Body() CreateUserDto: CreateUserDto) {
+    const user = await this.authService.registerUser(CreateUserDto);
+
+    if (user) {
+      const { id, email, role } = user;
+      const token = await this.authService.generateToken(id, email, role);
+
+      return {
+        accessToken: token?.accessToken,
+        refreshToken: token?.refreshToken,
+      };
+    }
+
+    return null;
   }
 
   /* User Login */
@@ -51,22 +61,10 @@ export class AuthController {
     description: 'User logged in successfully',
     schema: {
       example: {
-        access_token:
+        accessToken:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
-        refresh_token:
+        refreshToken:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
-        user: {
-          id: '123e4567-e89b-12d3-a456-426614174000',
-          email: 'user@example.com',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: 'BUYER',
-          verified: true,
-          LGA: 'Ikeja',
-          isLagosian: true,
-          createdAt: '2023-12-01T10:00:00.000Z',
-          updatedAt: '2023-12-01T10:00:00.000Z',
-        },
       },
     },
   })
@@ -88,16 +86,13 @@ export class AuthController {
     const token = await this.authService.generateToken(id, email, role);
 
     return {
-      user: {
-        ...req.user,
-      },
       accessToken: token?.accessToken,
       refreshTokken: token?.refreshToken,
     };
   }
 
   /* Google Authentication */
-  @Get('/google')
+  @Get('/google-signup')
   @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Initiate Google OAuth flow' })
   @ApiResponse({
@@ -129,16 +124,13 @@ export class AuthController {
         email: string;
         firstName: string;
         lastName: string;
-        isNewUser: boolean;
       };
     },
   ) {
-    const path = req.user.isNewUser ? '/setup' : '/dashboard';
     return {
       email: req.user.email,
-      first_name: req.user.firstName,
-      last_name: req.user.lastName,
-      path,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
     };
   }
 
@@ -164,7 +156,6 @@ export class AuthController {
   async refreshToken(@Request() req: { user: UserResponseDto }) {
     const { id, email, role } = req.user;
 
-    console.log(req.user);
     const token = await this.authService.generateToken(id, email, role);
 
     return {

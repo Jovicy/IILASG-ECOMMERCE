@@ -15,6 +15,7 @@ model User {
   firstName              String
   lastName               String
   password                String
+  phoneNumber             String?                 @unique
   role                    Role
   verified                Boolean                 @default(false)
   LGA                     String?                 

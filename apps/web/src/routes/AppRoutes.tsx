@@ -15,12 +15,11 @@ import SettingsPage from "@/pages/SettingsPage";
 import SupportPage from "@/pages/SupportPage";
 
 import SignInPage from "@/pages/SignInPage";
-import SignUpPage from "@/pages/SignUpPage";
+import AccountPage from "@/pages/AccountPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import VerifyEmailPage from "@/pages/VerifyPage";
 import ResetPasswordConfirmPage from "@/pages/ResetPasswordConfirmPage";
-import BuyerSignUpPage from "@/pages/BuyerSignUpPage";
-import VendorSignUpPage from "@/pages/VendorSignUpPage";
+import SignUpPage from "@/pages/SignUpPage";
 import AccountCreatedWithGoogle from "@/pages/AccountCreatedWithGoogle";
 import AccountCreatedWithoutGoogle from "@/pages/AccountCreatedWithoutGoogle";
 
@@ -30,20 +29,18 @@ export default function AppRoutes() {
       {/* Auth Routes (no layout) */}
       <Route path="/signin" element={<SignInPage />} />
       <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/account-type" element={<AccountPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route path="/new-password" element={<ResetPasswordConfirmPage />} />
-      <Route path="/signup/buyer" element={<BuyerSignUpPage />} />
-      <Route path="/signup/vendor" element={<VendorSignUpPage />} />
       <Route path="/account-created/google" element={<AccountCreatedWithGoogle />} />
       <Route path="/account-not-created/google" element={<AccountCreatedWithoutGoogle />} />
 
       {/* Routes using Main Layout */}
       <Route element={<MainLayout />}>
-        <Route index element={<Homepage />} />
-
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
+          <Route index element={<Homepage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="orders/:orderId" element={<OrderDetailsPage />} />
           <Route path="points" element={<PointsPage />} />
