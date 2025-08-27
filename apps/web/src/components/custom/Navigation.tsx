@@ -22,8 +22,10 @@ import {
   Send2,
 } from "iconsax-reactjs";
 
+import { UserRole } from "@/types/types";
+
 interface NavigationProps {
-  role: "buyer" | "vendor";
+  role: UserRole;
 }
 
 const Navigation: React.FC<NavigationProps> = ({ role }) => {

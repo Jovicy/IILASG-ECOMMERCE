@@ -1,0 +1,9 @@
+export interface Credentials {
+  email: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+  isLagosian: boolean;
+  LGA?: string;
+  accountType?: string;
+}

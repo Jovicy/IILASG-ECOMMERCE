@@ -8,8 +8,6 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../common/dto/create-user.dto';
-import { Role } from 'generated/prisma';
-import { UserDetailsWithTimestamps } from 'src/common/interface/user-details.interface';
 import { LocalAuthGuard } from './guard/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guard/refresh-auth/refresh-auth.guard';
 import {
@@ -22,6 +20,8 @@ import {
 } from '@nestjs/swagger';
 import { GoogleAuthGuard } from './guard/google-auth/google-auth.guard';
 import { Public } from 'src/common/decorators/public.decorator';
+import { UserResponseDto } from 'src/common/dto/user-response.dto';
+import { LoginUserDto } from 'src/common/dto/login-user.dto';
 
 @Public()
 @ApiTags('Authentication')
@@ -29,39 +29,17 @@ import { Public } from 'src/common/decorators/public.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  /* Vendor - Signup */
-  @Post('signup/vendor')
+  @Post('signup')
   @ApiOperation({ summary: 'Register a new vendor' })
-  @ApiResponse({ status: 201, description: 'Vendor registered successfully' })
+  @ApiResponse({ status: 201, description: 'User registered successfully' })
   @ApiResponse({
     status: 409,
     description: 'User with this email already exists',
   })
   async signupVendor(
-    @Body() createVendor: CreateUserDto,
-  ): Promise<UserDetailsWithTimestamps | null> {
-    return await this.authService.registerUser({
-      ...createVendor,
-      role: Role.VENDOR,
-    });
-  }
-
-  /* Buyer - Signup */
-  @Post('signup/buyer')
-  @ApiOperation({ summary: 'Register a new buyer' })
-  @ApiResponse({ status: 201, description: 'Buyer registered successfully' })
-  @ApiResponse({
-    status: 409,
-    description: 'User with this email already exists',
-  })
-  async signupBuyer(
-    @Body() createBuyer: CreateUserDto,
-  ): Promise<UserDetailsWithTimestamps | null> {
-    return await this.authService.registerUser({
-      ...createBuyer,
-      role: Role.BUYER,
-      isLagosian: false,
-    });
+    @Body() CreateUserDto: CreateUserDto,
+  ): Promise<UserResponseDto | null> {
+    return await this.authService.registerUser(CreateUserDto);
   }
 
   /* User Login */
@@ -73,19 +51,22 @@ export class AuthController {
     description: 'User logged in successfully',
     schema: {
       example: {
+        access_token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+        refresh_token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
         user: {
-          id: 'uuid',
+          id: '123e4567-e89b-12d3-a456-426614174000',
           email: 'user@example.com',
-          first_name: 'John',
-          last_name: 'Doe',
+          firstName: 'John',
+          lastName: 'Doe',
           role: 'BUYER',
+          verified: true,
+          LGA: 'Ikeja',
           isLagosian: true,
-          state: 'Lagos',
-          createdAt: '2024-06-10T12:00:00.000Z',
-          updatedAt: '2024-06-10T12:00:00.000Z',
+          createdAt: '2023-12-01T10:00:00.000Z',
+          updatedAt: '2023-12-01T10:00:00.000Z',
         },
-        token: 'access-token',
-        refreshToken: 'refresh-token',
       },
     },
   })
@@ -99,17 +80,19 @@ export class AuthController {
       },
     },
   })
-  async signinUser(@Request() req: { user: UserDetailsWithTimestamps }) {
-    const { id } = req.user;
+  async signinUser(
+    @Request() req: { user: UserResponseDto },
+  ): Promise<LoginUserDto> {
+    const { id, email, role } = req.user;
 
-    const token = await this.authService.generateToken(id!);
+    const token = await this.authService.generateToken(id, email, role);
 
     return {
       user: {
         ...req.user,
       },
-      token: token?.accessToken,
-      refreshToken: token?.refreshToken,
+      accessToken: token?.accessToken,
+      refreshTokken: token?.refreshToken,
     };
   }
 
@@ -178,9 +161,11 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized or invalid refresh token',
   })
-  async refreshToken(@Request() req: { user: UserDetailsWithTimestamps }) {
-    const { id } = req.user;
-    const token = await this.authService.generateToken(id!);
+  async refreshToken(@Request() req: { user: UserResponseDto }) {
+    const { id, email, role } = req.user;
+
+    console.log(req.user);
+    const token = await this.authService.generateToken(id, email, role);
 
     return {
       token: token?.accessToken,

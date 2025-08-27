@@ -8,8 +8,9 @@ import jwtConfig from './auth/config/jwt.config';
 import refreshConfig from './auth/config/refresh.config';
 import { TokenGuard } from './common/guard/token/token.guard';
 import { TokenStrategy } from './common/strategy/token.strategy';
-import { CategoryModule } from './category/category.module';
-import { ProductModule } from './product/product.module';
+import { RolesGuard } from './common/guard/roles/roles.guard';
+import { JwtService } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -19,16 +20,19 @@ import { ProductModule } from './product/product.module';
       isGlobal: true,
       load: [jwtConfig, refreshConfig],
     }),
-    CategoryModule,
-    ProductModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     TokenStrategy,
+    JwtService,
     {
-      provide: 'APP_GUARD',
+      provide: APP_GUARD,
       useClass: TokenGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

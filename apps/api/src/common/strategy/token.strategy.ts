@@ -14,7 +14,10 @@ export class TokenStrategy extends PassportStrategy(Strategy, 'token') {
     });
   }
 
-  async validate(req: Request, payload: any): Promise<any> {
+  async validate(
+    req: Request,
+    payload: any,
+  ): Promise<{ userId: string | null }> {
     return {
       userId: payload.sub,
     };

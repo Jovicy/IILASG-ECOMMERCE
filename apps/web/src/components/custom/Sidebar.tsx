@@ -14,6 +14,9 @@ import {
   LoginCurve,
 } from "iconsax-reactjs";
 
+import { UserRole } from "@/types/types";
+
+
 interface SidebarItemProps {
   icon: React.ElementType;
   label: string;
@@ -22,8 +25,9 @@ interface SidebarItemProps {
   danger?: boolean;
 }
 
+
 interface SidebarProps {
-  role: "buyer" | "vendor";
+  role: UserRole;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ role }) => {
