@@ -1,9 +1,8 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 import { useSignUp } from "@/hooks/useAuth";
 import AccountCreationForm from "@/components/custom/AccountCreationForm";
 import { tokenService } from "@/api/tokenService";
-import { useEffect } from "react";
-import { AccountType } from "./AccountPage";
 
 interface BuyerFormData {
   firstName: string;
@@ -20,7 +19,7 @@ const BuyerSignUpPage = () => {
   const { mutate: signUp } = useSignUp();
 
   useEffect(() => {
-    if (!accountType || !AccountType[accountType]) {
+    if (!accountType || (accountType !== "buyer" && accountType !== "vendor")) {
       navigate("/account-type");
       return;
     }

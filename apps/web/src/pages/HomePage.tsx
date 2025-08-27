@@ -36,9 +36,16 @@ const Homepage = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {categories.map((category, index) => (
-            <Link to="/categories" key={index}>
-              <div className="relative rounded-xl overflow-hidden group cursor-pointer" style={{ aspectRatio: "1 / 1" }}>
-                <img src={category.image} alt={category.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            <Link to={`/categories/${category.name.replace(/\s+/g, "-").toLowerCase()}`} key={index}>
+              <div
+                className="relative rounded-xl overflow-hidden group cursor-pointer"
+                style={{ aspectRatio: "1 / 1" }}
+              >
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
                 <div className="absolute inset-0 bg-black/30" />
                 <div className="absolute bottom-8 left-2 right-2 text-center text-bodies text-sm font-normal z-10">{category.name}</div>
               </div>
@@ -59,7 +66,7 @@ const Homepage = () => {
             <h2 className="text-3xl font-medium leading-snug">Find Your Tribe, Right Here!</h2>
             <p className="text-base/7 font-normal w-[400px] text-grey-800">Join vibrant forums where Lagosians with shared interests connect, collaborate, and grow together.</p>
             <div className="flex justify-end">
-              <Link to={"/explore"} className="bg-bodies rounded-full flex items-center gap-2 w-fit text-primary-500 py-3 px-6 transition-transform duration-300 transform hover:scale-105">
+              <Link to={'/explore'} className="bg-bodies rounded-full flex items-center gap-2 w-fit text-primary-500 py-3 px-6 transition-transform duration-300 transform hover:scale-105">
                 <Messages2 />
                 <p>Explore Forums</p>
               </Link>

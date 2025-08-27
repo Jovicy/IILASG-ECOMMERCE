@@ -1,6 +1,5 @@
-import { UserResponseDto } from './user-response.dto';
-
 export class LoginUserDto {
+  role?: string;
   accessToken?: string;
-  refreshTokken?: string;
+  refreshToken?: string;
 }

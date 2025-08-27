@@ -1,144 +1,101 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+// import icons
+import { ArrowRight2, Home2, Box, Gift, Heart, Messages2, Setting2, Call, LoginCurve } from "iconsax-reactjs";
 
-//import icon.
-import { ArrowRight2, Home2, Box, Gift, Heart, Messages2, Setting2, Call, LoginCurve } from 'iconsax-reactjs';
+import { UserRole } from "@/types";
 
 interface SidebarItemProps {
-  icon: React.ReactElement<any>;
+  icon: React.ElementType;
   label: string;
   to: string;
   collapsed: boolean;
+  danger?: boolean;
 }
 
-const Sidebar = () => {
+interface SidebarProps {
+  role: UserRole;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   const [collapsed, setCollapsed] = useState(true);
   const toggleSidebar = () => setCollapsed(!collapsed);
 
-  const iconStyle = {
-    size: 20,
-    className: "text-grey-900 transition-colors duration-300 group-hover:text-primary-500"
-  };
-
-  const itemsTop = [
-    {
-      icon: <Home2 {...iconStyle} />,
-      label: "Home",
-      to: "/",
-    },
-    {
-      icon: <Box {...iconStyle} />,
-      label: "My Orders",
-      to: "/orders",
-    },
-    {
-      icon: <Gift {...iconStyle} />,
-      label: "Shopping Points",
-      to: "/points",
-    },
-    {
-      icon: <Heart {...iconStyle} />,
-      label: "Saved Items",
-      to: "/saved",
-    },
-    {
-      icon: <Messages2 {...iconStyle} />,
-      label: "Forums",
-      to: "/forums",
-    },
+  // Define menus for buyer
+  const buyerItemsTop = [
+    { icon: Home2, label: "Home", to: "/buyer" },
+    { icon: Box, label: "My Orders", to: "/buyer/orders" },
+    { icon: Gift, label: "Shopping Points", to: "/buyer/points" },
+    { icon: Heart, label: "Saved Items", to: "/buyer/saved" },
+    { icon: Messages2, label: "Forums", to: "/buyer/forums" },
   ];
 
-  const itemsBottom = [
-    {
-      icon: <Setting2 {...iconStyle} />,
-      label: "Settings",
-      to: "/settings",
-    },
-    {
-      icon: <Call {...iconStyle} />,
-      label: "Help & Support",
-      to: "/support",
-    },
-    {
-      icon: <LoginCurve {...iconStyle} />,
-      label: "Log out",
-      to: "/logout",
-    },
+  const buyerItemsBottom = [
+    { icon: Setting2, label: "Settings", to: "/buyer/settings" },
+    { icon: Call, label: "Help & Support", to: "/buyer/support" },
+    { icon: LoginCurve, label: "Log out", to: "/buyer/logout", danger: true },
   ];
+
+  // Define menus for vendor
+  const vendorItemsTop = [
+    { icon: Home2, label: "Dashboard", to: "/vendor" }, // <-- matches Route index
+    { icon: Box, label: "Products", to: "/vendor/products" },
+    { icon: Gift, label: "Orders", to: "/vendor/orders" },
+    { icon: Messages2, label: "Messages", to: "/vendor/messages" },
+    { icon: Setting2, label: "Analytics", to: "/vendor/analytics" },
+  ];
+
+  const vendorItemsBottom = [
+    { icon: Setting2, label: "Settings", to: "/vendor/settings" },
+    { icon: Call, label: "Help & Support", to: "/vendor/support" },
+    { icon: LoginCurve, label: "Log out", to: "/vendor/logout", danger: true },
+  ];
+
+  // Pick correct items based on role
+  const itemsTop = role === "buyer" ? buyerItemsTop : vendorItemsTop;
+  const itemsBottom = role === "buyer" ? buyerItemsBottom : vendorItemsBottom;
 
   return (
     <aside
-      className={`sticky top-[70px] bg-bodies border-r border-grey-100 transition-all duration-300 flex flex-col justify-between overflow-hidden ${collapsed ? "w-[72px]" : "w-[260px]"
-        } max-h-[calc(100vh-70px)]`}
-    >
-      {/* Top Section */}
+      className={`sticky top-[70px] bg-bodies border-r border-grey-100 transition-all duration-300 flex flex-col justify-between overflow-hidden ${
+        collapsed ? "w-[72px]" : "w-[260px]"
+      } max-h-[calc(100vh-70px)]`}>
+      {/* Collapse Button */}
       <div className="px-2 py-4">
-        <button
-          onClick={toggleSidebar}
-          className={`
-            group w-full px-3 py-2 mb-4 text-grey-400 text-sm transition-all duration-300 
-            flex items-center ${collapsed ? "justify-center" : "gap-3"}
-          `}
-        >
-          <div className="flex-shrink-0">
-            <ArrowRight2
-              size={18}
-              className={`text-grey-400 transition-transform duration-300 ${collapsed ? "rotate-180" : "rotate-0"
-                }`}
-            />
-          </div>
-
-          {!collapsed && (
-            <p className="text-sm sm:text-base transition-all duration-300">
-              Collapse
-            </p>
-          )}
+        <button onClick={toggleSidebar} className={`group w-full px-3 py-2 mb-4 text-grey-400 text-sm transition-all duration-300 flex items-center ${collapsed ? "justify-center" : "gap-3"}`}>
+          <ArrowRight2 size={18} className={`text-grey-400 transition-transform duration-300 ${collapsed ? "rotate-180" : "rotate-0"}`} />
+          {!collapsed && <p className="text-sm sm:text-base">Collapse</p>}
         </button>
 
-
+        {/* Top Items */}
         <div className="space-y-4">
           {itemsTop.map(({ icon, label, to }) => (
-            <SidebarItem
-              key={label}
-              icon={icon}
-              label={label}
-              to={to}
-              collapsed={collapsed}
-            />
+            <SidebarItem key={label} icon={icon} label={label} to={to} collapsed={collapsed} />
           ))}
         </div>
       </div>
 
-      {/* Bottom Section */}
+      {/* Bottom Items */}
       <div className="px-2 py-4 space-y-4">
-        {itemsBottom.map(({ icon, label, to }) => (
-          <SidebarItem
-            key={label}
-            icon={icon}
-            label={label}
-            to={to}
-            collapsed={collapsed}
-          />
+        {itemsBottom.map(({ icon, label, to, danger }) => (
+          <SidebarItem key={label} icon={icon} label={label} to={to} collapsed={collapsed} danger={danger} />
         ))}
       </div>
     </aside>
   );
 };
 
-const SidebarItem = ({ icon, label, to, collapsed }: SidebarItemProps) => {
+const SidebarItem = ({ icon: Icon, label, to, collapsed, danger }: SidebarItemProps) => {
   const { pathname } = useLocation();
   const isActive = pathname === to;
 
-  // Conditionally style icon
-  const styledIcon = React.isValidElement(icon)
-    ? React.cloneElement(icon as React.ReactElement<any>, {
-        className: isActive
-          ? "text-primary-500"
-          : "text-grey-900 transition-colors duration-300 group-hover:text-primary-500",
-      })
-    : icon;
+  // Classes for normal vs danger
+  const baseClasses = danger
+    ? "border-white text-error-600 hover:text-error-600 hover:bg-error-50 hover:border-error-500"
+    : "border-white text-grey-900 hover:text-primary-500 hover:bg-primary-50 hover:border-primary-500";
+
+  const activeClasses = danger ? "bg-error-50 border-error-500 text-error-600" : "bg-primary-50 border-primary-500 text-primary-500";
 
   return (
     <Link
@@ -147,27 +104,27 @@ const SidebarItem = ({ icon, label, to, collapsed }: SidebarItemProps) => {
         group flex items-center px-3 py-2 transition-all duration-300 
         border rounded-[100px]
         ${collapsed ? "justify-center" : "gap-3"}
-        ${isActive
-          ? "bg-primary-50 border-primary-500 text-primary-500"
-          : "border-white text-grey-900 hover:text-primary-500 hover:bg-primary-50 hover:border-primary-500"}
-      `}
-    >
-      <span className="flex-shrink-0 transition-colors duration-300">
-        {styledIcon}
-      </span>
+        ${isActive ? activeClasses : baseClasses}
+      `}>
+      {/* ✅ Icon now changes color dynamically */}
+      <Icon
+        size={20}
+        className={`
+          transition-colors duration-300 
+          ${isActive ? (danger ? "text-error-600" : "text-primary-500") : danger ? "text-error-600 group-hover:text-error-500" : "text-grey-900 group-hover:text-primary-500"}
+        `}
+      />
 
       {!collapsed && (
         <span
-          className={`whitespace-nowrap text-sm sm:text-base font-normal transition-colors duration-300 ${isActive ? "text-primary-500" : "group-hover:text-primary-500"
-            }`}
-        >
+          className={`whitespace-nowrap text-sm sm:text-base font-normal transition-colors duration-300 ${
+            isActive ? (danger ? "text-error-600" : "text-primary-500") : danger ? "group-hover:text-error-600" : "group-hover:text-primary-500"
+          }`}>
           {label}
         </span>
       )}
     </Link>
   );
 };
-
-
 
 export default Sidebar;

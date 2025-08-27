@@ -1,7 +1,6 @@
-// src/api/tokenService.js
 import CryptoJS from "crypto-js";
 
-const SECRET_KEY = "67eaed519aa3ba093bf7e1b128fed49d4424a52c766a5dbdb147a8b1661360fdeaf797a7d5183281c336aa740496c6c995f881c44a1de5817a454163ebbe4e49"; // should be from .env
+const SECRET_KEY = "67eaed519aa3ba093bf7e1b128fed49d4424a52c766a5dbdb147a8b1661360fdeaf797a7d5183281c336aa740496c6c995f881c44a1de5817a454163ebbe4e49"; // should come from .env
 
 const encrypt = (value: string) => CryptoJS.AES.encrypt(value, SECRET_KEY).toString();
 
@@ -35,5 +34,15 @@ export const tokenService = {
   clearTokens: () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("role");
+  },
+
+  setRole: (role: string) => {
+    localStorage.setItem("role", encrypt(role));
+  },
+
+  getRole: () => {
+    const role = localStorage.getItem("role");
+    return role ? decrypt(role) : null;
   },
 };

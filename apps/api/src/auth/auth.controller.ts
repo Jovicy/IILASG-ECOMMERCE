@@ -61,6 +61,7 @@ export class AuthController {
     description: 'User logged in successfully',
     schema: {
       example: {
+        role: 'vendor',
         accessToken:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
         refreshToken:
@@ -86,8 +87,9 @@ export class AuthController {
     const token = await this.authService.generateToken(id, email, role);
 
     return {
+      role: role,
       accessToken: token?.accessToken,
-      refreshTokken: token?.refreshToken,
+      refreshToken: token?.refreshToken,
     };
   }
 

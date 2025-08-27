@@ -4,11 +4,14 @@ import { useUpdate } from "@/hooks/useUser";
 import Logo from "@/assets/Main-logo.svg";
 import ModalImg from "@/assets/modal-img.svg";
 import { ArrowRight, ShoppingCart } from "iconsax-reactjs";
+import { tokenService } from "@/api/tokenService";
+import { UserRole } from "@/types";
 
 const AccountCreatedWithoutGoogle = () => {
   const [showModal, setShowModal] = React.useState(false);
   const navigate = useNavigate();
   const { mutate: updateUser } = useUpdate();
+  const role: UserRole = tokenService.getRole();
 
   const [form, setForm] = React.useState({
     isLagosian: "",
@@ -156,7 +159,7 @@ const AccountCreatedWithoutGoogle = () => {
                 </div>
               </div>
               <div>
-                <button onClick={() => navigate("/")} className="cursor-pointer bg-success-700 text-white text-base rounded-full px-6 py-3 flex items-center gap-2">
+                <button onClick={() => navigate(`/${role}`)} className="cursor-pointer bg-success-700 text-white text-base rounded-full px-6 py-3 flex items-center gap-2">
                   <ShoppingCart />
                   Start Shopping
                 </button>

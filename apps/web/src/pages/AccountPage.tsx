@@ -1,16 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Box1, User, ArrowRight2 } from "iconsax-reactjs";
 import AuthLayout from "@/layouts/AuthLayout";
-
-export enum AccountType {
-  Buyer = "Buyer",
-  Vendor = "Vendor",
-}
+import { UserRole } from "@/types";
+import { tokenService } from "@/api/tokenService";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
 
-  const handleAccountTypeClick = (type: AccountType) => {
+  const handleAccountTypeClick = (type: UserRole) => {
+    tokenService.setRole(type);
     navigate(`/signup?accountType=${type}`);
   };
 
@@ -27,7 +25,7 @@ const SignUpPage = () => {
 
         {/* Form Container Main */}
         <div className="flex flex-col gap-8">
-          <div onClick={() => handleAccountTypeClick(AccountType.Buyer)} className="bg-grey-50 py-4 px-6 rounded-lg cursor-pointer flex justify-between items-center hover:shadow-md transition">
+          <div onClick={() => handleAccountTypeClick("buyer")} className="bg-grey-50 py-4 px-6 rounded-lg cursor-pointer flex justify-between items-center hover:shadow-md transition">
             <div className="flex items-start gap-5">
               <User className="bg-primary-500 rounded-full p-3 w-12 h-12" color="#FFF" variant="Bold" />
               <div className="flex flex-col gap-1 w-64">
@@ -38,7 +36,7 @@ const SignUpPage = () => {
             <ArrowRight2 color="#101010" variant="Bold" size="24" />
           </div>
 
-          <div onClick={() => handleAccountTypeClick(AccountType.Vendor)} className="bg-grey-50 py-4 px-6 rounded-lg cursor-pointer flex justify-between items-center hover:shadow-md transition">
+          <div onClick={() => handleAccountTypeClick("vendor")} className="bg-grey-50 py-4 px-6 rounded-lg cursor-pointer flex justify-between items-center hover:shadow-md transition">
             <div className="flex items-start gap-5">
               <Box1 className="bg-primary-500 rounded-full p-3 w-12 h-12" color="#FFF" variant="Bold" />
               <div className="flex flex-col gap-1 w-64">

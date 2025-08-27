@@ -4,6 +4,7 @@ import { EyeSlash, Eye, Google } from "iconsax-reactjs";
 import AuthLayout from "@/layouts/AuthLayout";
 import { useSignIn } from "@/hooks/useAuth";
 import { tokenService } from "@/api/tokenService";
+import { UserRole } from "@/types";
 
 const SignInPage = () => {
   const { mutate: signIn } = useSignIn();
@@ -11,6 +12,7 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  let role: UserRole = null;
 
   const isFormValid = email !== "" && password !== "";
 
@@ -22,7 +24,9 @@ const SignInPage = () => {
       {
         onSuccess: (response) => {
           tokenService.setTokens({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken });
-          navigate("/");
+          role = response.data.role.toLowerCase() as UserRole;
+          tokenService.setRole(role);
+          navigate(`/${role}`);
         },
         onError: (err) => {
           console.error("Signin failed:", err);

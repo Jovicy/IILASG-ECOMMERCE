@@ -246,6 +246,10 @@ img {
   width: 100%;
 }
 
+button {
+  cursor: pointer;
+}
+
 input[type="password"]::-ms-reveal,
 input[type="password"]::-webkit-credentials-auto-fill-button,
 input[type="password"]::-webkit-password-reveal-button {
@@ -282,4 +286,18 @@ input[type="search"] {
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
+}
+
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* track color */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #9ca3af; /* thumb color */
+  border-radius: 9999px;
 }

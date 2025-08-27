@@ -1,4 +1,4 @@
-import { CredentialsPayload } from "@/type";
+import { CredentialsPayload } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: CredentialsPayload = {
@@ -26,12 +26,8 @@ const signUpSlice = createSlice({
     addIsLagosian: (state, action: PayloadAction<boolean>) => {
       return { ...state, isLagosian: action.payload };
     },
-
-    addAccountType: (state, action: PayloadAction<string>) => {
-      return { ...state, accountType: action.payload };
-    },
   },
 });
 
-export const { addSignUpCredentials, addIsLagosian, addLGA, addAccountType } = signUpSlice.actions;
+export const { addSignUpCredentials, addIsLagosian, addLGA } = signUpSlice.actions;
 export default signUpSlice.reducer;

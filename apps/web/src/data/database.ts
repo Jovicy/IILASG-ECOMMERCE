@@ -71,21 +71,24 @@ export const categories = [
 ];
 
 export const featuredProducts = [
+  // Electronics & Gadgets
   {
     id: 1,
-    name: "Wireless Headphone",
+    name: "Wireless Headphone Pro",
     image: headphone,
     price: 95000,
     rating: 5.0,
     reviews: 500,
+    category: "Electronics & Gadgets",
   },
   {
     id: 2,
-    name: "Wireless Headphone",
+    name: "Noise Cancelling Headphone",
     image: otherHead,
-    price: 95000,
-    rating: 5.0,
-    reviews: 500,
+    price: 99000,
+    rating: 4.8,
+    reviews: 450,
+    category: "Electronics & Gadgets",
   },
   {
     id: 3,
@@ -95,24 +98,215 @@ export const featuredProducts = [
     rating: 5.0,
     reviews: 600,
     discount: 30,
+    category: "Electronics & Gadgets",
   },
   {
     id: 4,
-    name: "Apple airpod",
+    name: "Apple AirPods Gen 3",
     image: airpod,
     price: 150000,
     rating: 5.0,
     reviews: 3200,
-    discount: 30,
+    discount: 20,
+    category: "Electronics & Gadgets",
   },
   {
     id: 5,
+    name: "Gaming Headset",
+    image: headphone,
+    price: 85000,
+    rating: 4.7,
+    reviews: 300,
+    category: "Electronics & Gadgets",
+  },
+
+  // Health & Wellness
+  {
+    id: 6,
     name: "Axe Body Spray",
     image: axe,
     price: 15000,
     rating: 5.0,
     reviews: 2100,
-    discount: 30,
+    discount: 10,
+    category: "Health & Wellness",
+  },
+  {
+    id: 7,
+    name: "Herbal Body Mist",
+    image: axe,
+    price: 12000,
+    rating: 4.6,
+    reviews: 900,
+    category: "Health & Wellness",
+  },
+  {
+    id: 8,
+    name: "Refreshing Deodorant",
+    image: axe,
+    price: 14000,
+    rating: 4.8,
+    reviews: 1100,
+    category: "Health & Wellness",
+  },
+  {
+    id: 9,
+    name: "Energy Spray",
+    image: axe,
+    price: 16000,
+    rating: 4.7,
+    reviews: 750,
+    category: "Health & Wellness",
+  },
+  {
+    id: 10,
+    name: "Essential Body Spray",
+    image: axe,
+    price: 13500,
+    rating: 4.5,
+    reviews: 500,
+    category: "Health & Wellness",
+  },
+
+  // Fashion & Wearables
+  {
+    id: 11,
+    name: "Trendy Headphone Bag",
+    image: headphone,
+    price: 30000,
+    rating: 4.4,
+    reviews: 200,
+    category: "Fashion & Wearables",
+  },
+  {
+    id: 12,
+    name: "Casual EarPod Pouch",
+    image: airpod,
+    price: 25000,
+    rating: 4.3,
+    reviews: 150,
+    category: "Fashion & Wearables",
+  },
+  {
+    id: 13,
+    name: "iPhone Case – Classic Black",
+    image: iphone,
+    price: 20000,
+    rating: 4.6,
+    reviews: 450,
+    category: "Fashion & Wearables",
+  },
+  {
+    id: 14,
+    name: "Wireless Headphone Cover",
+    image: otherHead,
+    price: 22000,
+    rating: 4.2,
+    reviews: 320,
+    category: "Fashion & Wearables",
+  },
+  {
+    id: 15,
+    name: "Leather Gadget Strap",
+    image: headphone,
+    price: 18000,
+    rating: 4.1,
+    reviews: 280,
+    category: "Fashion & Wearables",
+  },
+
+  // Food & Groceries
+  {
+    id: 16,
+    name: "Energy Snack Pack",
+    image: axe,
+    price: 7000,
+    rating: 4.8,
+    reviews: 400,
+    category: "Food & Groceries",
+  },
+  {
+    id: 17,
+    name: "Organic Drink Mix",
+    image: axe,
+    price: 9500,
+    rating: 4.7,
+    reviews: 380,
+    category: "Food & Groceries",
+  },
+  {
+    id: 18,
+    name: "Healthy Protein Snack",
+    image: axe,
+    price: 8500,
+    rating: 4.9,
+    reviews: 420,
+    category: "Food & Groceries",
+  },
+  {
+    id: 19,
+    name: "Quick Energy Bar",
+    image: axe,
+    price: 6000,
+    rating: 4.5,
+    reviews: 300,
+    category: "Food & Groceries",
+  },
+  {
+    id: 20,
+    name: "Daily Nutrient Shake",
+    image: axe,
+    price: 10500,
+    rating: 4.6,
+    reviews: 350,
+    category: "Food & Groceries",
+  },
+
+  // Baby & Kids
+  {
+    id: 21,
+    name: "Kids Music Headphones",
+    image: headphone,
+    price: 40000,
+    rating: 4.7,
+    reviews: 220,
+    category: "Baby & Kids",
+  },
+  {
+    id: 22,
+    name: "Colorful Toy AirPods",
+    image: airpod,
+    price: 35000,
+    rating: 4.5,
+    reviews: 180,
+    category: "Baby & Kids",
+  },
+  {
+    id: 23,
+    name: "Mini Play iPhone",
+    image: iphone,
+    price: 50000,
+    rating: 4.6,
+    reviews: 250,
+    category: "Baby & Kids",
+  },
+  {
+    id: 24,
+    name: "Junior Gaming Headset",
+    image: otherHead,
+    price: 42000,
+    rating: 4.4,
+    reviews: 200,
+    category: "Baby & Kids",
+  },
+  {
+    id: 25,
+    name: "Fun Spray Bottle",
+    image: axe,
+    price: 8000,
+    rating: 4.3,
+    reviews: 150,
+    category: "Baby & Kids",
   },
 ];
 
@@ -124,14 +318,16 @@ export const recentProducts = [
     price: 95000,
     rating: 5.0,
     reviews: 500,
+    category: "Electronics & Gadgets",
   },
   {
     id: 7,
-    name: "Wireless Headphone",
+    name: "Noise Cancelling Headphone",
     image: otherHead,
     price: 95000,
     rating: 5.0,
     reviews: 500,
+    category: "Electronics & Gadgets",
   },
   {
     id: 8,
@@ -141,15 +337,17 @@ export const recentProducts = [
     rating: 5.0,
     reviews: 600,
     discount: 30,
+    category: "Electronics & Gadgets",
   },
   {
     id: 9,
-    name: "Apple airpod",
+    name: "Apple AirPods Gen 3",
     image: airpod,
     price: 150000,
     rating: 5.0,
     reviews: 3200,
     discount: 30,
+    category: "Electronics & Gadgets",
   },
   {
     id: 10,
@@ -159,25 +357,28 @@ export const recentProducts = [
     rating: 5.0,
     reviews: 2100,
     discount: 30,
+    category: "Health & Wellness",
   },
 ];
 
 export const bestSellers = [
   {
     id: 11,
-    name: "Wireless Headphone",
+    name: "Wireless Headphone Pro",
     image: headphone,
     price: 95000,
     rating: 5.0,
     reviews: 500,
+    category: "Electronics & Gadgets",
   },
   {
     id: 12,
-    name: "Wireless Headphone",
+    name: "Wireless Headphone Max",
     image: otherHead,
     price: 95000,
     rating: 5.0,
     reviews: 500,
+    category: "Electronics & Gadgets",
   },
   {
     id: 13,
@@ -187,15 +388,17 @@ export const bestSellers = [
     rating: 5.0,
     reviews: 600,
     discount: 30,
+    category: "Electronics & Gadgets",
   },
   {
     id: 14,
-    name: "Apple airpod",
+    name: "Apple AirPods Gen 3",
     image: airpod,
     price: 150000,
     rating: 5.0,
     reviews: 3200,
     discount: 30,
+    category: "Electronics & Gadgets",
   },
   {
     id: 15,
@@ -205,6 +408,7 @@ export const bestSellers = [
     rating: 5.0,
     reviews: 2100,
     discount: 30,
+    category: "Health & Wellness",
   },
 ];
 
@@ -421,7 +625,8 @@ export const forums = [
     members: 124,
     createdBy: "currentUser",
     joined: true,
-    description: "A community for frontend developers to share resources, tips, and collaborate on projects."
+    description:
+      "A community for frontend developers to share resources, tips, and collaborate on projects.",
   },
   {
     id: "2",
@@ -430,7 +635,8 @@ export const forums = [
     members: 88,
     createdBy: "currentUser",
     joined: true,
-    description: "Join passionate web developers tackling real-world problems using modern web tools."
+    description:
+      "Join passionate web developers tackling real-world problems using modern web tools.",
   },
   {
     id: "3",
@@ -439,7 +645,8 @@ export const forums = [
     members: 76,
     createdBy: "currentUser",
     joined: true,
-    description: "Dedicated to CSS enthusiasts who love clean, beautiful, and responsive design."
+    description:
+      "Dedicated to CSS enthusiasts who love clean, beautiful, and responsive design.",
   },
   {
     id: "4",
@@ -448,7 +655,8 @@ export const forums = [
     members: 143,
     createdBy: "currentUser",
     joined: true,
-    description: "A hub for fullstack engineers working across frontend, backend, and DevOps."
+    description:
+      "A hub for fullstack engineers working across frontend, backend, and DevOps.",
   },
   {
     id: "5",
@@ -457,7 +665,8 @@ export const forums = [
     members: 97,
     createdBy: "currentUser",
     joined: true,
-    description: "Nigeria's growing dev community discussing tech trends, jobs, and innovations."
+    description:
+      "Nigeria's growing dev community discussing tech trends, jobs, and innovations.",
   },
 
   // Joined Forums (9)
@@ -468,7 +677,8 @@ export const forums = [
     members: 98,
     createdBy: "anotherUser",
     joined: true,
-    description: "All things React in Nigeria. From newbies to professionals, everyone is welcome."
+    description:
+      "All things React in Nigeria. From newbies to professionals, everyone is welcome.",
   },
   {
     id: "7",
@@ -477,7 +687,8 @@ export const forums = [
     members: 110,
     createdBy: "anotherUser",
     joined: true,
-    description: "Exploring the world of JavaScript – from ES6 to modern frameworks and beyond."
+    description:
+      "Exploring the world of JavaScript – from ES6 to modern frameworks and beyond.",
   },
   {
     id: "8",
@@ -486,7 +697,8 @@ export const forums = [
     members: 64,
     createdBy: "anotherUser",
     joined: true,
-    description: "A safe space for mastering TypeScript and building scalable JavaScript apps."
+    description:
+      "A safe space for mastering TypeScript and building scalable JavaScript apps.",
   },
   {
     id: "9",
@@ -495,7 +707,8 @@ export const forums = [
     members: 102,
     createdBy: "anotherUser",
     joined: true,
-    description: "Lounge for Next.js developers to exchange ideas, code, and showcase work."
+    description:
+      "Lounge for Next.js developers to exchange ideas, code, and showcase work.",
   },
   {
     id: "10",
@@ -504,7 +717,8 @@ export const forums = [
     members: 140,
     createdBy: "anotherUser",
     joined: true,
-    description: "Tech professionals in Lagos collaborating on innovation and digital transformation."
+    description:
+      "Tech professionals in Lagos collaborating on innovation and digital transformation.",
   },
   {
     id: "11",
@@ -513,7 +727,8 @@ export const forums = [
     members: 86,
     createdBy: "anotherUser",
     joined: true,
-    description: "Deep dive into Node.js with tutorials, APIs, and best practices."
+    description:
+      "Deep dive into Node.js with tutorials, APIs, and best practices.",
   },
   {
     id: "12",
@@ -522,7 +737,8 @@ export const forums = [
     members: 121,
     createdBy: "anotherUser",
     joined: true,
-    description: "Tailwind CSS experts and learners sharing layouts, themes, and components."
+    description:
+      "Tailwind CSS experts and learners sharing layouts, themes, and components.",
   },
   {
     id: "13",
@@ -531,7 +747,8 @@ export const forums = [
     members: 93,
     createdBy: "anotherUser",
     joined: true,
-    description: "Designers focused on UX principles, research, and enhancing user journeys."
+    description:
+      "Designers focused on UX principles, research, and enhancing user journeys.",
   },
   {
     id: "14",
@@ -540,7 +757,8 @@ export const forums = [
     members: 77,
     createdBy: "anotherUser",
     joined: true,
-    description: "Stay up-to-date on blockchain, DApps, and Web3 development trends."
+    description:
+      "Stay up-to-date on blockchain, DApps, and Web3 development trends.",
   },
 
   // Explore Forums (6)
@@ -551,7 +769,8 @@ export const forums = [
     members: 59,
     createdBy: "anotherUser",
     joined: false,
-    description: "Enthusiasts of Svelte and SvelteKit creating high-performance apps."
+    description:
+      "Enthusiasts of Svelte and SvelteKit creating high-performance apps.",
   },
   {
     id: "16",
@@ -560,7 +779,8 @@ export const forums = [
     members: 83,
     createdBy: "anotherUser",
     joined: false,
-    description: "African developers contributing to and creating impactful open-source tools."
+    description:
+      "African developers contributing to and creating impactful open-source tools.",
   },
   {
     id: "17",
@@ -569,7 +789,8 @@ export const forums = [
     members: 112,
     createdBy: "anotherUser",
     joined: false,
-    description: "Designers and developers collaborating with Figma for seamless UI design."
+    description:
+      "Designers and developers collaborating with Figma for seamless UI design.",
   },
   {
     id: "18",
@@ -578,7 +799,8 @@ export const forums = [
     members: 96,
     createdBy: "anotherUser",
     joined: false,
-    description: "Experiment, ideate, and iterate on digital product design and user testing."
+    description:
+      "Experiment, ideate, and iterate on digital product design and user testing.",
   },
   {
     id: "19",
@@ -587,7 +809,8 @@ export const forums = [
     members: 72,
     createdBy: "anotherUser",
     joined: false,
-    description: "Fast builds and dev server tips for projects powered by Vite."
+    description:
+      "Fast builds and dev server tips for projects powered by Vite.",
   },
   {
     id: "20",
@@ -596,7 +819,7 @@ export const forums = [
     members: 68,
     createdBy: "anotherUser",
     joined: false,
-    description: "CI/CD, containers, and infrastructure as code – all things DevOps."
+    description:
+      "CI/CD, containers, and infrastructure as code – all things DevOps.",
   },
 ];
-
