@@ -31,11 +31,16 @@ import SignUpPage from "@/pages/SignUpPage";
 import AccountCreatedWithGoogle from "@/pages/AccountCreatedWithGoogle";
 import AccountCreatedWithoutGoogle from "@/pages/AccountCreatedWithoutGoogle";
 
+import { tokenService } from "@/api/tokenService";
+import { UserRole } from "@/types";
+
 export default function AppRoutes() {
+  const role = tokenService.getRole() as UserRole;
   return (
     <Routes>
+      <Route path="/" element={role === "buyer" ? <Navigate to="/buyer" replace /> : role === "vendor" ? <Navigate to="/vendor" replace /> : <Navigate to="/signin" replace />} />
+
       {/* Auth Routes (no layout) */}
-      <Route path="/" element={<Navigate to="/buyer" replace />} />
       <Route path="/signin" element={<SignInPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/account-type" element={<AccountPage />} />
@@ -46,8 +51,8 @@ export default function AppRoutes() {
       <Route path="/account-not-created/google" element={<AccountCreatedWithoutGoogle />} />
 
       <Route path="/buyer" element={<MainLayout />}>
-        <Route index element={<Homepage />} />
         <Route element={<ProtectedRoute role="buyer" />}>
+          <Route index element={<Homepage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="orders/:orderId" element={<OrderDetailsPage />} />
           <Route path="points" element={<PointsPage />} />
