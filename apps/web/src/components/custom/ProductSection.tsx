@@ -22,7 +22,7 @@ const ProductSection = ({ title, products }: SectionProps) => {
     return (
         <section className="mb-10">
             <div className="flex justify-between items-center bg-primary-500 px-6 py-2 gap-1 rounded-lg">
-                <h3 className="text-base font-normal text-grey-950">{title}</h3>
+                <h3 className="text-lg font-normal text-grey-950">{title}</h3>
                 <div className="flex items-center text-bodies hover:text-primary-700 cursor-pointer">
                     <p className="text-sm">View all</p>
                     <ArrowRight2 />

@@ -36,14 +36,6 @@ export class AuthService {
       throw new ConflictException('User with this email already exists');
     }
 
-    if (userDetails.isLagosian) {
-      if (!userDetails.state) {
-        throw new BadRequestException(
-          'Lagosian users must provide their state (e.g., "Victoria Island")',
-        );
-      }
-    }
-
     const user = await this.userService.create(userDetails);
     return user;
   }

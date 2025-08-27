@@ -42,9 +42,9 @@ export class CreateUserDto {
     example: true,
     description: 'Whether the user is a Lagosian (true or false)',
   })
-  @IsBoolean()
+  @IsBoolean({})
   @Transform(({ value }) => value === 'true' || value === true || value === 1)
-  isLagosian: boolean;
+  isLagosian?: boolean;
 
   @ApiPropertyOptional({
     example: 'Lagos',

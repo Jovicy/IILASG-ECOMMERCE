@@ -22,57 +22,69 @@ interface SidebarItemProps {
   danger?: boolean;
 }
 
-const Sidebar = () => {
+interface SidebarProps {
+  role: "buyer" | "vendor";
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   const [collapsed, setCollapsed] = useState(true);
   const toggleSidebar = () => setCollapsed(!collapsed);
 
-  const itemsTop = [
-    { icon: Home2, label: "Home", to: "/" },
-    { icon: Box, label: "My Orders", to: "/orders" },
-    { icon: Gift, label: "Shopping Points", to: "/points" },
-    { icon: Heart, label: "Saved Items", to: "/saved" },
-    { icon: Messages2, label: "Forums", to: "/forums" },
+  // Define menus for buyer
+  const buyerItemsTop = [
+    { icon: Home2, label: "Home", to: "/buyer" },
+    { icon: Box, label: "My Orders", to: "/buyer/orders" },
+    { icon: Gift, label: "Shopping Points", to: "/buyer/points" },
+    { icon: Heart, label: "Saved Items", to: "/buyer/saved" },
+    { icon: Messages2, label: "Forums", to: "/buyer/forums" },
   ];
 
-  const itemsBottom = [
-    { icon: Setting2, label: "Settings", to: "/settings" },
-    { icon: Call, label: "Help & Support", to: "/support" },
-    {
-      icon: LoginCurve,
-      label: "Log out",
-      to: "/logout",
-      danger: true, // 🔴 make logout special
-    },
+  const buyerItemsBottom = [
+    { icon: Setting2, label: "Settings", to: "/buyer/settings" },
+    { icon: Call, label: "Help & Support", to: "/buyer/support" },
+    { icon: LoginCurve, label: "Log out", to: "/buyer/logout", danger: true },
   ];
+
+  // Define menus for vendor
+  const vendorItemsTop = [
+    { icon: Home2, label: "Dashboard", to: "/vendor" }, // <-- matches Route index
+    { icon: Box, label: "Products", to: "/vendor/products" },
+    { icon: Gift, label: "Orders", to: "/vendor/orders" },
+    { icon: Messages2, label: "Messages", to: "/vendor/messages" },
+    { icon: Setting2, label: "Analytics", to: "/vendor/analytics" },
+  ];
+
+  const vendorItemsBottom = [
+    { icon: Setting2, label: "Settings", to: "/vendor/settings" },
+    { icon: Call, label: "Help & Support", to: "/vendor/support" },
+    { icon: LoginCurve, label: "Log out", to: "/vendor/logout", danger: true },
+  ];
+
+  // Pick correct items based on role
+  const itemsTop = role === "buyer" ? buyerItemsTop : vendorItemsTop;
+  const itemsBottom = role === "buyer" ? buyerItemsBottom : vendorItemsBottom;
 
   return (
     <aside
-      className={`sticky top-[70px] bg-bodies border-r border-grey-100 transition-all duration-300 flex flex-col justify-between overflow-hidden ${
-        collapsed ? "w-[72px]" : "w-[260px]"
-      } max-h-[calc(100vh-70px)]`}
+      className={`sticky top-[70px] bg-bodies border-r border-grey-100 transition-all duration-300 flex flex-col justify-between overflow-hidden ${collapsed ? "w-[72px]" : "w-[260px]"
+        } max-h-[calc(100vh-70px)]`}
     >
-      {/* Top Section */}
+      {/* Collapse Button */}
       <div className="px-2 py-4">
         <button
           onClick={toggleSidebar}
-          className={`
-            group w-full px-3 py-2 mb-4 text-grey-400 text-sm transition-all duration-300 
-            flex items-center ${collapsed ? "justify-center" : "gap-3"}
-          `}
+          className={`group w-full px-3 py-2 mb-4 text-grey-400 text-sm transition-all duration-300 flex items-center ${collapsed ? "justify-center" : "gap-3"
+            }`}
         >
           <ArrowRight2
             size={18}
-            className={`text-grey-400 transition-transform duration-300 ${
-              collapsed ? "rotate-180" : "rotate-0"
-            }`}
+            className={`text-grey-400 transition-transform duration-300 ${collapsed ? "rotate-180" : "rotate-0"
+              }`}
           />
-          {!collapsed && (
-            <p className="text-sm sm:text-base transition-all duration-300">
-              Collapse
-            </p>
-          )}
+          {!collapsed && <p className="text-sm sm:text-base">Collapse</p>}
         </button>
 
+        {/* Top Items */}
         <div className="space-y-4">
           {itemsTop.map(({ icon, label, to }) => (
             <SidebarItem
@@ -86,7 +98,7 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Bottom Section */}
+      {/* Bottom Items */}
       <div className="px-2 py-4 space-y-4">
         {itemsBottom.map(({ icon, label, to, danger }) => (
           <SidebarItem
@@ -137,12 +149,11 @@ const SidebarItem = ({
         size={20}
         className={`
           transition-colors duration-300 
-          ${
-            isActive
-              ? danger
-                ? "text-error-600"
-                : "text-primary-500"
-              : danger
+          ${isActive
+            ? danger
+              ? "text-error-600"
+              : "text-primary-500"
+            : danger
               ? "text-error-600 group-hover:text-error-500"
               : "text-grey-900 group-hover:text-primary-500"
           }
@@ -151,15 +162,14 @@ const SidebarItem = ({
 
       {!collapsed && (
         <span
-          className={`whitespace-nowrap text-sm sm:text-base font-normal transition-colors duration-300 ${
-            isActive
+          className={`whitespace-nowrap text-sm sm:text-base font-normal transition-colors duration-300 ${isActive
               ? danger
                 ? "text-error-600"
                 : "text-primary-500"
               : danger
-              ? "group-hover:text-error-600"
-              : "group-hover:text-primary-500"
-          }`}
+                ? "group-hover:text-error-600"
+                : "group-hover:text-primary-500"
+            }`}
         >
           {label}
         </span>

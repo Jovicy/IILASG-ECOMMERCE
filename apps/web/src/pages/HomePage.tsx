@@ -20,21 +20,14 @@ const Homepage = () => {
           text-white 
           h-96 lg:h-[320px] xl:h-[450px] mb-8
         "
-        style={{ backgroundImage: `url(${Banner})` }}
-      >
+        style={{ backgroundImage: `url(${Banner})` }}>
         <div className="z-10 max-w-[480px]">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-medium mb-3 leading-snug">
             Enjoy Exclusive Benefits as a <br />
-            <span className="font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
-              Verified Indigenous Lagosian!
-            </span>
+            <span className="font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">Verified Indigenous Lagosian!</span>
           </h2>
-          <p className="text-sm md:text-base mb-6 font-normal text-success-50">
-            Get access to special discounts, priority deliveries, and verified vendor deals tailored for our very own Lagosians.
-          </p>
-          <button className="cursor-pointer bg-transparent border border-white px-5 py-2 rounded-full text-sm hover:bg-white hover:text-green-700 transition">
-            Verify Your Indigene Status
-          </button>
+          <p className="text-sm md:text-base mb-6 font-normal text-success-50">Get access to special discounts, priority deliveries, and verified vendor deals tailored for our very own Lagosians.</p>
+          <button className="cursor-pointer bg-transparent border border-white px-5 py-2 rounded-full text-sm hover:bg-white hover:text-green-700 transition">Verify Your Indigene Status</button>
         </div>
       </section>
       {/* Category Section */}
@@ -54,9 +47,7 @@ const Homepage = () => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-black/30" />
-                <div className="absolute bottom-8 left-2 right-2 text-center text-bodies text-sm font-normal z-10">
-                  {category.name}
-                </div>
+                <div className="absolute bottom-8 left-2 right-2 text-center text-bodies text-sm font-normal z-10">{category.name}</div>
               </div>
             </Link>
           ))}
@@ -67,21 +58,13 @@ const Homepage = () => {
       <ProductSection title="Best Sellers" products={bestSellers} />
       {/* Footer Banner */}
       <section className="relative w-full rounded-xl overflow-hidden h-96 lg:h-[312px] mb-8">
-        <img
-          src={footerBanner}
-          alt="Banner"
-          className="w-full h-full object-cover"
-        />
+        <img src={footerBanner} alt="Banner" className="w-full h-full object-cover" />
 
         {/* Text Overlay */}
         <div className="absolute inset-0 flex items-center justify-end px-4 sm:px-6 lg:px-36 text-grey-950 z-10 text-right">
           <div className="flex flex-col gap-6">
-            <h2 className="text-3xl font-medium leading-snug">
-              Find Your Tribe, Right Here!
-            </h2>
-            <p className="text-base/7 font-normal w-[400px] text-grey-800">
-              Join vibrant forums where Lagosians with shared interests connect, collaborate, and grow together.
-            </p>
+            <h2 className="text-3xl font-medium leading-snug">Find Your Tribe, Right Here!</h2>
+            <p className="text-base/7 font-normal w-[400px] text-grey-800">Join vibrant forums where Lagosians with shared interests connect, collaborate, and grow together.</p>
             <div className="flex justify-end">
               <Link to={'/explore'} className="bg-bodies rounded-full flex items-center gap-2 w-fit text-primary-500 py-3 px-6 transition-transform duration-300 transform hover:scale-105">
                 <Messages2 />
@@ -91,8 +74,7 @@ const Homepage = () => {
           </div>
         </div>
       </section>
-
-    </div >
+    </div>
   );
 };
 

@@ -1,8 +1,20 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { categories, featuredProducts, recentProducts, bestSellers } from "@/data/database";
+import {
+  categories,
+  featuredProducts,
+  recentProducts,
+  bestSellers,
+} from "@/data/database";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Star1, Heart, ArrowLeft, Sort, ArrowDown2 } from "iconsax-reactjs";
+import {
+  ShoppingCart,
+  Star1,
+  Heart,
+  ArrowLeft,
+  Sort,
+  ArrowDown2,
+} from "iconsax-reactjs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,13 +28,22 @@ const CategoryPage = () => {
 
   const [sortBy, setSortBy] = useState("Popularity");
 
-  const sortOptions = ["Popularity", "Price: Low to High", "Price: High to Low", "Newest"];
+  const sortOptions = [
+    "Popularity",
+    "Price: Low to High",
+    "Price: High to Low",
+    "Newest",
+  ];
 
   // Convert slug back to category name
   const categoryName = slug?.replace(/-/g, " ") || "";
 
   // Filter products by category
-  let categoryProducts = [...featuredProducts, ...recentProducts, ...bestSellers].filter(
+  let categoryProducts = [
+    ...featuredProducts,
+    ...recentProducts,
+    ...bestSellers,
+  ].filter(
     (product) => product.category?.toLowerCase() === categoryName.toLowerCase()
   );
 
@@ -43,7 +64,9 @@ const CategoryPage = () => {
             <ArrowLeft size="20" />
           </Link>
           <div className="flex items-center gap-1">
-            <h2 className="text-lg capitalize font-medium text-grey-950">{categoryName}</h2>
+            <h2 className="text-lg capitalize font-medium text-grey-950">
+              {categoryName}
+            </h2>
             <p className="text-base font-normal text-grey-950">
               ({categoryProducts.length.toLocaleString()} products found)
             </p>
@@ -112,7 +135,8 @@ const CategoryPage = () => {
                   <div className="text-xs flex items-center gap-1">
                     <Star1 className="w-2.5 text-primary-500" variant="Bold" />
                     <p className="text-grey-800 cursor-pointer">
-                      {product.rating.toFixed(1)} ({product.reviews.toLocaleString()} Reviews)
+                      {product.rating.toFixed(1)} (
+                      {product.reviews.toLocaleString()} Reviews)
                     </p>
                   </div>
                   <div className="flex justify-between items-center">
@@ -120,7 +144,10 @@ const CategoryPage = () => {
                       ₦{product.price.toLocaleString()}
                     </div>
                     <div className="flex gap-4 text-gray-600">
-                      <ShoppingCart variant="Bold" className="cursor-pointer text-grey-900" />
+                      <ShoppingCart
+                        variant="Bold"
+                        className="cursor-pointer text-grey-900"
+                      />
                       <Heart className="cursor-pointer text-grey-900" />
                     </div>
                   </div>
@@ -130,7 +157,9 @@ const CategoryPage = () => {
           ))}
         </div>
       ) : (
-        <p className="text-gray-600">No products available in this category yet.</p>
+        <p className="text-gray-600">
+          No products available in this category yet.
+        </p>
       )}
     </div>
   );
