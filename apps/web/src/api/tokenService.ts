@@ -43,6 +43,6 @@ export const tokenService = {
 
   getRole: () => {
     const role = localStorage.getItem("role");
-    return role ? decrypt(role) : null;
+    return role ? decrypt(role).toLowerCase() : null;
   },
 };

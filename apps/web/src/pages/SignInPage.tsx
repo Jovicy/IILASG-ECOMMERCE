@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeSlash, Eye, Google } from "iconsax-reactjs";
 import AuthLayout from "@/layouts/AuthLayout";
-import { useSignIn } from "@/hooks/useAuth";
+import { useGoogleSign, useSignIn } from "@/hooks/useAuth";
 import { tokenService } from "@/api/tokenService";
-import { UserRole } from "@/types";
+import { GoogleSignPayload, UserRole } from "@/types";
+import { GoogleLogin } from "@react-oauth/google";
 
 const SignInPage = () => {
   const { mutate: signIn } = useSignIn();
@@ -12,6 +13,7 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { mutate: googleSignIn } = useGoogleSign();
   let role: UserRole = null;
 
   const isFormValid = email !== "" && password !== "";
@@ -26,7 +28,7 @@ const SignInPage = () => {
           tokenService.setTokens({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken });
           role = response.data.role.toLowerCase() as UserRole;
           tokenService.setRole(role);
-          navigate(`/${role}`);
+          navigate(`/${role.toLowerCase()}`);
         },
         onError: (err) => {
           console.error("Signin failed:", err);
@@ -47,10 +49,29 @@ const SignInPage = () => {
         {/* Form Container Main */}
         <div className="flex flex-col gap-8">
           <div>
-            <button className="w-full flex items-center justify-center gap-2 bg-primary-50 border border-primary-500 hover:border-primary-50 text-primary-700 text-base font-normal rounded-full py-3 px-6 cursor-pointer">
-              <Google variant="Bold" />
-              <p>Log in with Google</p>
-            </button>
+            <GoogleLogin
+              text="signin_with"
+              onSuccess={(credentialResponse) => {
+                const data: GoogleSignPayload = {
+                  token: credentialResponse.credential,
+                };
+                googleSignIn(data, {
+                  onSuccess: (response) => {
+                    tokenService.setTokens({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken });
+                    role = response.data.role.toLowerCase() as UserRole;
+                    tokenService.setRole(role);
+                    navigate(`/${role.toLowerCase()}`);
+                    return;
+                  },
+                  onError: (err) => {
+                    console.error("Signup failed:", err);
+                  },
+                });
+              }}
+              onError={() => {
+                console.error("Google Signin Failed");
+              }}
+            />
           </div>
 
           <div className="flex items-center gap-4 my-6">

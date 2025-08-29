@@ -159,7 +159,7 @@ const AccountCreatedWithoutGoogle = () => {
                 </div>
               </div>
               <div>
-                <button onClick={() => navigate(`/${role}`)} className="cursor-pointer bg-success-700 text-white text-base rounded-full px-6 py-3 flex items-center gap-2">
+                <button onClick={() => navigate(`/${role.toLowerCase()}`)} className="cursor-pointer bg-success-700 text-white text-base rounded-full px-6 py-3 flex items-center gap-2">
                   <ShoppingCart />
                   Start Shopping
                 </button>

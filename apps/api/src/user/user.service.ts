@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { argon2id, hash } from 'argon2';
-import { Role } from 'generated/prisma';
+import { AuthProvider, Role } from 'generated/prisma';
 import { CreateUserDto } from 'src/common/dto/create-user.dto';
 import { UpdateUserDto } from 'src/common/dto/update-user.dto';
 import { UserResponseDto } from 'src/common/dto/user-response.dto';
@@ -15,7 +15,10 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createUser: CreateUserDto): Promise<UserResponseDto> {
+  async create(
+    createUser: CreateUserDto,
+    authProvider: AuthProvider = 'LOCAL',
+  ): Promise<UserResponseDto> {
     const { password, role, ...userInfo } = createUser;
 
     const existingUser = await this.prisma.user.findUnique({
@@ -41,6 +44,7 @@ export class UserService {
           data: {
             ...createUser,
             password: hashedPassword,
+            authProvider,
             vendorProfile: {
               create: {},
             },
@@ -53,6 +57,7 @@ export class UserService {
         data: {
           ...createUser,
           password: hashedPassword,
+          authProvider,
         },
       });
     }
