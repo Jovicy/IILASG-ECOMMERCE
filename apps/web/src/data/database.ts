@@ -26,6 +26,40 @@ import forum5 from "@/assets/forum-5.svg";
 import forum6 from "@/assets/forum-6.svg";
 import forum7 from "@/assets/forum-7.svg";
 
+// src/data/sectionData.ts
+import { FaChartLine, FaUsers, FaLock } from "react-icons/fa";
+
+export const sectionData = {
+  title: "Our Key Features",
+  subtitle: "What makes us stand out",
+  description:
+    "We provide solutions that are reliable, scalable, and easy to integrate. Explore the benefits you get from using our platform.",
+
+  items: [
+    {
+      id: 1,
+      icon: FaChartLine,
+      title: "Analytics & Insights",
+      description:
+        "Gain access to detailed analytics and insights to make smarter business decisions.",
+    },
+    {
+      id: 2,
+      icon: FaUsers,
+      title: "User Management",
+      description:
+        "Easily manage your users and teams with robust tools built for efficiency.",
+    },
+    {
+      id: 3,
+      icon: FaLock,
+      title: "Security First",
+      description:
+        "Your data is encrypted and secured using industry best practices.",
+    },
+  ],
+};
+
 // Export categories array
 export const categories = [
   {

@@ -57,17 +57,14 @@ const Navigation: React.FC<NavigationProps> = ({ role }) => {
             </>
           ) : (
             <>
-              <Link to="/vendor" className={navLinkClass}>
-                Dashboard
-              </Link>
               <Link to="/vendor/products" className={navLinkClass}>
-                Products
+                My Products
               </Link>
               <Link to="/vendor/orders" className={navLinkClass}>
                 Orders
               </Link>
-              <Link to="/vendor/messages" className={navLinkClass}>
-                Messages
+              <Link to="/vendor/earnings" className={navLinkClass}>
+                Sales & Earnings
               </Link>
             </>
           )}
@@ -80,7 +77,7 @@ const Navigation: React.FC<NavigationProps> = ({ role }) => {
             <SearchNormal1 className="text-grey-800 text-sm mr-2 w-5 h-5" />
             <input
               type="text"
-              placeholder={role === "buyer" ? "Search products and categories" : "Search products or orders"}
+              placeholder={role === "buyer" ? "Search products and categories" : "Search orders, products..."}
               className="bg-transparent text-xs text-grey-800 placeholder-grey-300 focus:outline-none w-full"
             />
           </div>
