@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Patch,
-  Put,
-  Request,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
   ApiBearerAuth,

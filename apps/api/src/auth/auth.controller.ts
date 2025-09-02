@@ -45,7 +45,7 @@ export class AuthController {
 
     if (user) {
       const { id, email, role } = user;
-      const token = await this.authService.generateToken(id, email, role);
+      const token = await this.authService.generateToken(id, role, email);
 
       return {
         accessToken: token?.accessToken,
@@ -98,7 +98,7 @@ export class AuthController {
   ): Promise<LoginUserDto> {
     const { id, email, role } = req.user;
 
-    const token = await this.authService.generateToken(id, email, role);
+    const token = await this.authService.generateToken(id, role, email);
 
     return {
       role: role,
@@ -129,7 +129,7 @@ export class AuthController {
   async refreshToken(@Request() req: { user: UserResponseDto }) {
     const { id, email, role } = req.user;
 
-    const token = await this.authService.generateToken(id, email, role);
+    const token = await this.authService.generateToken(id, role, email);
 
     return {
       token: token?.accessToken,

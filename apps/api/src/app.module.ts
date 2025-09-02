@@ -11,6 +11,7 @@ import { TokenStrategy } from './common/strategy/token.strategy';
 import { RolesGuard } from './common/guard/roles/roles.guard';
 import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
       isGlobal: true,
       load: [jwtConfig, refreshConfig],
     }),
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [

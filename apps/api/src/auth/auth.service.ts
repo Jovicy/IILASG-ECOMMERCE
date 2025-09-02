@@ -138,7 +138,7 @@ export class AuthService {
           }
 
           const { id, email, role } = existingUser;
-          const token = await this.generateToken(id, email, role);
+          const token = await this.generateToken(id, role, email);
 
           return {
             role: role,
@@ -160,7 +160,7 @@ export class AuthService {
 
             if (newUser) {
               const { id, email, role } = newUser;
-              const token = await this.generateToken(id, email, role);
+              const token = await this.generateToken(id, role, email);
 
               return {
                 firstName: newUser.firstName,

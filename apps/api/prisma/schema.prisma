@@ -57,7 +57,7 @@ model VendorProfile {
 
 model Product {
   id          String   @id @default(uuid())
-  name        String
+  name        String   
   description String?
   price       Decimal
   createdAt   DateTime @default(now())
@@ -85,6 +85,7 @@ model Category {
 
   products Product[]
 
+ @@unique([name, vendorProfileId])
   @@map("categories")
 }
 
