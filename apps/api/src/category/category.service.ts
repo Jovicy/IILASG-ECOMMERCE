@@ -7,27 +7,23 @@ import {
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { VendorService } from 'src/vendor/vendor.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly vendorService: VendorService,
+  ) {}
 
   async create(createCategoryDto: CreateCategoryDto, userId: string) {
-    const vendorProfile = await this.prisma.vendorProfile.findUnique({
-      where: { userId },
-      select: { id: true },
-    });
-
-    if (!vendorProfile) {
-      throw new NotFoundException(
-        `Vendor profile not found for userId ${userId}`,
-      );
-    }
+    const vendorProfileId =
+      await this.vendorService.getVendorProfileIdByUser(userId);
 
     try {
       return await this.prisma.category.create({
         data: {
-          vendorProfileId: vendorProfile.id,
+          vendorProfileId: vendorProfileId,
           name: createCategoryDto.name.toLowerCase(),
         },
       });
@@ -42,19 +38,11 @@ export class CategoryService {
   }
 
   async findAll(userId: string) {
-    const vendorProfile = await this.prisma.vendorProfile.findUnique({
-      where: { userId },
-      select: { id: true },
-    });
-
-    if (!vendorProfile) {
-      throw new NotFoundException(
-        `Vendor profile not found for userId ${userId}`,
-      );
-    }
+    const vendorProfileId =
+      await this.vendorService.getVendorProfileIdByUser(userId);
 
     return this.prisma.category.findMany({
-      where: { vendorProfileId: vendorProfile.id },
+      where: { vendorProfileId: vendorProfileId },
     });
   }
 

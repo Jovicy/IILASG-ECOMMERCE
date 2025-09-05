@@ -12,6 +12,9 @@ import { RolesGuard } from './common/guard/roles/roles.guard';
 import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
+import { VendorModule } from './vendor/vendor.module';
+import { PrismaModule } from './common/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { CategoryModule } from './category/category.module';
       load: [jwtConfig, refreshConfig],
     }),
     CategoryModule,
+    ProductModule,
+    VendorModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [

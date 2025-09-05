@@ -21,17 +21,13 @@ import {
 import { Public } from 'src/common/decorators/public.decorator';
 import { UserResponseDto } from 'src/common/dto/user-response.dto';
 import { LoginUserDto } from 'src/common/dto/login-user.dto';
-import { UserService } from 'src/user/user.service';
 import { Role } from 'generated/prisma';
 
 @Public()
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   @ApiOperation({ summary: 'Register a new vendor' })
