@@ -15,6 +15,7 @@ import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { VendorModule } from './vendor/vendor.module';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PrismaModule } from './common/prisma/prisma.module';
     ProductModule,
     VendorModule,
     PrismaModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [

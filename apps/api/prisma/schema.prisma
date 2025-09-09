@@ -26,6 +26,21 @@ enum StockStatus {
   OUT_OF_STOCK
 }
 
+enum OrderStatus {
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD_PAYMENT
+  BANK_TRANSFER
+  CASH_ON_DELIVERY
+  BONUS_POINT
+}
+
+/* User Schema */
 model User {
   id                      String                  @id @default(uuid())
   email                   String                  @unique
@@ -41,15 +56,32 @@ model User {
   updatedAt               DateTime                @updatedAt
   authProvider            AuthProvider             @default(LOCAL)
 
+  address                 Address?            @relation(fields: [addressId], references: [id])
+  addressId               String? @unique
+
   refreshTokenSessions    RefreshTokenSession?   
   vendorProfile           VendorProfile?
 
   reviews                 ProductReview[]
   savedItems              SavedItem[]
 
+  orders                  Order[]
+
   @@map("users")
 }
 
+model Address {
+  id        String   @id @default(uuid())
+  state     String
+  LGA       String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User?
+  
+  @@map("addresses")
+}
 
 
 model VendorProfile {
@@ -66,6 +98,7 @@ model VendorProfile {
   @@map("vendor_profile")
 }
 
+/* Product Schema */
 model Product {
   id                      String   @id @default(uuid())
   name                    String
@@ -83,7 +116,8 @@ model Product {
   images                  ProductImage[]
   features                ProductFeature[]
   reviews                 ProductReview[]   
-  savedBy                 SavedItem[]       
+  savedBy                 SavedItem[]  
+  orderItems              OrderItem[]     
 
   numberSold              Int         @default(0)
   quantity                Int         @default(0)
@@ -155,6 +189,52 @@ model Category {
   @@unique([name, vendorProfileId])
   @@map("categories")
 }
+
+
+/* Order Schema */
+model Order {
+  id           String       @id @default(uuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  items        OrderItem[]
+  totalAmount  Decimal
+  status       OrderStatus  @default(PROCESSING)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  payment      Payment?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Decimal
+
+  @@map("order_items")
+}
+
+model Payment {
+  id         String         @id @default(uuid())
+  orderId    String         @unique
+  order      Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  method     PaymentMethod
+  reference  String         @unique
+  amount     Decimal
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@map("payments")
+}
+
 
 model RefreshTokenSession {
   id                      String   @id @default(uuid())
