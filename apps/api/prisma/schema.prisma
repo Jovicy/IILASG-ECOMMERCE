@@ -139,7 +139,6 @@ model SavedItem {
   @@map("saved_item")
 }
 
-
 model Category {
   id                      String    @id @default(uuid())
   name                    String    @unique
@@ -156,7 +155,6 @@ model Category {
   @@unique([name, vendorProfileId])
   @@map("categories")
 }
-
 
 model RefreshTokenSession {
   id                      String   @id @default(uuid())

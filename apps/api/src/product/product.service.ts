@@ -172,7 +172,16 @@ export class ProductService {
         category: true,
         images: true,
         features: true,
-        reviews: { select: { rating: true } },
+        reviews: {
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -187,12 +196,13 @@ export class ProductService {
         : 0;
 
     if (vendorProfileId) {
-      if (product.vendorProfileId) {
+      if (product.vendorProfileId !== vendorProfileId.id) {
         throw new ForbiddenException('You can only view your own products');
       }
       const { reviews, ...rest } = product;
       return {
         ...rest,
+        reviews,
         averageRating,
       };
     }
@@ -209,6 +219,7 @@ export class ProductService {
     const { reviews, ...rest } = product;
     return {
       ...rest,
+      reviews,
       averageRating,
       isSaved: !!saved,
     };
@@ -269,6 +280,14 @@ export class ProductService {
   }
 
   async addReview(userId: string, productId: string, reviewDto: AddReviewDto) {
+    const isProduct = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    if (!isProduct) {
+      throw new NotFoundException(`Product with ID ${productId} not found`);
+    }
+
     return this.prisma.productReview.create({
       data: {
         productId,
@@ -279,13 +298,35 @@ export class ProductService {
     });
   }
 
-  async saveProduct(userId: string, productId: string, isVendor: boolean) {
-    if (isVendor) {
-      throw new ForbiddenException('Vendors cannot save products');
+  async saveProduct(userId: string, productId: string) {
+    const isProduct = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    if (!isProduct) {
+      throw new NotFoundException(`Product with ID ${productId} not found`);
     }
 
     return this.prisma.savedItem.create({
       data: { productId, userId },
+    });
+  }
+
+  async unsaveProduct(userId: string, productId: string) {
+    const isSaved = await this.prisma.savedItem.findUnique({
+      where: {
+        userId_productId: { userId, productId },
+      },
+    });
+
+    if (!isSaved) {
+      throw new NotFoundException(`Product with ID ${productId} is not saved`);
+    }
+
+    return this.prisma.savedItem.delete({
+      where: {
+        userId_productId: { userId, productId },
+      },
     });
   }
 }

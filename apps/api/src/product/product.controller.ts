@@ -20,6 +20,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'generated/prisma';
+import { AddReviewDto } from './dto/add-review.dto';
 
 @ApiTags('Products')
 @ApiBearerAuth()
@@ -104,6 +105,46 @@ export class ProductController {
       +page,
       +limit,
     );
+  }
+
+  @Roles(Role.BUYER)
+  @Post(':productId/reviews')
+  @ApiOperation({ summary: 'Add a review to a product' })
+  @ApiResponse({ status: 201, description: 'Review created successfully' })
+  @ApiResponse({ status: 404, description: 'Product not found' })
+  async addReview(
+    @Param('productId') productId: string,
+    @Body() reviewDto: AddReviewDto,
+    @Request() req: { user: { userId: string } },
+  ) {
+    const userId = req.user.userId;
+    return this.productService.addReview(userId, productId, reviewDto);
+  }
+
+  @Roles(Role.BUYER)
+  @Post(':productId/save')
+  @ApiOperation({ summary: 'Save a product to user’s saved list' })
+  @ApiResponse({ status: 201, description: 'Product saved successfully' })
+  @ApiResponse({ status: 404, description: 'Product not found' })
+  async saveProduct(
+    @Param('productId') productId: string,
+    @Request() req: { user: { userId: string } },
+  ) {
+    const userId = req.user.userId;
+    return this.productService.saveProduct(userId, productId);
+  }
+
+  @Roles(Role.BUYER)
+  @Delete(':productId/unsave')
+  @ApiOperation({ summary: 'Remove a product from user’s saved list' })
+  @ApiResponse({ status: 200, description: 'Product unsaved successfully' })
+  @ApiResponse({ status: 404, description: 'Product not saved' })
+  async unsaveProduct(
+    @Param('productId') productId: string,
+    @Request() req: { user: { userId: string } },
+  ) {
+    const userId = req.user.userId;
+    return this.productService.unsaveProduct(userId, productId);
   }
 
   @ApiOperation({ summary: 'Get a single product by ID' })
