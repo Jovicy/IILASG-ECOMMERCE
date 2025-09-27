@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { Eye, EyeSlash, Google, ArrowLeft } from "iconsax-reactjs";
-import { Link } from "react-router-dom";
+import { Eye, EyeSlash, ArrowLeft } from "iconsax-reactjs";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "@/layouts/AuthLayout";
 import CustomFormImage from "@/assets/BuyerOrVendorImage.svg";
+import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleSign } from "@/hooks/useAuth";
+import { GoogleSignPayload, UserRole } from "@/types";
+import { tokenService } from "@/api/tokenService";
 
 type AccountCreationFormProps = {
   accountType?: string;
   onSubmit: (form: { firstName: string; lastName: string; email: string; password: string; confirm: string }) => void;
 };
 
-const AccountCreationForm = ({ accountType = "User", onSubmit }: AccountCreationFormProps) => {
+const AccountCreationForm = ({ accountType, onSubmit }: AccountCreationFormProps) => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const { mutate: googleSignIn } = useGoogleSign();
+
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -26,7 +33,6 @@ const AccountCreationForm = ({ accountType = "User", onSubmit }: AccountCreation
     e.preventDefault();
     if (!isFormValid) return;
 
-    // Pass form data to parent handler
     onSubmit(form);
   };
 
@@ -46,12 +52,35 @@ const AccountCreationForm = ({ accountType = "User", onSubmit }: AccountCreation
         </div>
 
         {/* Google Auth */}
-        <Link to="/account-created/google">
-          <button className="w-full flex items-center justify-center gap-2 bg-primary-50 text-primary-700 border border-primary-500 hover:border-primary-50 text-base font-normal rounded-full py-3 px-6 transition">
-            <Google variant="Bold" />
-            <span>Sign up with Google</span>
-          </button>
-        </Link>
+        <GoogleLogin
+          text="signup_with"
+          onSuccess={(credentialResponse) => {
+            const data: GoogleSignPayload = {
+              token: credentialResponse.credential,
+              role: accountType.toUpperCase() as UserRole,
+            };
+            googleSignIn(data, {
+              onSuccess: (response) => {
+                if (response.data.firstName && response.data.lastName) {
+                  tokenService.setTokens({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken });
+                  tokenService.setRole(response.data.role);
+                  navigate(`/account-created/google?fistName=${response.data.firstName}&lastName=${response.data.lastName}`);
+                  return;
+                }
+              },
+              onError: (err) => {
+                console.error("Signup failed:", err);
+              },
+            });
+          }}
+          onError={() => {
+            console.error("Google Signin Failed");
+          }}
+        />
+        {/* <button className="w-full flex items-center justify-center gap-2 bg-primary-50 text-primary-700 border border-primary-500 hover:border-primary-50 text-base font-normal rounded-full py-3 px-6 transition">
+          <Google variant="Bold" />
+          <span>Sign up with Google</span>
+        </button> */}
 
         {/* OR Divider */}
         <div className="flex items-center gap-4 my-6">

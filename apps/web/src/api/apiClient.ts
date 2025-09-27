@@ -56,7 +56,7 @@ apiClient.interceptors.response.use(
           return Promise.reject(err);
         }
 
-        const { data } = await axios.post(`${BASE_URL}/refreshtoken`, { refreshToken });
+        const { data } = await axios.post(`${BASE_URL}/auth/refreshtoken`, { refreshToken });
 
         tokenService.setTokens({
           accessToken: data.accessToken,

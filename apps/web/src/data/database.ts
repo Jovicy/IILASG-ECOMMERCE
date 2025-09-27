@@ -857,3 +857,40 @@ export const forums = [
       "CI/CD, containers, and infrastructure as code – all things DevOps.",
   },
 ];
+
+
+// Vendor
+export const orders = [
+  {
+    id: "12345678",
+    buyer: "John Doe",
+    products: ["Product A"],
+    total: "₦1,202,500",
+    status: "Order pending",
+    date: "May 28, 2025",
+  },
+  {
+    id: "12345679",
+    buyer: "John Doe",
+    products: ["Product A", "Product B"],
+    total: "₦1,202,500",
+    status: "Awaiting Pickup",
+    date: "May 28, 2025",
+  },
+  {
+    id: "12345680",
+    buyer: "John Doe",
+    products: ["Product A", "Product B"],
+    total: "₦1,202,500",
+    status: "With Delivery",
+    date: "May 28, 2025",
+  },
+  {
+    id: "12345681",
+    buyer: "John Doe",
+    products: ["Product A", "Product B", "Product C"],
+    total: "₦1,202,500",
+    status: "Delivered",
+    date: "May 28, 2025",
+  },
+];

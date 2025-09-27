@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import { Role } from 'generated/prisma';
 
 export class UserResponseDto {
@@ -14,6 +13,7 @@ export class UserResponseDto {
   createdAt: Date;
   updatedAt: Date;
   password: string;
+  authProvider: string;
 
   constructor(partial: Partial<UserResponseDto>) {
     Object.assign(this, partial);

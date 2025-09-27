@@ -220,7 +220,7 @@ const OrdersPage = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            navigate(`/orders/${encodeURIComponent(order.id)}`);
+                            navigate(`/buyer/orders/${encodeURIComponent(order.id)}`);
                           }}
                           className="cursor-pointer ml-4 text-primary-600 text-sm font-normal flex items-center gap-2 hover:underline"
                         >

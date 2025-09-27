@@ -36,7 +36,7 @@ const ForumCard = ({
   member: number;
   type: "your" | "joined" | "explore";
 }) => (
-  <Link to={`/forums/${id}`}>
+  <Link to={`/buyer/forums/${id}`}>
     <div className="bg-grey-50 rounded-lg flex justify-between p-4">
       <div className="flex items-center gap-4">
         <div className="w-36 h-36">

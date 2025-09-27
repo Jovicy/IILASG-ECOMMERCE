@@ -1,4 +1,5 @@
 import React from "react";
+import { orders } from "@/data/database";
 import {
   ResponsiveContainer,
   LineChart,
@@ -17,7 +18,17 @@ import {
   InfoCircle,
   Clock,
   Truck,
+  ArrowRight2,
+  DocumentText1,
+  BoxTick,
 } from "iconsax-reactjs";
+import { MoreVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 // Mock chart data 
 const salesData = [{ day: "Mon", sales: 4000 }, { day: "Tue", sales: 3200 }, { day: "Wed", sales: 2800 }, { day: "Thu", sales: 4500 }, { day: "Fri", sales: 5100 }, { day: "Sat", sales: 6100 }, { day: "Sun", sales: 7000 },];
@@ -90,13 +101,20 @@ const DashboardCard = ({ title, value, subtitle, icon: Icon, iconColor, variant,
   </div>
 );
 
+const statusColors: Record<string, string> = {
+  "Order pending": "bg-grey-100 text-grey-900",
+  "Awaiting pickup": "bg-primary-50 text-primary-600",
+  "With Delivery": "bg-[#EAF6FF] text-[#0088FF]",
+  "Delivered": "bg-success-50 text-success-600",
+};
+
 
 const DashboardPage = () => {
   return (
     <div className="w-full">
       {/* Intro Section */}
-      <section className="flex flex-col gap-4 mb-8">
-        <h1 className="text-base font-medium text-gray-950">
+      <section className="flex flex-col gap-1 mb-8">
+        <h1 className="text-lg font-medium text-gray-950">
           Hello [First Name], Here's how your store is doing today.
         </h1>
         <p className="text-sm text-gray-500 font-normal">
@@ -105,7 +123,7 @@ const DashboardPage = () => {
       </section>
 
       {/* Dashboard Stats + Chart Section */}
-      <section className="grid grid-cols-4 gap-6">
+      <section className="grid grid-cols-4 gap-6 mb-8">
         {/* First row: 4 cards */}
         {mockStats.slice(0, 4).map((stat, index) => (
           <DashboardCard
@@ -170,6 +188,74 @@ const DashboardPage = () => {
             className="col-span-1 h-[400px] justify-between"
           />
         ))}
+      </section>
+
+      <section>
+        <div className="flex justify-between items-center p-4 bg-primary-50 rounded-t-lg">
+          <p className="text-lg font-normal text-grey-950">Orders</p>
+          <div className="flex items-center gap-1 text-primary-600 text-sm font-normal cursor-pointer">
+            <p>View all</p>
+            <ArrowRight2 />
+          </div>
+        </div>
+        <table className="min-w-full text-sm text-left">
+          <thead className="bg-grey-900 text-white font-medium text-sm capitalize">
+            <tr>
+              <th className="px-4 py-3">Order ID</th>
+              <th className="px-4 py-3">Buyer</th>
+              <th className="px-4 py-3">Products</th>
+              <th className="px-4 py-3">Total Amount</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Date</th>
+              <th className="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody className="divide-y bg-grey-50">
+            {orders.map((order) => (
+              <tr key={order.id}>
+                <td className="px-4 py-3 font-normal text-grey-700">#{order.id}</td>
+                <td className="px-4 py-3 text-grey-700">{order.buyer}</td>
+                <td className="px-4 py-3 text-primary-600 underline cursor-pointer">
+                  [{order.products.length}{" "}
+                  {order.products.length > 1 ? "items" : "item"}]
+                </td>
+                <td className="px-4 py-3 text-grey-700">{order.total}</td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`inline-block px-2 py-1 rounded-sm text-xs font-medium ${statusColors[order.status]}`}
+                  >
+                    {order.status}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-grey-700">{order.date}</td>
+                <td className="px-4 py-3 text-right">
+                  {/* More menu */}
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" className="hover:bg-grey-100">
+                        <MoreVertical className="h-5 w-5 text-grey-700" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      align="end"
+                      sideOffset={6}
+                      className="w-40 p-2 flex flex-col gap-2"
+                    >
+                      <button className="w-full flex items-center gap-1 text-left px-2 py-1.5 text-xs text-grey-700">
+                        <DocumentText1 size="16" />
+                        View order
+                      </button>
+                      <button className="w-full flex items-center gap-1 text-left px-2 py-1.5 text-xs text-success-600">
+                        <BoxTick size="16" />
+                        Ready for pickup
+                      </button>
+                    </PopoverContent>
+                  </Popover>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
     </div>
   );

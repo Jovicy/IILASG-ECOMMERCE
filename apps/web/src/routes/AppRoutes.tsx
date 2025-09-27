@@ -15,6 +15,9 @@ import ForumChatPage from "@/pages/ForumChatPage";
 import SettingsPage from "@/pages/SettingsPage";
 import SupportPage from "@/pages/SupportPage";
 import LogoutPage from "@/pages/LogoutPage";
+import CategoryPage from "@/pages/CategoriesPage";
+import BuyerProductPage from "@/pages/ProductPage";
+
 
 // Vendor Pages
 import VendorDashboard from "@/pages/vendor/DashboardPage";
@@ -26,6 +29,7 @@ import VendorCustomers from "@/pages/vendor/CustomersPage";
 import VendorPromotion from "@/pages/vendor/PromotionPage";
 import VendorSettings from "@/pages/vendor/SettingsPage";
 import VendorSupport from "@/pages/vendor/SupportPage";
+import VendorProductDetailsPage from "@/pages/vendor/ProductDetailsPage";
 
 // Auth Pages
 import SignInPage from "@/pages/SignInPage";
@@ -85,6 +89,8 @@ export default function AppRoutes() {
           <Route path="settings" element={<SettingsPage />} />
           <Route path="support" element={<SupportPage />} />
           <Route path="logout" element={<LogoutPage />} />
+          <Route path="categories/:slug" element={<CategoryPage />} />
+          <Route path="products/:id" element={<BuyerProductPage />} />
         </Route>
       </Route>
 
@@ -94,6 +100,7 @@ export default function AppRoutes() {
           <Route index element={<VendorDashboard />} />
           <Route path="orders" element={<VendorOrders />} />
           <Route path="products" element={<VendorProducts />} />
+          <Route path="products/:id" element={<VendorProductDetailsPage />} />
           <Route path="inventory" element={<VendorInventory />} />
           <Route path="earnings" element={<VendorEarnings />} />
           <Route path="customers" element={<VendorCustomers />} />

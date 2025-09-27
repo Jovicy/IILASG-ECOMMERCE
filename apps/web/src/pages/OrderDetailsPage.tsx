@@ -77,7 +77,7 @@ const OrderDetailsPage = () => {
     <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
-          <Link to="/orders">
+          <Link to="/buyer/orders">
             <ArrowLeft color="#000000" />
           </Link>
           <h2 className="text-xl font-semibold text-gray-900">Order Details</h2>

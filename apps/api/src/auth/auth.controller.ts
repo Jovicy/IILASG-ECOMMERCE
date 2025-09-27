@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Request,
+  Response,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -13,21 +14,24 @@ import { RefreshAuthGuard } from './guard/refresh-auth/refresh-auth.guard';
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiExcludeEndpoint,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GoogleAuthGuard } from './guard/google-auth/google-auth.guard';
 import { Public } from 'src/common/decorators/public.decorator';
 import { UserResponseDto } from 'src/common/dto/user-response.dto';
 import { LoginUserDto } from 'src/common/dto/login-user.dto';
+import { UserService } from 'src/user/user.service';
+import { Role } from 'generated/prisma';
 
 @Public()
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post('signup')
   @ApiOperation({ summary: 'Register a new vendor' })
@@ -52,8 +56,18 @@ export class AuthController {
     return null;
   }
 
+  @Post('google')
+  async googleAuth(@Body() body: { token: string; role: Role }) {
+    const googleUser = await this.authService.verifyGoogleToken({
+      token: body.token,
+      role: body.role,
+    });
+
+    return googleUser;
+  }
+
   /* User Login */
-  @Post('/signin')
+  @Post('signin')
   @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'User login (email & password)' })
   @ApiResponse({
@@ -90,49 +104,6 @@ export class AuthController {
       role: role,
       accessToken: token?.accessToken,
       refreshToken: token?.refreshToken,
-    };
-  }
-
-  /* Google Authentication */
-  @Get('/google-signup')
-  @UseGuards(GoogleAuthGuard)
-  @ApiOperation({ summary: 'Initiate Google OAuth flow' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns user profile after successful authentication',
-    schema: {
-      example: {
-        user: {
-          email: 'user@example.com',
-          first_name: 'John',
-          last_name: 'Doe',
-        },
-        isNewUser: true,
-      },
-    },
-  })
-  async googleAuth() {
-    // Redirect to Google OAuth page
-  }
-
-  /* Google Authentication Redirect */
-  @Get('/google/redirect')
-  @UseGuards(GoogleAuthGuard)
-  @ApiExcludeEndpoint()
-  async googleAuthRedirect(
-    @Request()
-    req: {
-      user: {
-        email: string;
-        firstName: string;
-        lastName: string;
-      };
-    },
-  ) {
-    return {
-      email: req.user.email,
-      firstName: req.user.firstName,
-      lastName: req.user.lastName,
     };
   }
 

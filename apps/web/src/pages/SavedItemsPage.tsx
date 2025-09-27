@@ -12,7 +12,7 @@ const SavedItemsPage = () => {
         {featuredProducts.map((product, index) => (
           <div
             key={index}
-            onClick={() => navigate(`/products/${product.id}`)}
+            onClick={() => navigate(`/buyer/products/${product.id}`)}
             className="relative group overflow-hidden rounded-xl cursor-pointer transition-all duration-300"
           >
             {/* Discount badge */}

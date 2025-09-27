@@ -2,22 +2,28 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { verify } from 'argon2';
 import { UserService } from 'src/user/user.service';
+import { OAuth2Client } from 'google-auth-library';
 import { ConfigType } from '@nestjs/config';
 import refreshConfig from './config/refresh.config';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { decrypt, encrypt } from 'src/common/utils/crypto.util';
 import { CreateUserDto } from 'src/common/dto/create-user.dto';
 import { UserResponseDto } from 'src/common/dto/user-response.dto';
+import { Role } from 'generated/prisma';
 
 @Injectable()
 export class AuthService {
+  private client: OAuth2Client;
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
+
     @Inject(refreshConfig.KEY)
     private readonly refreshTokenConfig: ConfigType<typeof refreshConfig>,
-  ) {}
+  ) {
+    this.client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  }
 
   async registerUser(
     userDetails: CreateUserDto,
@@ -110,5 +116,68 @@ export class AuthService {
 
   async validateRefreshToken(userId: string) {
     return this.validateUserById(userId);
+  }
+
+  async verifyGoogleToken({ token, role }: { token: string; role: Role }) {
+    try {
+      const ticket = await this.client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload();
+
+      if (payload?.email) {
+        const existingUser = await this.userService.findByEmail(payload.email);
+
+        if (existingUser) {
+          if (existingUser.authProvider !== 'GOOGLE') {
+            throw new UnauthorizedException(
+              'This email is registered with password login. Please use email and password.',
+            );
+          }
+
+          const { id, email, role } = existingUser;
+          const token = await this.generateToken(id, email, role);
+
+          return {
+            role: role,
+            accessToken: token?.accessToken,
+            refreshToken: token?.refreshToken,
+          };
+        } else {
+          if (payload?.given_name && payload?.family_name) {
+            const newUser = await this.userService.create(
+              {
+                firstName: payload.given_name,
+                lastName: payload.family_name,
+                email: payload.email,
+                password: `${payload.email}${token}`,
+                role: role,
+              },
+              'GOOGLE',
+            );
+
+            if (newUser) {
+              const { id, email, role } = newUser;
+              const token = await this.generateToken(id, email, role);
+
+              return {
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                role: role,
+                accessToken: token?.accessToken,
+                refreshToken: token?.refreshToken,
+              };
+            }
+          }
+        }
+      }
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Invalid Google token');
+    }
   }
 }

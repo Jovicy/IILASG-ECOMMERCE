@@ -8,7 +8,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Role } from 'generated/prisma';
+import { AuthProvider, Role } from 'generated/prisma';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'testing@gmail.com' })

@@ -31,7 +31,7 @@ const ForumChatPage = () => {
         <div className="w-full">
             <div className="p-6 bg-[#F6F6F699] rounded-lg mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-8 text-grey-950">
-                    <Link to="/forums">
+                    <Link to="/buyer/forums">
                         <ArrowLeft size="20" />
                     </Link>
                     <div className="flex items-center gap-6">

@@ -8,7 +8,6 @@ import jwtConfig from './config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
 import refreshConfig from './config/refresh.config';
 import { RefreshToken } from './strategy/refresh-token.strategy';
-import { GoogleStrategy } from './strategy/google.strategy';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @Module({
@@ -23,7 +22,6 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
     LocalStrategy,
     PrismaService,
     RefreshToken,
-    GoogleStrategy,
   ],
 })
 export class AuthModule {}

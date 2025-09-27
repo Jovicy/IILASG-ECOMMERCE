@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { fetchWrapper } from "@/api/fetchWrapper";
-import { CredentialsPayload, SigninPayload, UserResponsePayload } from "@/types";
+import { CredentialsPayload, GoogleResponsePayload, GoogleSignPayload, SigninPayload, UserResponsePayload } from "@/types";
 
 export const useSignUp = () => {
   return useMutation<AxiosResponse<UserResponsePayload>, Error, CredentialsPayload>({
@@ -21,6 +21,17 @@ export const useSignIn = () => {
         url: "/auth/signin",
         method: "POST",
         data: credentials,
+      }),
+  });
+};
+
+export const useGoogleSign = () => {
+  return useMutation<AxiosResponse<GoogleResponsePayload>, Error, GoogleSignPayload>({
+    mutationFn: (data) =>
+      fetchWrapper({
+        url: "/auth/google",
+        method: "POST",
+        data: data,
       }),
   });
 };
