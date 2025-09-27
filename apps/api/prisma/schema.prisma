@@ -14,11 +14,38 @@ enum AuthProvider {
   GOOGLE
 }
 
+enum Role {
+  BUYER
+  VENDOR
+  ADMIN
+}
+
+enum StockStatus {
+  AVAILABLE
+  LIMITED
+  OUT_OF_STOCK
+}
+
+enum OrderStatus {
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD_PAYMENT
+  BANK_TRANSFER
+  CASH_ON_DELIVERY
+  BONUS_POINT
+}
+
+/* User Schema */
 model User {
   id                      String                  @id @default(uuid())
   email                   String                  @unique
-  firstName              String
-  lastName               String
+  firstName               String
+  lastName                String
   password                String
   phoneNumber             String?                 @unique
   role                    Role
@@ -27,19 +54,35 @@ model User {
   isLagosian              Boolean                 @default(false)
   createdAt               DateTime                @default(now())
   updatedAt               DateTime                @updatedAt
-  authProvider           AuthProvider             @default(LOCAL)
+  authProvider            AuthProvider             @default(LOCAL)
+
+  address                 Address?            @relation(fields: [addressId], references: [id])
+  addressId               String? @unique
 
   refreshTokenSessions    RefreshTokenSession?   
   vendorProfile           VendorProfile?
 
+  reviews                 ProductReview[]
+  savedItems              SavedItem[]
+
+  orders                  Order[]
+
   @@map("users")
 }
 
-enum Role {
-  BUYER
-  VENDOR
-  ADMIN
+model Address {
+  id        String   @id @default(uuid())
+  state     String
+  LGA       String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User?
+  
+  @@map("addresses")
 }
+
 
 model VendorProfile {
   id       String @id @default(uuid())
@@ -55,48 +98,152 @@ model VendorProfile {
   @@map("vendor_profile")
 }
 
+/* Product Schema */
 model Product {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  price       Decimal
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                      String   @id @default(uuid())
+  name                    String
+  description             String?
+  price                   Decimal
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 
-  vendorProfileId String
-  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade)
+  vendorProfileId         String
+  vendorProfile           VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade)
 
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId              String?
+  category                Category? @relation(fields: [categoryId], references: [id])
+
+  images                  ProductImage[]
+  features                ProductFeature[]
+  reviews                 ProductReview[]   
+  savedBy                 SavedItem[]  
+  orderItems              OrderItem[]     
+
+  numberSold              Int         @default(0)
+  quantity                Int         @default(0)
+  stockStatus             StockStatus @default(AVAILABLE)
 
   @@map("products")
 }
 
+model ProductImage {
+  id                      String   @id @default(uuid())
+  url                     String
+  productId               String
+  product                 Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+model ProductFeature {
+  id                      String   @id @default(uuid())
+  name                    String
+  productId               String
+  product                 Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_features")
+}
+
+model ProductReview {
+  id                      String   @id @default(uuid())
+  rating                  Int      
+  comment                 String?
+  createdAt               DateTime @default(now())
+
+  productId               String
+  product                 Product @relation(fields: [productId], references: [id])
+
+  userId                  String
+  user                    User @relation(fields: [userId], references: [id])
+
+  @@map("product_review")
+}
+
+model SavedItem {
+  id                      String   @id @default(uuid())
+  createdAt               DateTime @default(now())
+
+  userId                  String
+  user                    User @relation(fields: [userId], references: [id])
+
+  productId               String
+  product                 Product @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId]) 
+  @@map("saved_item")
+}
+
 model Category {
-  id          String    @id @default(uuid())
-  name        String    @unique
-  description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                      String    @id @default(uuid())
+  name                    String    @unique
+  description             String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
 
 
-  vendorProfileId String
-  vendorProfile   VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade)
+  vendorProfileId         String
+  vendorProfile           VendorProfile @relation(fields: [vendorProfileId], references: [id], onDelete: Cascade)
 
-  products Product[]
+  products                Product[]
 
+  @@unique([name, vendorProfileId])
   @@map("categories")
 }
 
 
+/* Order Schema */
+model Order {
+  id           String       @id @default(uuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  items        OrderItem[]
+  totalAmount  Decimal
+  status       OrderStatus  @default(PROCESSING)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  payment      Payment?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Decimal
+
+  @@map("order_items")
+}
+
+model Payment {
+  id         String         @id @default(uuid())
+  orderId    String         @unique
+  order      Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  method     PaymentMethod
+  reference  String         @unique
+  amount     Decimal
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@map("payments")
+}
+
+
 model RefreshTokenSession {
-  id             String   @id @default(uuid())
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String   @unique                   
-  refreshTokenId String   @unique                  
-  createdAt      DateTime @default(now())
-  expiresAt      DateTime
-  revoked        Boolean  @default(false)
+  id                      String   @id @default(uuid())
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                  String   @unique                   
+  refreshTokenId          String   @unique                  
+  createdAt               DateTime @default(now())
+  expiresAt               DateTime
+  revoked                 Boolean  @default(false)
 
   @@map("refresh-token")
 }

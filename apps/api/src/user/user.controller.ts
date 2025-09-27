@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Put,
   Request,
@@ -16,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateUserDto } from 'src/common/dto/update-user.dto';
 import { UserResponseDto } from 'src/common/dto/user-response.dto';
+import { UpdateAddressDto } from 'src/common/dto/update-address.dto';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -65,6 +67,19 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.userService.updateUser(req.user.userId, updateUserDto);
+  }
+
+  @Put(':id/address')
+  async updateAddress(
+    @Param('id') userId: string,
+    @Body() updateAddress: UpdateAddressDto,
+    @Request() req: { user: { userId: string } },
+  ) {
+    if (req.user.userId !== userId) {
+      throw new Error('You are not allowed to update another user’s address');
+    }
+
+    return this.userService.updateAddress(userId, updateAddress);
   }
 
   @Delete('')

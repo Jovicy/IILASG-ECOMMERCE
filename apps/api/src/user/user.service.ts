@@ -7,6 +7,7 @@ import {
 import { argon2id, hash } from 'argon2';
 import { AuthProvider, Role } from 'generated/prisma';
 import { CreateUserDto } from 'src/common/dto/create-user.dto';
+import { UpdateAddressDto } from 'src/common/dto/update-address.dto';
 import { UpdateUserDto } from 'src/common/dto/update-user.dto';
 import { UserResponseDto } from 'src/common/dto/user-response.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
@@ -142,6 +143,57 @@ export class UserService {
     });
 
     return new UserResponseDto(updatedUser);
+  }
+
+  async updateAddress(userId: string, updateAddress: UpdateAddressDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { address: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    let address: any;
+
+    if (user.addressId) {
+      address = await this.prisma.address.update({
+        where: { id: user.addressId },
+        data: {
+          state: updateAddress.state,
+          LGA: updateAddress.LGA,
+          address: updateAddress.address,
+        },
+      });
+    } else {
+      address = await this.prisma.address.create({
+        data: {
+          state: updateAddress.state,
+          LGA: updateAddress.LGA,
+          address: updateAddress.address,
+          user: { connect: { id: userId } },
+        },
+      });
+
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          addressId: address.id,
+          ...(updateAddress.phoneNumber
+            ? { phoneNumber: updateAddress.phoneNumber }
+            : null),
+        },
+      });
+    }
+
+    return {
+      message: 'Address updated successfully',
+      address,
+      ...(updateAddress.phoneNumber
+        ? { phoneNumber: updateAddress.phoneNumber }
+        : null),
+    };
   }
 
   async deleteUser(userId: string): Promise<void> {

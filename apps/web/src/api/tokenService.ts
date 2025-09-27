@@ -16,6 +16,7 @@ const decrypt = (value: string) => {
 export const tokenService = {
   setTokens: ({ accessToken, refreshToken }) => {
     localStorage.setItem("accessToken", encrypt(accessToken));
+
     if (refreshToken) {
       localStorage.setItem("refreshToken", encrypt(refreshToken));
     }

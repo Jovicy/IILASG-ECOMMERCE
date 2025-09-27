@@ -11,6 +11,11 @@ import { TokenStrategy } from './common/strategy/token.strategy';
 import { RolesGuard } from './common/guard/roles/roles.guard';
 import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
+import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
+import { VendorModule } from './vendor/vendor.module';
+import { PrismaModule } from './common/prisma/prisma.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -20,6 +25,11 @@ import { APP_GUARD } from '@nestjs/core';
       isGlobal: true,
       load: [jwtConfig, refreshConfig],
     }),
+    CategoryModule,
+    ProductModule,
+    VendorModule,
+    PrismaModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [

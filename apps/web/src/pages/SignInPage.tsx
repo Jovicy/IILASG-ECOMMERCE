@@ -26,6 +26,7 @@ const SignInPage = () => {
       {
         onSuccess: (response) => {
           tokenService.setTokens({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken });
+
           role = response.data.role.toLowerCase() as UserRole;
           tokenService.setRole(role);
           navigate(`/${role.toLowerCase()}`);
