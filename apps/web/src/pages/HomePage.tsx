@@ -36,7 +36,7 @@ const Homepage = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {categories.map((category, index) => (
-            <Link to={`/categories/${category.name.replace(/\s+/g, "-").toLowerCase()}`} key={index}>
+            <Link to={`/buyer/categories/${category.name.replace(/\s+/g, "-").toLowerCase()}`} key={index}>
               <div
                 className="relative rounded-xl overflow-hidden group cursor-pointer"
                 style={{ aspectRatio: "1 / 1" }}

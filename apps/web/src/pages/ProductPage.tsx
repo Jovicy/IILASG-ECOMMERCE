@@ -31,14 +31,12 @@ const ProductPage = () => {
     return (
         <div className="w-full">
             <div className="bg-[#F6F6F699] w-full p-6 rounded-lg flex justify-between items-center mb-6">
-                <div className="flex items-center gap-4">
-                    <Link to="/">
-                        <ArrowLeft size="20" />
-                    </Link>
+                <Link to="/" className="flex items-center gap-4">
+                    <ArrowLeft size="20" />
                     <h2 className="text-lg capitalize font-medium text-grey-950">
                         {product.name}
                     </h2>
-                </div>
+                </Link>
                 <div className="flex items-center gap-4">
                     <button className="text-primary-700 bg-primary-50 border border-primary-500 text-base font-medium py-3 px-6 rounded-full">
                         Add to Cart
@@ -477,7 +475,7 @@ const ProductPage = () => {
                         </div>
                     </div>
 
-                    <DeliveryAddress/>
+                    <DeliveryAddress />
 
                     <div className="flex flex-col gap-4 py-5 border-b border-b-grey-100">
                         <h1 className="text-base font-medium text-grey-950">Delivery Information</h1>

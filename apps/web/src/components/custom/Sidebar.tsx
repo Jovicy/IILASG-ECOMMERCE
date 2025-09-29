@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 // import icons
-import { ArrowRight2, Home2, Box, Gift, Heart, Messages2, Setting2, Call, LoginCurve } from "iconsax-reactjs";
+import { ArrowRight2, Home2, Box, Gift, Heart, Messages2, Setting2, Call, LoginCurve, ShoppingCart, Chart1, Moneys, Profile2User, TicketDiscount } from "iconsax-reactjs";
 
 import { UserRole } from "@/types";
 
@@ -39,11 +39,13 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
 
   // Define menus for vendor
   const vendorItemsTop = [
-    { icon: Home2, label: "Dashboard", to: "/vendor" }, // <-- matches Route index
-    { icon: Box, label: "Products", to: "/vendor/products" },
-    { icon: Gift, label: "Orders", to: "/vendor/orders" },
-    { icon: Messages2, label: "Messages", to: "/vendor/messages" },
-    { icon: Setting2, label: "Analytics", to: "/vendor/analytics" },
+    { icon: Home2, label: "Home", to: "/vendor" }, // <-- matches Route index
+    { icon: ShoppingCart, label: "Orders", to: "/vendor/orders" },
+    { icon: Box, label: "My Products", to: "/vendor/products" },
+    { icon: Chart1, label: "Inventory", to: "/vendor/inventory" },
+    { icon: Moneys, label: "Sales & Earnings", to: "/vendor/earnings" },
+    { icon: Profile2User, label: "Customer", to: "/vendor/customers" },
+    { icon: TicketDiscount, label: "Promotion", to: "/vendor/promotion" },
   ];
 
   const vendorItemsBottom = [
@@ -65,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
       <div className="px-2 py-4">
         <button onClick={toggleSidebar} className={`group w-full px-3 py-2 mb-4 text-grey-400 text-sm transition-all duration-300 flex items-center ${collapsed ? "justify-center" : "gap-3"}`}>
           <ArrowRight2 size={18} className={`text-grey-400 transition-transform duration-300 ${collapsed ? "rotate-180" : "rotate-0"}`} />
-          {!collapsed && <p className="text-sm sm:text-base">Collapse</p>}
+          {!collapsed && <p className="text-sm sm:text-sm">Collapse</p>}
         </button>
 
         {/* Top Items */}

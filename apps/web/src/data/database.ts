@@ -26,6 +26,40 @@ import forum5 from "@/assets/forum-5.svg";
 import forum6 from "@/assets/forum-6.svg";
 import forum7 from "@/assets/forum-7.svg";
 
+// src/data/sectionData.ts
+import { FaChartLine, FaUsers, FaLock } from "react-icons/fa";
+
+export const sectionData = {
+  title: "Our Key Features",
+  subtitle: "What makes us stand out",
+  description:
+    "We provide solutions that are reliable, scalable, and easy to integrate. Explore the benefits you get from using our platform.",
+
+  items: [
+    {
+      id: 1,
+      icon: FaChartLine,
+      title: "Analytics & Insights",
+      description:
+        "Gain access to detailed analytics and insights to make smarter business decisions.",
+    },
+    {
+      id: 2,
+      icon: FaUsers,
+      title: "User Management",
+      description:
+        "Easily manage your users and teams with robust tools built for efficiency.",
+    },
+    {
+      id: 3,
+      icon: FaLock,
+      title: "Security First",
+      description:
+        "Your data is encrypted and secured using industry best practices.",
+    },
+  ],
+};
+
 // Export categories array
 export const categories = [
   {
@@ -821,5 +855,42 @@ export const forums = [
     joined: false,
     description:
       "CI/CD, containers, and infrastructure as code – all things DevOps.",
+  },
+];
+
+
+// Vendor
+export const orders = [
+  {
+    id: "12345678",
+    buyer: "John Doe",
+    products: ["Product A"],
+    total: "₦1,202,500",
+    status: "Order pending",
+    date: "May 28, 2025",
+  },
+  {
+    id: "12345679",
+    buyer: "John Doe",
+    products: ["Product A", "Product B"],
+    total: "₦1,202,500",
+    status: "Awaiting Pickup",
+    date: "May 28, 2025",
+  },
+  {
+    id: "12345680",
+    buyer: "John Doe",
+    products: ["Product A", "Product B"],
+    total: "₦1,202,500",
+    status: "With Delivery",
+    date: "May 28, 2025",
+  },
+  {
+    id: "12345681",
+    buyer: "John Doe",
+    products: ["Product A", "Product B", "Product C"],
+    total: "₦1,202,500",
+    status: "Delivered",
+    date: "May 28, 2025",
   },
 ];
