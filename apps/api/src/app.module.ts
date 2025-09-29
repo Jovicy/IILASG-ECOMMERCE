@@ -11,6 +11,9 @@ import { TokenStrategy } from './common/strategy/token.strategy';
 import { RolesGuard } from './common/guard/roles/roles.guard';
 import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { MulterModule } from '@nestjs/platform-express';
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { VendorModule } from './vendor/vendor.module';
@@ -21,6 +24,11 @@ import { OrdersModule } from './orders/orders.module';
   imports: [
     AuthModule,
     UserModule,
+    MulterModule.register({ dest: './uploads' }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [jwtConfig, refreshConfig],
