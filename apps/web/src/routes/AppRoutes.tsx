@@ -25,7 +25,6 @@ import VendorOrders from "@/pages/vendor/OrdersPage";
 import VendorProducts from "@/pages/vendor/ProductsPage";
 import VendorInventory from "@/pages/vendor/InventoryPage";
 import VendorEarnings from "@/pages/vendor/EarningsPage";
-import VendorCustomers from "@/pages/vendor/CustomersPage";
 import VendorPromotion from "@/pages/vendor/PromotionPage";
 import VendorSettings from "@/pages/vendor/SettingsPage";
 import VendorSupport from "@/pages/vendor/SupportPage";
@@ -103,7 +102,6 @@ export default function AppRoutes() {
           <Route path="products/:id" element={<VendorProductDetailsPage />} />
           <Route path="inventory" element={<VendorInventory />} />
           <Route path="earnings" element={<VendorEarnings />} />
-          <Route path="customers" element={<VendorCustomers />} />
           <Route path="promotion" element={<VendorPromotion />} />
           <Route path="settings" element={<VendorSettings />} />
           <Route path="support" element={<VendorSupport />} />

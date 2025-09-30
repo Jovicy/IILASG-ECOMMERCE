@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 // import icons
-import { ArrowRight2, Home2, Box, Gift, Heart, Messages2, Setting2, Call, LoginCurve, ShoppingCart, Chart1, Moneys, Profile2User, TicketDiscount } from "iconsax-reactjs";
+import { ArrowRight2, Home2, Box, Gift, Heart, Messages2, Setting2, Call, LoginCurve, ShoppingCart, Chart1, Moneys, TicketDiscount } from "iconsax-reactjs";
 
 import { UserRole } from "@/types";
 
@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   const buyerItemsBottom = [
     { icon: Setting2, label: "Settings", to: "/buyer/settings" },
     { icon: Call, label: "Help & Support", to: "/buyer/support" },
-    { icon: LoginCurve, label: "Log out", to: "/buyer/logout", danger: true },
+    { icon: LoginCurve, label: "Log out", to: "/signin", danger: true },
   ];
 
   // Define menus for vendor
@@ -44,14 +44,13 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
     { icon: Box, label: "My Products", to: "/vendor/products" },
     { icon: Chart1, label: "Inventory", to: "/vendor/inventory" },
     { icon: Moneys, label: "Sales & Earnings", to: "/vendor/earnings" },
-    { icon: Profile2User, label: "Customer", to: "/vendor/customers" },
     { icon: TicketDiscount, label: "Promotion", to: "/vendor/promotion" },
   ];
 
   const vendorItemsBottom = [
     { icon: Setting2, label: "Settings", to: "/vendor/settings" },
     { icon: Call, label: "Help & Support", to: "/vendor/support" },
-    { icon: LoginCurve, label: "Log out", to: "/vendor/logout", danger: true },
+    { icon: LoginCurve, label: "Log out", to: "/signin", danger: true },
   ];
 
   // Pick correct items based on role

@@ -168,7 +168,7 @@ const InventoryPage = () => {
           </thead>
           <tbody className="divide-y bg-grey-50 text-grey-700">
             {filteredProducts.map((product) => (
-              <tr key={product.id}>
+              <tr key={product.id} className="border-t border-grey-200">
                 <td className="px-6 py-4">{product.name}</td>
                 <td className="px-6 py-4">
                   ₦{product.price.toLocaleString()}
