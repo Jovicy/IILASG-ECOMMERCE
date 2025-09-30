@@ -1,11 +1,11 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import storageSession from "redux-persist/lib/storage/session";
 import { persistReducer, persistStore } from "redux-persist";
-import signUpSlice from "./authStore/signUpSlice";
+import authSlice from "./authStore/authSlice";
 
 // Combine all reducers
 const rootReducer = combineReducers({
-  auth: signUpSlice,
+  auth: authSlice,
 });
 
 // Persist config

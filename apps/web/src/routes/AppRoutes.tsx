@@ -18,7 +18,6 @@ import LogoutPage from "@/pages/LogoutPage";
 import CategoryPage from "@/pages/CategoriesPage";
 import BuyerProductPage from "@/pages/ProductPage";
 
-
 // Vendor Pages
 import VendorDashboard from "@/pages/vendor/DashboardPage";
 import VendorOrders from "@/pages/vendor/OrdersPage";
@@ -43,42 +42,28 @@ import AccountCreatedWithoutGoogle from "@/pages/AccountCreatedWithoutGoogle";
 
 import { tokenService } from "@/api/tokenService";
 import { UserRole } from "@/types";
+import { PublicRoute } from "./PublicRoute";
 
 export default function AppRoutes() {
   const role = tokenService.getRole() as UserRole;
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          role === "buyer" ? (
-            <Navigate to="/buyer" replace />
-          ) : role === "vendor" ? (
-            <Navigate to="/vendor" replace />
-          ) : (
-            <Navigate to="/signin" replace />
-          )
-        }
-      />
+      <Route path="/" element={role === "buyer" ? <Navigate to="/buyer" replace /> : role === "vendor" ? <Navigate to="/vendor" replace /> : <Navigate to="/signin" replace />} />
 
       {/* Auth Routes (no layout) */}
-      <Route path="/signin" element={<SignInPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/account-type" element={<AccountPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/verify-email" element={<VerifyEmailPage />} />
-      <Route path="/new-password" element={<ResetPasswordConfirmPage />} />
-      <Route
-        path="/account-created/google"
-        element={<AccountCreatedWithGoogle />}
-      />
-      <Route
-        path="/account-not-created/google"
-        element={<AccountCreatedWithoutGoogle />}
-      />
+      <Route element={<PublicRoute />}>
+        <Route path="/signin" element={<SignInPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/account-type" element={<AccountPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/new-password" element={<ResetPasswordConfirmPage />} />
+        <Route path="/account-created/google" element={<AccountCreatedWithGoogle />} />
+        <Route path="/account-not-created/google" element={<AccountCreatedWithoutGoogle />} />
+      </Route>
 
       <Route path="/buyer" element={<MainLayout />}>
-        <Route element={<ProtectedRoute role="buyer" />}>
+        <Route element={<ProtectedRoute pageRole="buyer" />}>
           <Route index element={<Homepage />} />
           <Route path="orders" element={<OrdersPage />} />
           <Route path="orders/:orderId" element={<OrderDetailsPage />} />
@@ -96,7 +81,7 @@ export default function AppRoutes() {
 
       {/* Vendor routes */}
       <Route path="/vendor" element={<MainLayout />}>
-        <Route element={<ProtectedRoute role="vendor" />}>
+        <Route element={<ProtectedRoute pageRole="vendor" />}>
           <Route index element={<VendorDashboard />} />
           <Route path="orders" element={<VendorOrders />} />
           <Route path="products" element={<VendorProducts />} />
@@ -107,6 +92,7 @@ export default function AppRoutes() {
           <Route path="promotion" element={<VendorPromotion />} />
           <Route path="settings" element={<VendorSettings />} />
           <Route path="support" element={<VendorSupport />} />
+          <Route path="logout" element={<LogoutPage />} />
         </Route>
       </Route>
     </Routes>
