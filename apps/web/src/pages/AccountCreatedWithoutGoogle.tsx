@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useUpdate } from "@/hooks/useUser";
+import { useUpdateProfile } from "@/hooks/useUser";
 import Logo from "@/assets/Main-logo.svg";
 import ModalImg from "@/assets/modal-img.svg";
 import { ArrowRight, ShoppingCart } from "iconsax-reactjs";
@@ -10,7 +10,7 @@ import { UserRole } from "@/types";
 const AccountCreatedWithoutGoogle = () => {
   const [showModal, setShowModal] = React.useState(false);
   const navigate = useNavigate();
-  const { mutate: updateUser } = useUpdate();
+  const { mutate: updateProfile } = useUpdateProfile();
   const role: UserRole = tokenService.getRole();
 
   const [form, setForm] = React.useState({
@@ -44,7 +44,7 @@ const AccountCreatedWithoutGoogle = () => {
   const isStepFilled = form.isLagosian === "yes" ? form.localGovernment.trim() !== "" : form.isLagosian.trim() !== "";
 
   const handleFinalAction = () => {
-    updateUser(
+    updateProfile(
       {
         LGA: form.localGovernment,
         isLagosian: form.isLagosian === "yes" ? true : false,

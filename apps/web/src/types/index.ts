@@ -34,4 +34,16 @@ export interface UserResponsePayload {
   refreshToken: string;
 }
 
+export interface UserProfile {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+  isLagosian: boolean;
+  LGA: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type PartialCredentialsPayload = Partial<CredentialsPayload>;

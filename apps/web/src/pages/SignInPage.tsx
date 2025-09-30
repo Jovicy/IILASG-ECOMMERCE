@@ -5,7 +5,7 @@ import AuthLayout from "@/layouts/AuthLayout";
 import { useGoogleSign, useSignIn } from "@/hooks/useAuth";
 import { GoogleSignPayload, UserRole } from "@/types";
 import { GoogleLogin } from "@react-oauth/google";
-import { setAuth } from "@/store/authStore/authSlice";
+import { setAuth } from "@/store/slices/authSlice";
 import { useDispatch } from "react-redux";
 
 const SignInPage = () => {
