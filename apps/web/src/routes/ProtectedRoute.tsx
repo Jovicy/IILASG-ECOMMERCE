@@ -1,18 +1,17 @@
-import { tokenService } from "@/api/tokenService";
+import { RootState } from "@/store/store";
 import { UserRole } from "@/types";
+import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
-export const ProtectedRoute = ({ role }: { role: UserRole }) => {
-  const isAuthenticated = !!tokenService.getAccessToken();
-
-  const userRole = tokenService.getRole?.() as UserRole | null;
+export const ProtectedRoute = ({ pageRole }: { pageRole: UserRole }) => {
+  const { isAuthenticated, role } = useSelector((state: RootState) => state.auth);
 
   if (!isAuthenticated) {
     return <Navigate to="/signin" replace />;
   }
 
-  if (role && userRole !== role) {
-    return <Navigate to={`/${userRole ?? "signin"}`} replace />;
+  if (role && pageRole !== role) {
+    return <Navigate to={`/${pageRole ?? "signin"}`} replace />;
   }
 
   return <Outlet />;

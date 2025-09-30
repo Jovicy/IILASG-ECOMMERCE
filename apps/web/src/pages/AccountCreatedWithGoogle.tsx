@@ -3,7 +3,7 @@ import Logo from "@/assets/Main-logo.svg";
 import ModalImg from "@/assets/modal-img.svg";
 import { ArrowRight2, ArrowRight, ShoppingCart } from "iconsax-reactjs";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useUpdate } from "@/hooks/useUser";
+import { useUpdateProfile } from "@/hooks/useUser";
 import { tokenService } from "@/api/tokenService";
 import { UserRole } from "@/types";
 
@@ -12,7 +12,7 @@ const AccountCreatedWithGoogle = () => {
   const [step, setStep] = React.useState(1);
   const [showModal, setShowModal] = React.useState(false);
   const navigate = useNavigate();
-  const { mutate: updateUser } = useUpdate();
+  const { mutate: updateUser } = useUpdateProfile();
   const role: UserRole = tokenService.getRole();
 
   const [form, setForm] = React.useState({

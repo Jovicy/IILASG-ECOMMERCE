@@ -36,7 +36,8 @@ export class CategoryController {
     @Request() req: { user: { userId: string } },
     @Body() createCategoryDto: CreateCategoryDto,
   ) {
-    return this.categoryService.create(createCategoryDto, req.user.userId);
+    console.log(createCategoryDto);
+    // return this.categoryService.create(createCategoryDto, req.user.userId);
   }
 
   @ApiOperation({ summary: "Get all vendor's categories" })

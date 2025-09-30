@@ -1,36 +1,48 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { EyeSlash, Eye, Google } from "iconsax-reactjs";
+import { EyeSlash, Eye } from "iconsax-reactjs";
 import AuthLayout from "@/layouts/AuthLayout";
 import { useGoogleSign, useSignIn } from "@/hooks/useAuth";
-import { tokenService } from "@/api/tokenService";
 import { GoogleSignPayload, UserRole } from "@/types";
 import { GoogleLogin } from "@react-oauth/google";
+import { setAuth } from "@/store/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const SignInPage = () => {
+  const navigate = useNavigate();
+
   const { mutate: signIn } = useSignIn();
+  const { mutate: googleSignIn } = useGoogleSign();
+
+  const dispatch = useDispatch();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const { mutate: googleSignIn } = useGoogleSign();
-  let role: UserRole = null;
 
   const isFormValid = email !== "" && password !== "";
+
+  const handleAuthSuccess = (response: any) => {
+    const role = response.data.role.toLowerCase() as UserRole;
+
+    dispatch(
+      setAuth({
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+        role: role,
+      })
+    );
+
+    navigate(`/${role}`);
+  };
 
   const signinUserHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isFormValid) return;
     signIn(
-      { email: email, password: password },
+      { email, password },
       {
-        onSuccess: (response) => {
-          tokenService.setTokens({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken });
-
-          role = response.data.role.toLowerCase() as UserRole;
-          tokenService.setRole(role);
-          navigate(`/${role.toLowerCase()}`);
-        },
+        onSuccess: handleAuthSuccess,
         onError: (err) => {
           console.error("Signin failed:", err);
         },
@@ -57,15 +69,9 @@ const SignInPage = () => {
                   token: credentialResponse.credential,
                 };
                 googleSignIn(data, {
-                  onSuccess: (response) => {
-                    tokenService.setTokens({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken });
-                    role = response.data.role.toLowerCase() as UserRole;
-                    tokenService.setRole(role);
-                    navigate(`/${role.toLowerCase()}`);
-                    return;
-                  },
+                  onSuccess: handleAuthSuccess,
                   onError: (err) => {
-                    console.error("Signup failed:", err);
+                    console.error("Google Signin failed:", err);
                   },
                 });
               }}
