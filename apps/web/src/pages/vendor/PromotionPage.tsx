@@ -10,12 +10,8 @@ const initialCoupons = [
 
 const PromotionPage = () => {
   const [activeTab, setActiveTab] = useState("All");
-
-  // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
-
-  // Popover state
   const [openPopoverIndex, setOpenPopoverIndex] = useState(null);
 
   // Form states
@@ -23,24 +19,35 @@ const PromotionPage = () => {
   const [discount, setDiscount] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [isActive, setIsActive] = useState(true);
-  const [editingIndex, setEditingIndex] = useState(null); // track if editing
+  const [editingIndex, setEditingIndex] = useState(null);
 
   // Coupons state
   const [coupons, setCoupons] = useState(initialCoupons);
 
-  // Form validity
   const isFormValid =
     couponCode.trim() !== "" && discount.trim() !== "" && expiryDate.trim() !== "";
 
-  // Filtered coupons
   const filteredCoupons = coupons.filter((coupon) => {
     if (activeTab === "All") return true;
     return coupon.status === activeTab;
   });
 
-  // Create or Update coupon
-  const handleSaveCoupon = () => {
-    if (!isFormValid) return;
+  // Save or update coupon
+  const handleSaveCoupon = (e) => {
+    e.preventDefault();
+
+    if (!isFormValid) {
+      console.warn("Please fill all required fields before submitting.");
+      return;
+    }
+
+    // Log all filled fields to console
+    console.log("Coupon Form Data:", {
+      CouponCode: couponCode,
+      Discount: discount.endsWith("%") ? discount : `${discount}%`,
+      ExpiryDate: expiryDate,
+      Active: isActive ? "Active" : "Inactive",
+    });
 
     const normalizedDiscount = discount.trim().endsWith("%")
       ? discount.trim()
@@ -55,17 +62,16 @@ const PromotionPage = () => {
     };
 
     if (editingIndex !== null) {
-      // update existing coupon
       const updatedCoupons = [...coupons];
       updatedCoupons[editingIndex] = newCoupon;
       setCoupons(updatedCoupons);
       setEditingIndex(null);
     } else {
-      // add new coupon
       setCoupons((prev) => [newCoupon, ...prev]);
       setIsSuccessOpen(true);
     }
 
+    // Reset
     setIsModalOpen(false);
     setCouponCode("");
     setDiscount("");
@@ -73,13 +79,13 @@ const PromotionPage = () => {
     setIsActive(true);
   };
 
-  // Delete coupon
+  // Delete
   const handleDelete = (idx) => {
     setCoupons((prev) => prev.filter((_, i) => i !== idx));
     setOpenPopoverIndex(null);
   };
 
-  // Edit coupon
+  // Edit
   const handleEdit = (idx) => {
     const coupon = coupons[idx];
     setCouponCode(coupon.code);
@@ -109,10 +115,11 @@ const PromotionPage = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-1 ${activeTab === tab
+                className={`pb-1 ${
+                  activeTab === tab
                     ? "text-grey-900 border-b-2 border-primary-500"
                     : "text-grey-500"
-                  }`}
+                }`}
               >
                 {tab}
               </button>
@@ -150,10 +157,11 @@ const PromotionPage = () => {
                 <td className="py-5 px-6">{coupon.timesUsed}</td>
                 <td className="py-5 px-6">
                   <span
-                    className={`w-14 px-2 py-1 rounded-sm text-xs font-medium ${coupon.status === "Active"
+                    className={`w-14 px-2 py-1 rounded-sm text-xs font-medium ${
+                      coupon.status === "Active"
                         ? "bg-success-50 text-success-700"
                         : "bg-error-50 text-error-700"
-                      }`}
+                    }`}
                   >
                     {coupon.status}
                   </span>
@@ -197,8 +205,10 @@ const PromotionPage = () => {
       {/* Create / Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col gap-6 w-[764px]">
-            {/* Header */}
+          <form
+            onSubmit={handleSaveCoupon}
+            className="bg-white rounded-lg shadow-lg p-6 flex flex-col gap-6 w-[764px]"
+          >
             <div className="flex justify-between items-start">
               <div className="flex flex-col gap-1">
                 <h2 className="text-lg font-medium text-grey-950">
@@ -210,7 +220,7 @@ const PromotionPage = () => {
                     : "Set up a new discount coupon for your customers"}
                 </p>
               </div>
-              <button onClick={() => setIsModalOpen(false)}>
+              <button type="button" onClick={() => setIsModalOpen(false)}>
                 <CloseSquare size={20} color="#4E4E4E" />
               </button>
             </div>
@@ -220,6 +230,7 @@ const PromotionPage = () => {
               <label className="text-sm text-grey-800">Coupon Code *</label>
               <input
                 type="text"
+                required
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
                 placeholder="e.g SAVE20"
@@ -232,7 +243,8 @@ const PromotionPage = () => {
               <label className="text-sm text-grey-800">Discount Percentage *</label>
               <div className="flex items-center border border-grey-100 rounded-full px-3 py-2">
                 <input
-                  type="text"
+                  type="number"
+                  required
                   value={discount}
                   onChange={(e) => setDiscount(e.target.value)}
                   placeholder="e.g 20"
@@ -247,6 +259,7 @@ const PromotionPage = () => {
               <label className="text-sm text-grey-800">Expiry Date *</label>
               <input
                 type="date"
+                required
                 value={expiryDate}
                 onChange={(e) => setExpiryDate(e.target.value)}
                 className="w-full border border-grey-100 text-grey-800 rounded-full px-3 py-2"
@@ -258,12 +271,14 @@ const PromotionPage = () => {
               <button
                 type="button"
                 onClick={() => setIsActive(!isActive)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${isActive ? "bg-primary-500" : "bg-grey-900"
-                  }`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+                  isActive ? "bg-primary-500" : "bg-grey-900"
+                }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-grey-50 transition ${isActive ? "translate-x-6" : "translate-x-1"
-                    }`}
+                  className={`inline-block h-4 w-4 transform rounded-full bg-grey-50 transition ${
+                    isActive ? "translate-x-6" : "translate-x-1"
+                  }`}
                 />
               </button>
               <label className="text-sm text-grey-800">Active</label>
@@ -272,6 +287,7 @@ const PromotionPage = () => {
             {/* Actions */}
             <div className="flex justify-end gap-4">
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
                 className="text-sm text-grey-600"
               >
@@ -279,17 +295,18 @@ const PromotionPage = () => {
               </button>
 
               <button
-                onClick={handleSaveCoupon}
+                type="submit"
                 disabled={!isFormValid}
-                className={`px-6 py-3 text-base font-normal text-white rounded-full ${isFormValid
+                className={`px-6 py-3 text-base font-normal text-white rounded-full ${
+                  isFormValid
                     ? "bg-primary-500"
                     : "bg-grey-100 cursor-not-allowed"
-                  }`}
+                }`}
               >
                 {editingIndex !== null ? "Update Coupon" : "Create Coupon"}
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
 

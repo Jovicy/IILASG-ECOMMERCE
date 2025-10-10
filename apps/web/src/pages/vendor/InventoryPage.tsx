@@ -22,9 +22,8 @@ const DashboardCard = ({
   className,
 }: any) => (
   <div
-    className={`bg-grey-50 border border-grey-50 shadow-sm rounded-lg p-4 flex flex-col justify-between ${
-      className ?? ""
-    }`}
+    className={`bg-grey-50 border border-grey-50 shadow-sm rounded-lg p-4 flex flex-col justify-between ${className ?? ""
+      }`}
   >
     <div className="flex justify-between items-center">
       <h3 className="font-semibold text-sm text-grey-600">{title}</h3>
@@ -49,7 +48,7 @@ const InventoryPage = () => {
   const navigate = useNavigate();
 
   // Mock data
-  const [products] = useState<any[]>([
+  const [products, setProducts] = useState<any[]>([
     { id: 1, name: "Wireless Headphones", price: 25000, stock: 12 },
     { id: 2, name: "Smart Watch", price: 40000, stock: 5 },
     { id: 3, name: "Laptop Bag", price: 15000, stock: 0 },
@@ -143,11 +142,10 @@ const InventoryPage = () => {
           <p
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`p-1 pb-3 text-sm font-normal cursor-pointer ${
-              activeTab === tab
-                ? "text-grey-900 border-b-2 border-b-primary-500"
-                : "text-grey-500"
-            }`}
+            className={`p-1 pb-3 text-sm font-normal cursor-pointer ${activeTab === tab
+              ? "text-grey-900 border-b-2 border-b-primary-500"
+              : "text-grey-500"
+              }`}
           >
             {tab}
           </p>
@@ -178,7 +176,7 @@ const InventoryPage = () => {
                 <td className="px-6 py-4 flex items-center gap-2">
                   {product.stock > 0 ? (
                     <>
-                      <span className="font-medium">{product.stock}</span>
+                      <span className="font-medium items-center">{product.stock}</span>
                       {product.stock <= 5 && (
                         <span className="text-yellow-600 bg-yellow-100 text-xs px-2 py-0.5 rounded">
                           Low
@@ -187,7 +185,7 @@ const InventoryPage = () => {
                     </>
                   ) : (
                     <>
-                      <span className="font-medium">0</span>
+                      <span className="font-medium items-center">0</span>
                       <span className="text-red-600 bg-red-100 text-xs px-2 py-0.5 rounded">
                         Out of stock
                       </span>
@@ -263,7 +261,32 @@ const InventoryPage = () => {
                 <CloseSquare />
               </button>
             </div>
-            <div className="flex flex-col gap-4">
+
+            <form
+              className="flex flex-col gap-6"
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                if (!productName || !newStock) {
+                  alert("Please fill out all fields before updating.");
+                  return;
+                }
+
+                console.log("✅ Restock form submitted:", { productName, newStock });
+
+                // Update the product in the table
+                setProducts((prev) =>
+                  prev.map((p) =>
+                    p.id === restockProduct.id
+                      ? { ...p, stock: p.stock + Number(newStock) }
+                      : p
+                  )
+                );
+
+                setRestockProduct(null);
+                setShowSuccess(true);
+              }}
+            >
               {/* Product Name */}
               <div className="flex flex-col gap-2">
                 <label className="text-sm text-gray-800">
@@ -272,11 +295,12 @@ const InventoryPage = () => {
                 <input
                   type="text"
                   value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                  className="w-full border border-grey-100 text-grey-800 rounded-full px-3 py-2"
+                  readOnly
+                  className="w-full border border-grey-100 text-grey-800 rounded-full px-3 py-2 bg-gray-100 cursor-not-allowed"
                   placeholder="[Product Name]"
                 />
               </div>
+
 
               {/* Stock Quantity */}
               <div className="flex flex-col gap-2">
@@ -289,23 +313,23 @@ const InventoryPage = () => {
                   onChange={(e) => setNewStock(Number(e.target.value))}
                   className="w-full border border-grey-100 text-grey-800 rounded-full px-3 py-2"
                   placeholder="0"
+                  required
                 />
               </div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <button
-                className="px-6 py-3 rounded-full bg-primary-500 text-white text-base"
-                onClick={() => {
-                  setRestockProduct(null);
-                  setShowSuccess(true);
-                }}
-              >
-                Update
-              </button>
-            </div>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-full bg-primary-500 text-white text-base"
+                >
+                  Update
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
+
 
       {/* Success Modal */}
       {showSuccess && (

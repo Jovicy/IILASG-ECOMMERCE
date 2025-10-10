@@ -247,7 +247,7 @@ const ProductsPage = () => {
         </section>
       )}
 
-      {/* Add Product Modal (scrollable, unchanged) */}
+      {/* Add Product Modal (scrollable, updated with form validation and console logging) */}
       {isModalOpen && (
         <div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -275,13 +275,39 @@ const ProductsPage = () => {
             </div>
 
             {/* Form Fields */}
-            <div className="space-y-4">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                const formData = {
+                  productName: e.currentTarget.productName.value,
+                  category: e.currentTarget.category.value,
+                  price: e.currentTarget.price.value,
+                  discount: e.currentTarget.discount.value,
+                  stock: e.currentTarget.stock.value,
+                  description: e.currentTarget.description.value,
+                  features,
+                  images: images.map((file) => file.name),
+                };
+
+                if (selectedProduct) {
+                  console.log("🟡 Edited Product Data:", formData);
+                } else {
+                  console.log("🟢 New Product Data:", formData);
+                }
+
+                setIsModalOpen(false);
+                setIsReviewModalOpen(true);
+              }}
+
+              className="space-y-4"
+            >
               <div className="w-full flex justify-between gap-4">
                 <div className="w-1/2 gap-2 flex flex-col">
-                  <label className="text-sm text-grey-800">
-                    Product Name *
-                  </label>
+                  <label className="text-sm text-grey-800">Product Name *</label>
                   <input
+                    name="productName"
+                    required
                     type="text"
                     defaultValue={selectedProduct?.name || ""}
                     className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full"
@@ -290,7 +316,11 @@ const ProductsPage = () => {
                 </div>
                 <div className="w-1/2 gap-2 flex flex-col">
                   <label className="text-sm text-grey-800">Category *</label>
-                  <select className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full">
+                  <select
+                    name="category"
+                    required
+                    className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full"
+                  >
                     <option value="">Select category</option>
                     <option value="electronics">Electronics</option>
                     <option value="fashion">Fashion</option>
@@ -299,22 +329,24 @@ const ProductsPage = () => {
                   </select>
                 </div>
               </div>
+
               <div className="w-full flex justify-between gap-4">
                 <div className="w-1/2 gap-2 flex flex-col">
                   <label className="text-sm text-grey-800">Price *</label>
                   <input
-                    type="text"
+                    name="price"
+                    required
+                    type="number"
                     className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full"
                     placeholder="₦"
                   />
                 </div>
                 <div className="w-1/2 gap-2 flex flex-col">
-                  <label className="text-sm text-grey-800">
-                    Discount (optional)
-                  </label>
+                  <label className="text-sm text-grey-800">Discount (optional)</label>
                   <div className="flex items-center justify-between border border-grey-100 rounded-full px-3">
                     <input
-                      type="text"
+                      name="discount"
+                      type="number"
                       className="flex-1 text-base text-grey-300 py-2 outline-none"
                       placeholder="0"
                     />
@@ -322,26 +354,30 @@ const ProductsPage = () => {
                   </div>
                 </div>
               </div>
+
               <div className="w-full gap-2 flex flex-col">
-                <label className="text-sm text-grey-800">
-                  Stock Quantity *
-                </label>
+                <label className="text-sm text-grey-800">Stock Quantity *</label>
                 <input
-                  type="text"
+                  name="stock"
+                  required
+                  type="number"
                   className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full"
                   placeholder="0"
                 />
               </div>
+
               <div className="w-full gap-2 flex flex-col">
                 <label className="text-sm text-grey-800">Description *</label>
                 <textarea
+                  name="description"
+                  required
                   className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-2xl"
                   rows={5}
                   placeholder="Product description"
                 ></textarea>
               </div>
 
-              {/* Features */}
+              {/* Features Section (unchanged except it's captured in state) */}
               <div className="w-full gap-4 flex flex-col">
                 <label className="text-sm text-grey-800">
                   Product Features (optional)
@@ -351,9 +387,7 @@ const ProductsPage = () => {
                     <input
                       type="text"
                       value={feature}
-                      onChange={(e) =>
-                        handleFeatureChange(index, e.target.value)
-                      }
+                      onChange={(e) => handleFeatureChange(index, e.target.value)}
                       className="w-full border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full"
                       placeholder={`Product feature ${index + 1}`}
                     />
@@ -415,6 +449,7 @@ const ProductsPage = () => {
                         type="file"
                         accept="image/*"
                         multiple
+                        required={images.length === 0}
                         onChange={handleImageUpload}
                         className="hidden"
                       />
@@ -422,25 +457,24 @@ const ProductsPage = () => {
                   )}
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="bg-none text-sm text-grey-700"
-              >
-                Save to draft
-              </button>
-              <button
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setIsReviewModalOpen(true);
-                }}
-                className="px-6 py-3 rounded-full bg-primary-500 text-white text-sm"
-              >
-                Submit for review
-              </button>
-            </div>
+              {/* Buttons */}
+              <div className="flex justify-end gap-4">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="bg-none text-sm text-grey-700"
+                >
+                  Save to draft
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-full bg-primary-500 text-white text-sm"
+                >
+                  Submit for review
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
