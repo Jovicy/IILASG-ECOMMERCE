@@ -54,8 +54,8 @@ const SettingsPage = () => {
           </TabsList>
         </div>
 
-        {/* Tab contents use same spacing style as ForumsPage */}
-        <TabsContent value="profile" className="">
+        {/* Profile Tab */}
+        <TabsContent value="profile">
           <div className="flex flex-col gap-8">
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex flex-col gap-6">
               <label
@@ -196,7 +196,7 @@ const SettingsPage = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="security" className="">
+        <TabsContent value="security">
           <div className="flex flex-col gap-8">
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex flex-col gap-6">
               <label
@@ -313,7 +313,7 @@ const SettingsPage = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="verification" className="">
+        <TabsContent value="verification">
           <div className="flex flex-col gap-8">
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex flex-col gap-6">
               <div className="flex items-center gap-4 border-b border-b-grey-100 pb-4">
@@ -371,7 +371,7 @@ const SettingsPage = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="notifications" className="">
+        <TabsContent value="notifications">
           <div className="flex flex-col gap-8">
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
               <p className="text-[#4E4E4E] text-xs font-normal">
@@ -413,14 +413,12 @@ const SettingsPage = () => {
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
               <button
                 onClick={() => setEnabled(!enabled)}
-                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${
-                  enabled ? "bg-primary-600" : "bg-gray-200"
-                }`}
+                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${enabled ? "bg-primary-600" : "bg-gray-200"
+                  }`}
               >
                 <span
-                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                    enabled ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${enabled ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
               <h3 className="text-grey-500 font-medium text-lg">
@@ -430,14 +428,12 @@ const SettingsPage = () => {
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
               <button
                 onClick={() => setEnabled(!enabled)}
-                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${
-                  enabled ? "bg-primary-600" : "bg-gray-200"
-                }`}
+                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${enabled ? "bg-primary-600" : "bg-gray-200"
+                  }`}
               >
                 <span
-                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                    enabled ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${enabled ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
               <h3 className="text-grey-500 font-medium text-lg">
@@ -447,14 +443,12 @@ const SettingsPage = () => {
             <div className="bg-[#F6F6F6] py-5 px-4 rounded-lg flex gap-2 items-center">
               <button
                 onClick={() => setEnabled(!enabled)}
-                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${
-                  enabled ? "bg-primary-600" : "bg-gray-200"
-                }`}
+                className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${enabled ? "bg-primary-600" : "bg-gray-200"
+                  }`}
               >
                 <span
-                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
-                    enabled ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ${enabled ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
               <h3 className="text-grey-500 font-medium text-lg">
