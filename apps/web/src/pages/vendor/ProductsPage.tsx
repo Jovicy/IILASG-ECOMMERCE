@@ -238,7 +238,7 @@ const ProductsPage = () => {
         </section>
       )}
 
-      {/* Add Product Modal (scrollable, unchanged) */}
+      {/* Add Product Modal (scrollable, updated with form validation and console logging) */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setIsModalOpen(false)}>
           <div
@@ -258,13 +258,39 @@ const ProductsPage = () => {
               </button>
             </div>
 
-            <div className="space-y-4">
+            {/* Form Fields */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                const formData = {
+                  productName: e.currentTarget.productName.value,
+                  category: e.currentTarget.category.value,
+                  price: e.currentTarget.price.value,
+                  discount: e.currentTarget.discount.value,
+                  stock: e.currentTarget.stock.value,
+                  description: e.currentTarget.description.value,
+                  features,
+                  images: images.map((file) => file.name),
+                };
+
+                if (selectedProduct) {
+                  console.log("🟡 Edited Product Data:", formData);
+                } else {
+                  console.log("🟢 New Product Data:", formData);
+                }
+
+                setIsModalOpen(false);
+                setIsReviewModalOpen(true);
+              }}
+              className="space-y-4">
               <div className="w-full flex justify-between gap-4">
                 <div className="w-1/2 gap-2 flex flex-col">
                   <label className="text-sm text-grey-800">Product Name *</label>
                   <input
+                    name="productName"
+                    required
                     type="text"
-                    name="name"
                     value={productData.name}
                     onChange={handleChange}
                     className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full"
@@ -273,7 +299,7 @@ const ProductsPage = () => {
                 </div>
                 <div className="w-1/2 gap-2 flex flex-col">
                   <label className="text-sm text-grey-800">Category *</label>
-                  <select name="categoryId" className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full" defaultValue={productData.categoryId} onChange={handleChange}>
+                  <select name="category" required className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full">
                     <option value="">Select category</option>
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
@@ -287,19 +313,12 @@ const ProductsPage = () => {
               <div className="w-full flex justify-between gap-4">
                 <div className="w-1/2 gap-2 flex flex-col">
                   <label className="text-sm text-grey-800">Price *</label>
-                  <input
-                    type="number"
-                    name="price"
-                    value={productData.price}
-                    onChange={handleChange}
-                    className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full"
-                    placeholder="₦"
-                  />
+                  <input name="price" required type="number" className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full" placeholder="₦" />
                 </div>
                 <div className="w-1/2 gap-2 flex flex-col">
                   <label className="text-sm text-grey-800">Discount (optional)</label>
                   <div className="flex items-center justify-between border border-grey-100 rounded-full px-3">
-                    <input type="number" name="discount" value={productData.discount} onChange={handleChange} className="flex-1 text-base text-grey-300 py-2 outline-none" placeholder="0" />
+                    <input name="discount" type="number" className="flex-1 text-base text-grey-300 py-2 outline-none" placeholder="0" />
                     <span className="text-grey-400">%</span>
                   </div>
                 </div>
@@ -307,21 +326,15 @@ const ProductsPage = () => {
 
               <div className="w-full gap-2 flex flex-col">
                 <label className="text-sm text-grey-800">Stock Quantity *</label>
-                <input type="number" name="stock" value={productData.stock} onChange={handleChange} className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full" placeholder="0" />
+                <input name="stock" required type="number" className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-full" placeholder="0" />
               </div>
 
               <div className="w-full gap-2 flex flex-col">
                 <label className="text-sm text-grey-800">Description *</label>
-                <textarea
-                  name="description"
-                  value={productData.description}
-                  onChange={handleChange}
-                  className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-2xl"
-                  rows={5}
-                  placeholder="Product description"></textarea>
+                <textarea name="description" required className="border border-grey-100 text-base text-grey-300 py-2 px-3 rounded-2xl" rows={5} placeholder="Product description"></textarea>
               </div>
 
-              {/* Features */}
+              {/* Features Section (unchanged except it's captured in state) */}
               <div className="w-full gap-4 flex flex-col">
                 <label className="text-sm text-grey-800">Product Features (optional)</label>
                 {features.map((feature, index) => (
@@ -362,8 +375,9 @@ const ProductsPage = () => {
                     </div>
                   ))}
                   {images.length < 5 && (
-                    <div onClick={() => fileInputRef.current?.click()} className="w-24 h-24 flex items-center justify-center border border-dashed border-grey-100 rounded-2xl cursor-pointer">
-                      <Add size="24" color="#B0B0B0" />
+                    <div onClick={() => fileInputRef.current?.click()} className="bg-white cursor-pointer border border-grey-100 rounded-2xl w-24 h-24 flex justify-center items-center">
+                      <Add color="#292D32" />
+                      <input ref={fileInputRef} type="file" accept="image/*" multiple required={images.length === 0} onChange={handleImageUpload} className="hidden" />
                     </div>
                   )}
                 </div>
@@ -372,19 +386,14 @@ const ProductsPage = () => {
 
               {/* Buttons */}
               <div className="flex justify-end gap-4">
-                <button
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    setSelectedProduct(null);
-                  }}
-                  className="px-6 py-3 rounded-full border border-grey-200 text-grey-700 text-sm">
-                  Cancel
+                <button type="button" onClick={() => setIsModalOpen(false)} className="bg-none text-sm text-grey-700">
+                  Save to draft
                 </button>
-                <button onClick={handleSubmit} className="px-6 py-3 rounded-full bg-primary-500 text-white text-sm">
+                <button type="submit" className="px-6 py-3 rounded-full bg-primary-500 text-white text-sm">
                   Submit for review
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}

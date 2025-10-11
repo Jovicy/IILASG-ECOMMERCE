@@ -29,7 +29,7 @@ const mockStats = [
     subtitle: "View Earnings",
     icon: ArrowUp,
     iconColor: "text-green-600",
-    variant: "Outline", // 👈 This one bold
+    variant: "Outline",
   },
   {
     title: "Requested Orders",

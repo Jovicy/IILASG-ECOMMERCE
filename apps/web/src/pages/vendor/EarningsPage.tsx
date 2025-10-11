@@ -410,6 +410,15 @@ const EarningsPage = () => {
                 <button
                   className="px-6 py-3 rounded-full text-base bg-primary-500 text-white"
                   onClick={() => {
+                    // ✅ Log all filled details to console
+                    console.log("📝 Bank Information Submitted:", {
+                      bank,
+                      accountNumber,
+                      accountName,
+                      otp,
+                    });
+
+                    // Close modal and open success message
                     setIsBankModalOpen(false);
                     setIsSuccessModalOpen(true);
                   }}
@@ -478,20 +487,25 @@ const EarningsPage = () => {
                       type="text"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
+                      required
                       className="border-none w-[65%] focus:outline-none focus:ring-0"
                       placeholder="000000"
                     />
                     {otpSent ? (
                       <button
+                        type="button"
                         disabled={timer > 0}
                         onClick={handleSendOtp}
-                        className={`text-sm w-[35%] text-end ${timer > 0 ? "text-grey-400 cursor-not-allowed" : "text-primary-600"
+                        className={`text-sm w-[35%] text-end ${timer > 0
+                            ? "text-grey-400 cursor-not-allowed"
+                            : "text-primary-600"
                           }`}
                       >
                         {timer > 0 ? `Resend OTP in ${timer}s` : "Send OTP to email"}
                       </button>
                     ) : (
                       <button
+                        type="button"
                         onClick={handleSendOtp}
                         className="text-primary-600 text-end text-sm w-[35%]"
                       >
@@ -501,28 +515,39 @@ const EarningsPage = () => {
                   </div>
                 </div>
               )}
-            </div>
 
-            {/* Footer buttons */}
-            {withdrawAmount && otp && (
-              <div className="flex justify-end gap-5">
-                <button
-                  className="bg-transparent text-sm font-normal text-grey-600"
-                  onClick={() => setIsPayoutModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-6 py-3 rounded-full text-base bg-primary-500 text-white"
-                  onClick={() => {
-                    setIsPayoutModalOpen(false);
-                    setIsWithdrawSuccessOpen(true);
-                  }}
-                >
-                  Withdraw Amount
-                </button>
-              </div>
-            )}
+              {/* Footer buttons */}
+              {withdrawAmount && otp && (
+                <div className="flex justify-end gap-5">
+                  <button
+                    className="bg-transparent text-sm font-normal text-grey-600"
+                    onClick={() => setIsPayoutModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-6 py-3 rounded-full text-base bg-primary-500 text-white"
+                    onClick={() => {
+                      if (!withdrawAmount || !otp) {
+                        alert("Please fill all required fields before submitting.");
+                        return;
+                      }
+
+                      // ✅ Log filled details to console
+                      console.log("💰 Withdrawal Request Submitted:", {
+                        withdrawAmount,
+                        otp,
+                      });
+
+                      setIsPayoutModalOpen(false);
+                      setIsWithdrawSuccessOpen(true);
+                    }}
+                  >
+                    Withdraw Amount
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
