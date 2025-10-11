@@ -41,16 +41,6 @@ export class CreateProductDto {
   categoryId?: string;
 
   @ApiProperty({
-    example: ['https://example.com/img1.jpg', 'https://example.com/img2.jpg'],
-    description: 'Product images',
-    required: false,
-    isArray: true,
-  })
-  @IsOptional()
-  @IsArray()
-  images?: string[];
-
-  @ApiProperty({
     example: ['Lightweight', 'Retina display'],
     description: 'Product features',
     required: false,

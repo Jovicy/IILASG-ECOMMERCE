@@ -8,15 +8,30 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { VendorService } from 'src/vendor/vendor.service';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class CategoryService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly vendorService: VendorService,
+    private readonly cloudinary: CloudinaryService,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto, userId: string) {
+  async create(
+    createCategoryDto: CreateCategoryDto,
+    userId: string,
+    file: Express.Multer.File,
+  ) {
+    let imageUrl: string | null = null;
+    let publicId: string | null = null;
+
+    if (file) {
+      const uploadResult: any = await this.cloudinary.uploadImage(file);
+      imageUrl = uploadResult.secure_url;
+      publicId = uploadResult.public_id;
+    }
+
     const vendorProfileId =
       await this.vendorService.getVendorProfileIdByUser(userId);
 
@@ -25,6 +40,9 @@ export class CategoryService {
         data: {
           vendorProfileId: vendorProfileId,
           name: createCategoryDto.name.toLowerCase(),
+          description: createCategoryDto.description,
+          imageUrl: imageUrl,
+          imagePublicId: publicId,
         },
       });
     } catch (error) {

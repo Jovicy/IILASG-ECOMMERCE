@@ -40,6 +40,13 @@ enum PaymentMethod {
   BONUS_POINT
 }
 
+enum ProductStatus {
+  ACTIVE
+  UNDER_REVIEW
+  INACTIVE
+  REJECTED
+}
+
 /* User Schema */
 model User {
   id                      String                  @id @default(uuid())
@@ -104,6 +111,7 @@ model Product {
   name                    String
   description             String?
   price                   Decimal
+  status                  ProductStatus  @default(UNDER_REVIEW)
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
 
@@ -177,7 +185,8 @@ model Category {
   id                      String    @id @default(uuid())
   name                    String    @unique
   description             String?
-  image                   String?
+  imageUrl                String?
+  imagePublicId           String?
   createdAt               DateTime  @default(now())
   updatedAt               DateTime  @updatedAt
 

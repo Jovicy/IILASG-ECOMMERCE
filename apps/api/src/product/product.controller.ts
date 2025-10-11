@@ -8,6 +8,8 @@ import {
   Post,
   Query,
   Request,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import {
@@ -21,6 +23,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'generated/prisma';
 import { AddReviewDto } from './dto/add-review.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Products')
 @ApiBearerAuth()
@@ -32,9 +35,11 @@ export class ProductController {
   @ApiOperation({ summary: 'Create a new product' })
   @ApiResponse({ status: 201, description: 'Product created successfully' })
   @Post()
+  @UseInterceptors(FilesInterceptor('images'))
   createProduct(
     @Request() req: { user: { userId: string } },
     @Body() createProductDto: CreateProductDto,
+    @UploadedFiles() files: Express.Multer.File[],
   ) {
     return this.productService.createProduct(req.user.userId, createProductDto);
   }

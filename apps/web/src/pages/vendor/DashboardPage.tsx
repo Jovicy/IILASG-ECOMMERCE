@@ -103,7 +103,7 @@ const DashboardPage = () => {
     <div className="w-full">
       {/* Intro Section */}
       <section className="flex flex-col gap-1 mb-8">
-        <h1 className="text-lg font-medium text-gray-950">Hello {user.firstName}, Here's how your store is doing today.</h1>
+        <h1 className="text-lg font-medium text-gray-950">Hello {user?.firstName}, Here's how your store is doing today.</h1>
         <p className="text-sm text-gray-500 font-normal">Manage your orders, track your earnings, and grow your business.</p>
       </section>
 

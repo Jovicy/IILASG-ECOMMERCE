@@ -44,9 +44,7 @@ export class ProductService {
         categoryId: createProductDto.categoryId,
         quantity: createProductDto.quantity,
         stockStatus: this.determineStockStatus(createProductDto.quantity),
-        images: {
-          create: createProductDto.images?.map((url) => ({ url })) || [],
-        },
+
         features: {
           create: createProductDto.features?.map((name) => ({ name })) || [],
         },
@@ -248,12 +246,7 @@ export class ProductService {
           updateProductDto.quantity !== undefined
             ? this.determineStockStatus(updateProductDto.quantity)
             : undefined,
-        images: updateProductDto.images
-          ? {
-              deleteMany: {},
-              create: updateProductDto.images.map((url) => ({ url })),
-            }
-          : undefined,
+
         features: updateProductDto.features
           ? {
               deleteMany: {},

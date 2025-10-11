@@ -3,7 +3,7 @@ type FetchWrapperConfig = {
   url: string;
   method?: string;
   data?: any;
-  headers?: Record<string, string>; // ✅ allow headers
+  headers?: Record<string, string>;
 };
 
 export const fetchWrapper = async (config: FetchWrapperConfig) => {

@@ -7,6 +7,8 @@ import {
   Patch,
   Post,
   Request,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -19,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Category')
 @ApiBearerAuth()
@@ -32,12 +35,17 @@ export class CategoryController {
   @ApiResponse({ status: 400, description: 'Invalid input' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @Post()
+  @UseInterceptors(FileInterceptor('image'))
   async createCategory(
     @Request() req: { user: { userId: string } },
     @Body() createCategoryDto: CreateCategoryDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log(createCategoryDto);
-    // return this.categoryService.create(createCategoryDto, req.user.userId);
+    return this.categoryService.create(
+      createCategoryDto,
+      req.user.userId,
+      file,
+    );
   }
 
   @ApiOperation({ summary: "Get all vendor's categories" })

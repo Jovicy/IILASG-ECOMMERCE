@@ -9,4 +9,11 @@ export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsString()
+  @ApiProperty({
+    example: 'Category for electronic products',
+    description: 'A brief description of the category',
+  })
+  description: string;
 }
