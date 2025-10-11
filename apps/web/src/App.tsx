@@ -10,7 +10,24 @@ import { setUser } from "./store/slices/authSlice";
 import { useEffect } from "react";
 
 const App = () => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 30,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        retry: 1,
+        placeholderData: true,
+      },
+      mutations: {
+        retry: 0,
+        onError: (error: any) => {
+          console.error("Mutation error:", error);
+        },
+      },
+    },
+  });
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
   const AppInitializer = () => {

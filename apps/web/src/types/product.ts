@@ -1,31 +1,38 @@
+export interface Image {
+  id: string;
+  url: string;
+  productId: string;
+}
+
 export interface Product {
   id: string;
   name: string;
   description?: string;
   price: number;
-  stock?: number;
-  status?: "AVAILABLE" | "LIMITED" | "OUT_OF_STOCK";
-  images?: string[];
+  quantity: number;
+  discount: number;
   categoryId: string;
+  stockStatus: string;
+  status: string;
   createdAt: string;
   updatedAt: string;
+  features: string[];
+  images: Image[];
 }
 
 export interface CreateProductPayload {
   name: string;
   categoryId: string;
   description?: string;
-  price?: number;
-  stock?: number;
+  price: number;
+  quantity: number;
+  discount?: number;
+  features?: string[];
   images?: File[];
 }
 
-export interface UpdateProductPayload {
-  name?: string;
-  description?: string;
-  price?: number;
-  stock?: number;
-  status?: string;
+export interface UpdateProductPayload extends Partial<CreateProductPayload> {
+  removedImageIds?: string[];
 }
 
 export interface ReviewPayload {
