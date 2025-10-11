@@ -122,11 +122,12 @@ model Product {
   category                Category? @relation(fields: [categoryId], references: [id])
 
   images                  ProductImage[]
-  features                ProductFeature[]
+  features                String[]
   reviews                 ProductReview[]   
   savedBy                 SavedItem[]  
   orderItems              OrderItem[]     
 
+  discount                Int
   numberSold              Int         @default(0)
   quantity                Int         @default(0)
   stockStatus             StockStatus @default(AVAILABLE)
@@ -143,14 +144,6 @@ model ProductImage {
   @@map("product_images")
 }
 
-model ProductFeature {
-  id                      String   @id @default(uuid())
-  name                    String
-  productId               String
-  product                 Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@map("product_features")
-}
 
 model ProductReview {
   id                      String   @id @default(uuid())

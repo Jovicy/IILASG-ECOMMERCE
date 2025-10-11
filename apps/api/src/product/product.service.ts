@@ -10,6 +10,7 @@ import { VendorService } from 'src/vendor/vendor.service';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AddReviewDto } from './dto/add-review.dto';
 import { CategoryService } from 'src/category/category.service';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class ProductService {
@@ -17,6 +18,7 @@ export class ProductService {
     private readonly prisma: PrismaService,
     private readonly vendorService: VendorService,
     private readonly categoryService: CategoryService,
+    private readonly cloudinary: CloudinaryService,
   ) {}
 
   private determineStockStatus(quantity: number): StockStatus {
@@ -25,7 +27,11 @@ export class ProductService {
     return 'AVAILABLE';
   }
 
-  async createProduct(userId: string, createProductDto: CreateProductDto) {
+  async createProduct(
+    userId: string,
+    createProductDto: CreateProductDto,
+    images: Express.Multer.File[],
+  ) {
     const vendorProfileId =
       await this.vendorService.getVendorProfileIdByUser(userId);
     if (!vendorProfileId)
@@ -33,6 +39,18 @@ export class ProductService {
 
     if (createProductDto.categoryId) {
       await this.categoryService.findOne(userId, createProductDto.categoryId);
+    }
+
+    const uploadedImages: { url: string; id: string }[] = [];
+
+    if (images && images.length > 0) {
+      for (const file of images) {
+        const uploadResult: any = await this.cloudinary.uploadImage(file);
+        uploadedImages.push({
+          url: uploadResult.secure_url,
+          id: uploadResult.public_id,
+        });
+      }
     }
 
     return this.prisma.product.create({
@@ -44,12 +62,16 @@ export class ProductService {
         categoryId: createProductDto.categoryId,
         quantity: createProductDto.quantity,
         stockStatus: this.determineStockStatus(createProductDto.quantity),
+        discount: createProductDto.discount,
 
-        features: {
-          create: createProductDto.features?.map((name) => ({ name })) || [],
+        features: createProductDto.features,
+
+        images: {
+          create: uploadedImages.map((image) => ({
+            url: image.url,
+          })),
         },
       },
-      include: { images: true, features: true, category: true },
     });
   }
 
@@ -75,6 +97,9 @@ export class ProductService {
         skip: (page - 1) * limit,
         take: limit,
         orderBy: { createdAt: 'desc' },
+        include: {
+          images: true,
+        },
       }),
       this.prisma.product.count({ where }),
     ]);
@@ -169,7 +194,6 @@ export class ProductService {
         vendorProfile: true,
         category: true,
         images: true,
-        features: true,
         reviews: {
           include: {
             user: {
@@ -227,34 +251,59 @@ export class ProductService {
     userId: string,
     productId: string,
     updateProductDto: UpdateProductDto,
+    images: Express.Multer.File[],
   ) {
+    const { removedImageIds, ...otherFields } = updateProductDto;
+
     const vendorProfileId =
       await this.vendorService.getVendorProfileIdByUser(userId);
+
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
     });
-
     if (!product) throw new NotFoundException('Product not found');
     if (product.vendorProfileId !== vendorProfileId)
       throw new ForbiddenException('You can only update your own products');
 
+    // Delete removed images from Cloudinary
+    if (removedImageIds?.length) {
+      for (const publicId of removedImageIds) {
+        await this.cloudinary.deleteImage(publicId);
+      }
+
+      await this.prisma.productImage.deleteMany({
+        where: { id: { in: removedImageIds } },
+      });
+    }
+
+    // Upload new images
+    const uploadedImages: { url: string; id: string }[] = [];
+    if (images?.length) {
+      for (const file of images) {
+        const uploadResult: any = await this.cloudinary.uploadImage(file);
+        uploadedImages.push({
+          url: uploadResult.secure_url,
+          id: uploadResult.public_id,
+        });
+      }
+    }
+
+    // Update product
     return this.prisma.product.update({
       where: { id: productId },
       data: {
-        ...updateProductDto,
+        ...otherFields,
         stockStatus:
           updateProductDto.quantity !== undefined
             ? this.determineStockStatus(updateProductDto.quantity)
             : undefined,
-
-        features: updateProductDto.features
-          ? {
-              deleteMany: {},
-              create: updateProductDto.features.map((name) => ({ name })),
-            }
-          : undefined,
+        features: updateProductDto.features,
+        images: {
+          create: uploadedImages.map((image) => ({
+            url: image.url,
+          })),
+        },
       },
-      include: { images: true, features: true, category: true },
     });
   }
 

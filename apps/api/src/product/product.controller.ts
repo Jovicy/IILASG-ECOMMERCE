@@ -36,12 +36,22 @@ export class ProductController {
   @ApiResponse({ status: 201, description: 'Product created successfully' })
   @Post()
   @UseInterceptors(FilesInterceptor('images'))
-  createProduct(
+  async createProduct(
     @Request() req: { user: { userId: string } },
     @Body() createProductDto: CreateProductDto,
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles() images: Express.Multer.File[],
   ) {
-    return this.productService.createProduct(req.user.userId, createProductDto);
+    const product = await this.productService.createProduct(
+      req.user.userId,
+      createProductDto,
+      images,
+    );
+
+    return {
+      status: 'success',
+      message: 'Product created successfully',
+      data: product,
+    };
   }
 
   @Roles(Role.VENDOR)
@@ -68,16 +78,25 @@ export class ProductController {
   @ApiOperation({ summary: 'Update a product by ID' })
   @ApiResponse({ status: 200, description: 'Product updated successfully' })
   @Patch(':id')
-  updateProduct(
+  @UseInterceptors(FilesInterceptor('images'))
+  async updateProduct(
     @Request() req: { user: { userId: string } },
     @Param('id') productId: string,
     @Body() updateProductDto: UpdateProductDto,
+    @UploadedFiles() images: Express.Multer.File[],
   ) {
-    return this.productService.updateProduct(
+    const updatedProduct = await this.productService.updateProduct(
       req.user.userId,
       productId,
       updateProductDto,
+      images,
     );
+
+    return {
+      status: 'success',
+      message: 'Product updated successfully',
+      data: updatedProduct,
+    };
   }
 
   @Roles(Role.VENDOR)
