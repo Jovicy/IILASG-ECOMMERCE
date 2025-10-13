@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { GoogleLogin } from "@react-oauth/google";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeSlash, Eye } from "iconsax-reactjs";
 import AuthLayout from "@/layouts/AuthLayout";
 import { useGoogleSign, useSignIn } from "@/hooks/useAuth";
 import { GoogleSignPayload, UserRole } from "@/types";
-import { GoogleLogin } from "@react-oauth/google";
-import { setAuth } from "@/store/slices/authSlice";
-import { useDispatch } from "react-redux";
+import { setAuth, setUser } from "@/store/slices/authSlice";
+import apiClient from "@/api/apiClient";
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const SignInPage = () => {
 
   const isFormValid = email !== "" && password !== "";
 
-  const handleAuthSuccess = (response: any) => {
+  const handleAuthSuccess = async (response: any) => {
     const role = response.data.role.toLowerCase() as UserRole;
 
     dispatch(
@@ -32,6 +33,13 @@ const SignInPage = () => {
         role: role,
       })
     );
+
+    try {
+      const { data: profile } = await apiClient.get("/user");
+      dispatch(setUser(profile));
+    } catch (err) {
+      console.error("Failed to fetch user profile:", err);
+    }
 
     navigate(`/${role}`);
   };

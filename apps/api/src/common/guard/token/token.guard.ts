@@ -19,19 +19,26 @@ export class TokenGuard extends AuthGuard('token') {
       context.getClass(),
     ]);
 
-    if (isPublic) {
-      return true;
-    }
+    // Skip guard for public routes
+    if (isPublic) return true;
 
     return super.canActivate(context);
   }
+
   handleRequest(err: any, user: any, info: any) {
-    if (info?.message === 'No auth token') {
-      throw new UnauthorizedException('Token is not provided');
+    if (
+      info?.message === 'No auth token' ||
+      info?.message === 'No auth token provided'
+    ) {
+      throw new UnauthorizedException('Token not provided');
     }
 
-    if (err || !user) {
-      throw new UnauthorizedException('Invalid or expired token');
+    if (info?.message === 'jwt expired') {
+      throw new UnauthorizedException('Token expired');
+    }
+
+    if (info?.message === 'invalid token' || err || !user) {
+      throw new UnauthorizedException('Invalid token');
     }
 
     return user;
