@@ -183,24 +183,15 @@ export class ProductService {
   }
 
   async getProductById(productId: string, userId: string) {
-    const vendorProfileId = await this.prisma.vendorProfile.findUnique({
-      where: { userId },
-      select: { id: true },
-    });
-
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
       include: {
-        vendorProfile: true,
         category: true,
         images: true,
         reviews: {
           include: {
             user: {
-              select: {
-                firstName: true,
-                lastName: true,
-              },
+              select: { firstName: true, lastName: true },
             },
           },
         },
@@ -211,39 +202,25 @@ export class ProductService {
       throw new NotFoundException(`Product with ID ${productId} not found`);
     }
 
-    const averageRating =
-      product.reviews.length > 0
-        ? product.reviews.reduce((acc, r) => acc + r.rating, 0) /
-          product.reviews.length
-        : 0;
-
-    if (vendorProfileId) {
-      if (product.vendorProfileId !== vendorProfileId.id) {
-        throw new ForbiddenException('You can only view your own products');
-      }
-      const { reviews, ...rest } = product;
-      return {
-        ...rest,
-        reviews,
-        averageRating,
-      };
-    }
+    const reviews = product.reviews ?? [];
+    const averageRating = reviews.length
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : 0;
 
     const saved = await this.prisma.savedItem.findUnique({
-      where: {
-        userId_productId: {
-          userId,
-          productId,
-        },
-      },
+      where: { userId_productId: { userId, productId } },
     });
 
-    const { reviews, ...rest } = product;
+    const { reviews: _, ...rest } = product;
+
     return {
       ...rest,
       reviews,
-      averageRating,
-      isSaved: !!saved,
+      stats: {
+        averageRating,
+        totalReviews: reviews.length,
+      },
+      isSaved: Boolean(saved),
     };
   }
 

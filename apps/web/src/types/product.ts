@@ -4,6 +4,32 @@ export interface Image {
   productId: string;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  imagePublicId: string;
+  createdAt: string;
+  updatedAt: string;
+  vendorProfileId: string;
+}
+
+export interface VendorProfile {
+  id: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Review {
+  id?: string;
+  rating?: number;
+  comment?: string;
+  userId?: string;
+  createdAt?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -18,6 +44,12 @@ export interface Product {
   updatedAt: string;
   features: string[];
   images: Image[];
+  numberSold?: number;
+  vendorProfileId?: string;
+  vendorProfile?: VendorProfile;
+  category?: Category;
+  reviews?: Review[];
+  averageRating?: number;
 }
 
 export interface CreateProductPayload {

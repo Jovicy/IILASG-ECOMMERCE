@@ -7,6 +7,8 @@ import { useGetAllCategories } from "@/hooks/category";
 import { useCreateProduct, useGetMyProducts, useUpdateProduct } from "@/hooks/product";
 import { Image, Product } from "@/types/product";
 import { useQueryClient } from "@tanstack/react-query";
+import { fetchWrapper } from "@/api/fetchWrapper";
+import { formatNaira } from "@/lib/utils";
 
 enum ProductStatus {
   ACTIVE = "ACTIVE",
@@ -156,7 +158,7 @@ const ProductsPage = () => {
                 {filteredProducts.map((product) => (
                   <tr key={product.id} className="border-t border-grey-200">
                     <td className="px-6 py-4 text-grey-900 text-sm">{product.name}</td>
-                    <td className="px-6 py-4 text-grey-900 text-sm">₦{product.price.toLocaleString()}</td>
+                    <td className="px-6 py-4 text-grey-900 text-sm">{formatNaira(product.price)}</td>
                     <td className="px-6 py-4 text-sm">
                       {product.quantity > 0 ? (
                         <span className="flex items-center gap-2 text-xs font-normal">
