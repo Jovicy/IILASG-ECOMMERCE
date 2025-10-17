@@ -1,5 +1,12 @@
 export type UserRole = "buyer" | "vendor";
 
+export enum ProductStatus {
+  ACTIVE = "ACTIVE",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  INACTIVE = "INACTIVE",
+  REJECTED = "REJECTED",
+}
+
 export interface CredentialsPayload {
   email: string;
   firstName: string;
@@ -40,6 +47,10 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   role: UserRole;
+  gender: string;
+  verified: boolean;
+  phoneNumber: string;
+  dateOfBirth: string;
   isLagosian: boolean;
   LGA: string | null;
   createdAt: string;

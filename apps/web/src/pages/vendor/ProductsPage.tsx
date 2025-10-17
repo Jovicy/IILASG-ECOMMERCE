@@ -8,14 +8,8 @@ import { useCreateProduct, useGetMyProducts, useUpdateProduct } from "@/hooks/pr
 import { Image, Product } from "@/types/product";
 import { useQueryClient } from "@tanstack/react-query";
 import { fetchWrapper } from "@/api/fetchWrapper";
-import { formatNaira } from "@/lib/utils";
-
-enum ProductStatus {
-  ACTIVE = "ACTIVE",
-  UNDER_REVIEW = "UNDER_REVIEW",
-  INACTIVE = "INACTIVE",
-  REJECTED = "REJECTED",
-}
+import { formatNaira, formatStatus } from "@/lib/utils";
+import { ProductStatus } from "@/types";
 
 const statusColors: Record<ProductStatus, string> = {
   [ProductStatus.ACTIVE]: "bg-success-50 text-success-700",
@@ -28,8 +22,9 @@ const ProductsPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { mutate: createProduct } = useCreateProduct();
-  const { mutate: upadatProduct } = useUpdateProduct();
+  const { mutate: createProduct, isPending: creatingProduct } = useCreateProduct();
+  const { mutate: updateProduct, isPending: updatingProduct } = useUpdateProduct();
+
   const { data: categories } = useGetAllCategories();
   const { data, isFetching } = useGetMyProducts();
 
@@ -70,13 +65,6 @@ const ProductsPage = () => {
   const handleRemoveUploadedImage = (id: string) => {
     setUploadedImages(uploadedImages.filter((img) => img.id !== id));
     setRemovedImageIds([...removedImageIds, id]);
-  };
-
-  const formatStatus = (status: ProductStatus) => {
-    return status
-      .toLowerCase() // "under_review"
-      .replace("_", " ") // "under review"
-      .replace(/\b\w/g, (c) => c.toUpperCase()); // "Under Review"
   };
 
   // Filter products based on active tab
@@ -276,7 +264,7 @@ const ProductsPage = () => {
                     },
                   });
                 } else {
-                  upadatProduct(
+                  updateProduct(
                     { id: selectedProduct.id, payload: { ...payload, removedImageIds: removedImageIds } },
                     {
                       onSuccess: () => {
@@ -412,7 +400,14 @@ const ProductsPage = () => {
                 <button type="button" onClick={() => setIsModalOpen(false)} className="bg-none text-sm text-grey-700">
                   Save to draft
                 </button>
-                <button type="submit" className="px-6 py-3 rounded-full bg-primary-500 text-white text-sm">
+                <button
+                  type="submit"
+                  disabled={updatingProduct || creatingProduct}
+                  className="px-6 py-3 rounded-full bg-primary-500 text-white text-sm 
+             hover:bg-primary-600 transition-colors 
+             disabled:bg-primary-400 
+disabled:opacity-40
+             disabled:cursor-not-allowed ">
                   Submit for review
                 </button>
               </div>

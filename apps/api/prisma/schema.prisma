@@ -47,6 +47,13 @@ enum ProductStatus {
   REJECTED
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
 /* User Schema */
 model User {
   id                      String                  @id @default(uuid())
@@ -55,6 +62,8 @@ model User {
   lastName                String
   password                String
   phoneNumber             String?                 @unique
+  dateOfBirth             DateTime?
+  gender                  Gender?
   role                    Role
   verified                Boolean                 @default(false)
   LGA                     String?                 

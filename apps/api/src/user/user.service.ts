@@ -125,16 +125,6 @@ export class UserService {
       updateData.LGA = undefined;
     }
 
-    if (updateData.email && updateData.email !== existingUser.email) {
-      const emailExists = await this.prisma.user.findUnique({
-        where: { email: updateData.email },
-      });
-
-      if (emailExists) {
-        throw new ConflictException('User with this email already exists');
-      }
-    }
-
     const { password, role, ...safeUpdateData } = updateData;
 
     const updatedUser = await this.prisma.user.update({

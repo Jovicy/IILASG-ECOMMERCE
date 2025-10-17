@@ -1,3 +1,4 @@
+import { ProductStatus } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -22,4 +23,11 @@ export const calculateDiscountedPrice = (originalPrice: number, discountPercent:
 
   const discountedPrice = originalPrice - (originalPrice * discountPercent) / 100;
   return formatNaira(discountedPrice);
+};
+
+export const formatStatus = (status: ProductStatus) => {
+  return status
+    .toLowerCase() // "under_review"
+    .replace("_", " ") // "under review"
+    .replace(/\b\w/g, (c) => c.toUpperCase()); // "Under Review"
 };

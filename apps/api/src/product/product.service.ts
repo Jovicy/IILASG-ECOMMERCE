@@ -191,7 +191,7 @@ export class ProductService {
         reviews: {
           include: {
             user: {
-              select: { firstName: true, lastName: true },
+              select: { firstName: true, lastName: true, verified: true },
             },
           },
         },
@@ -203,9 +203,9 @@ export class ProductService {
     }
 
     const reviews = product.reviews ?? [];
-    const averageRating = reviews.length
-      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-      : 0;
+
+    const totalRating = reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+    const averageRating = reviews.length ? totalRating / reviews.length : 0;
 
     const saved = await this.prisma.savedItem.findUnique({
       where: { userId_productId: { userId, productId } },
@@ -218,6 +218,7 @@ export class ProductService {
       reviews,
       stats: {
         averageRating,
+        totalRating,
         totalReviews: reviews.length,
       },
       isSaved: Boolean(saved),
@@ -301,10 +302,21 @@ export class ProductService {
   async addReview(userId: string, productId: string, reviewDto: AddReviewDto) {
     const isProduct = await this.prisma.product.findUnique({
       where: { id: productId },
+      include: {
+        vendorProfile: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
 
     if (!isProduct) {
       throw new NotFoundException(`Product with ID ${productId} not found`);
+    }
+
+    if (isProduct.vendorProfile.userId === userId) {
+      throw new ForbiddenException('You cannot review your own product.');
     }
 
     return this.prisma.productReview.create({

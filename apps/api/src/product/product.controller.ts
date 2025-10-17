@@ -131,7 +131,6 @@ export class ProductController {
     );
   }
 
-  @Roles(Role.BUYER)
   @Post(':productId/reviews')
   @ApiOperation({ summary: 'Add a review to a product' })
   @ApiResponse({ status: 201, description: 'Review created successfully' })

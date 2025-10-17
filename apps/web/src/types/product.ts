@@ -27,6 +27,11 @@ export interface Review {
   rating?: number;
   comment?: string;
   userId?: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    verified: boolean;
+  };
   createdAt?: string;
 }
 
@@ -49,7 +54,11 @@ export interface Product {
   vendorProfile?: VendorProfile;
   category?: Category;
   reviews?: Review[];
-  averageRating?: number;
+  stats: {
+    averageRating: number;
+    totalReviews: number;
+  };
+  isSaved: boolean;
 }
 
 export interface CreateProductPayload {

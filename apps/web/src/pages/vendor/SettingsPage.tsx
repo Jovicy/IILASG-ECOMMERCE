@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Image, Camera, Eye, EyeSlash } from "iconsax-reactjs";
 import SealCheck from "../../assets/icons/sealCheck.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const { user } = useSelector((state: RootState) => state.auth);
 
   // separate toggles for working hours and shipping
   const [workingHours, setWorkingHours] = useState(
@@ -88,38 +92,85 @@ const SettingsPage = () => {
 
         {/* PROFILE TAB */}
         <TabsContent value="profile">
-          <div className="flex flex-col gap-8">
-            <div className="bg-[#F6F6F6] p-6 rounded-lg flex w-full flex-wrap gap-4 justify-between">
-              {[
-                { label: "First Name *", type: "text", placeholder: "First Name" },
-                { label: "Last Name *", type: "text", placeholder: "Last Name" },
-                { label: "Email *", type: "email", placeholder: "Email Address" },
-                { label: "Phone Number *", type: "tel", placeholder: "08123456789" },
-                { label: "Date of Birth (optional)", type: "date" },
-              ].map((field, i) => (
-                <div key={i} className="w-[49%] flex flex-col gap-1">
-                  <label className="text-xs text-[#4E4E4E]">{field.label}</label>
-                  <input type={field.type} placeholder={field.placeholder || ""} className="w-full rounded-full bg-white border border-grey-100 py-2 px-3 text-sm" />
-                </div>
-              ))}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = Object.fromEntries(new FormData(e.target as HTMLFormElement));
+              console.log("Submitted:", formData);
+              // Example: await axios.put(`/user/${user.id}`, formData);
+            }}>
+            <div className="flex flex-col gap-8">
+              <div className="bg-[#F6F6F6] p-6 rounded-lg flex w-full flex-wrap gap-4 justify-between">
+                {[
+                  {
+                    label: "First Name *",
+                    name: "firstName",
+                    type: "text",
+                    placeholder: "First Name",
+                    value: user.firstName,
+                  },
+                  {
+                    label: "Last Name *",
+                    name: "lastName",
+                    type: "text",
+                    placeholder: "Last Name",
+                    value: user.lastName,
+                  },
+                  {
+                    label: "Email *",
+                    name: "email",
+                    type: "email",
+                    placeholder: "Email Address",
+                    value: user.email,
+                    readOnly: true,
+                  },
+                  {
+                    label: "Phone Number *",
+                    name: "phoneNumber",
+                    type: "tel",
+                    placeholder: "08123456789",
+                    value: user.phoneNumber,
+                  },
+                  {
+                    label: "Date of Birth (optional)",
+                    name: "dateOfBirth",
+                    type: "date",
+                    value: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split("T")[0] : "",
+                  },
+                ].map((field, i) => (
+                  <div key={i} className="w-[49%] flex flex-col gap-1">
+                    <label className="text-xs text-[#4E4E4E]">{field.label}</label>
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      placeholder={field.placeholder || ""}
+                      defaultValue={field.value}
+                      readOnly={field.readOnly}
+                      className="w-full rounded-full bg-white border border-grey-100 py-2 px-3 text-sm read-only:bg-gray-300 read-only:text-gray-600"
+                    />
+                  </div>
+                ))}
 
-              {/* Gender Field */}
-              <div className="w-[49%] flex flex-col gap-1">
-                <label className="text-xs text-[#4E4E4E]">Gender (optional)</label>
-                <select className="w-full rounded-full bg-white border border-grey-100 py-2 px-3 text-sm">
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                  <option value="prefer_not_say">Prefer not to say</option>
-                </select>
+                {/* Gender Field */}
+                <div className="w-[49%] flex flex-col gap-1">
+                  <label className="text-xs text-[#4E4E4E]">Gender (optional)</label>
+                  <select name="gender" defaultValue={user.gender || ""} className="w-full rounded-full bg-white border border-grey-100 py-2 px-3 text-sm">
+                    <option value="">Select gender</option>
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="OTHER">Other</option>
+                    <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button type="submit" className="bg-yellow-500 text-white py-3 px-6 rounded-full text-base font-normal">
+                  Save Changes
+                </button>
               </div>
             </div>
-
-            <div className="flex justify-end">
-              <button className="bg-yellow-500 text-white py-3 px-6 rounded-full text-base font-normal">Save Changes</button>
-            </div>
-          </div>
+          </form>
         </TabsContent>
 
         {/* STORE TAB */}
@@ -222,7 +273,7 @@ const SettingsPage = () => {
           <div className="py-5 px-4 bg-[#F6F6F6] rounded-lg flex flex-col gap-6 relative">
             {(() => {
               const [isOpen, setIsOpen] = React.useState(false);
-              const [selectedLGA, setSelectedLGA] = React.useState("");
+              const [selectedLGA, setSelectedLGA] = React.useState(user.LGA || "");
               const [verificationStatus, setVerificationStatus] = React.useState<"not_verified" | "in_progress" | "verified">("not_verified");
 
               const lagosLGAs = [
@@ -263,30 +314,18 @@ const SettingsPage = () => {
                 }, 3000);
               };
 
-              const renderStatusButton = () => {
-                switch (verificationStatus) {
-                  case "not_verified":
-                    return <button className="py-3 px-6 bg-error-50 border border-error-600 rounded-full text-error-600 font-normal text-base">Not Verified</button>;
-                  case "in_progress":
-                    return (
-                      <button className="py-3 px-6 bg-yellow-50 border border-yellow-600 rounded-full text-yellow-700 font-normal text-base flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 animate-spin text-yellow-600" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                        </svg>
-                        Verification in Progress
-                      </button>
-                    );
-                  case "verified":
-                    return (
-                      <button className="py-3 px-6 bg-success-50 border border-success-600 rounded-full text-success-700 font-normal text-base flex items-center gap-2">
-                        <div>
-                          <img src={SealCheck} className="h-5" />
-                        </div>
-                        You are a verified Indigene!
-                      </button>
-                    );
+              const renderStatusButton = (isVerified: boolean) => {
+                if (isVerified) {
+                  return (
+                    <button className="py-3 px-6 bg-success-50 border border-success-600 rounded-full text-success-700 font-normal text-base flex items-center gap-2">
+                      <div>
+                        <img src={SealCheck} className="h-5" />
+                      </div>
+                      You are a verified Indigene!
+                    </button>
+                  );
                 }
+                return <button className="py-3 px-6 bg-error-50 border border-error-600 rounded-full text-error-600 font-normal text-base">Not Verified</button>;
               };
 
               return (
@@ -294,7 +333,7 @@ const SettingsPage = () => {
                   {/* Status Section */}
                   <div className="border-b border-b-grey-100 pb-4 flex items-center gap-6">
                     <p>Current Status:</p>
-                    {renderStatusButton()}
+                    {renderStatusButton(user.verified)}
                   </div>
 
                   {/* LGA Dropdown */}

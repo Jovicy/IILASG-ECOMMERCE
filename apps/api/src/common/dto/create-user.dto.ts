@@ -1,14 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
 import {
-  IsBoolean,
   IsEmail,
-  IsEnum,
   IsNotEmpty,
-  IsOptional,
   IsString,
+  IsEnum,
+  IsBoolean,
+  IsOptional,
+  IsDateString,
 } from 'class-validator';
-import { AuthProvider, Role } from 'generated/prisma';
+import { Transform } from 'class-transformer';
+import { Gender, Role } from 'generated/prisma';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'testing@gmail.com' })
@@ -33,16 +34,15 @@ export class CreateUserDto {
 
   @ApiProperty({ example: '+23490675' })
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   phoneNumber?: string;
 
-  @ApiProperty({ example: Role })
+  @ApiProperty({ enum: Role })
   @IsEnum(Role)
   @IsNotEmpty()
   role: Role;
 
-  @ApiProperty({ example: 'True' })
+  @ApiProperty({ example: true })
   @IsBoolean()
   @IsOptional()
   @Transform(({ value }) => {
@@ -51,4 +51,21 @@ export class CreateUserDto {
     return value;
   })
   verified?: boolean;
+
+  @ApiProperty({
+    enum: Gender,
+    example: Gender.MALE,
+    description: 'User gender (MALE, FEMALE, OTHER, PREFER_NOT_TO_SAY)',
+  })
+  @IsEnum(Gender)
+  @IsOptional()
+  gender?: Gender;
+
+  @ApiProperty({
+    example: '1995-08-15',
+    description: 'Date of birth in ISO format (YYYY-MM-DD)',
+  })
+  @IsDateString()
+  @IsOptional()
+  dateOfBirth?: string;
 }

@@ -1,8 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Star1, Send2, ArrowDown2, TickCircle, ArrowLeft } from "iconsax-reactjs";
 import { useGetProduct } from "@/hooks/product";
 import { calculateDiscountedPrice } from "@/lib/utils";
+import { formatDate } from "date-fns";
+import { Star } from "lucide-react";
+import StarRating from "@/components/custom/StarRating";
+import RatingDistribution from "@/components/custom/RatingDistribution";
+import { Review } from "@/types/product";
 
 const ProductDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,42 +15,29 @@ const ProductDetailsPage = () => {
   const { data, isFetching } = useGetProduct(id);
   const product = data?.data;
 
-  const reviews = [
-    {
-      id: 1,
-      rating: 5,
-      title: "I love the product",
-      comment: "Quam lobortis ultrices amet ipsum sem pharetra risus erat at...",
-      reviewer: "Oluwafemi Oladipo",
-      verified: true,
-      date: "May 20, 2025",
-    },
-    {
-      id: 2,
-      rating: 4,
-      title: "Good but could improve",
-      comment: "Velit in quisque diam libero elementum. Lectus at nunc ut mi ornare...",
-      reviewer: "Chika Daniels",
-      verified: true,
-      date: "June 5, 2025",
-    },
-  ];
-
-  // ✅ Fix: add state for tabs
-  const [activeTab, setActiveTab] = useState("description");
-
-  // ✅ Fix: define available tabs
-  const tabs = [
-    { id: "description", label: "Description" },
-    { id: "features", label: "Features" },
-    { id: "reviews", label: "Reviews" },
-  ];
-
   // ✅ Fix: quantity logic
   const [quantity, setQuantity] = useState(1);
+  const ratingCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
 
   const increaseQty = () => setQuantity((prev) => prev + 1);
   const decreaseQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const getRatingDistribution = (reviews: Review[]) => {
+    const ratingCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+    reviews.forEach((review) => {
+      if (review.rating >= 1 && review.rating <= 5) {
+        ratingCounts[review.rating]++;
+      }
+    });
+
+    const total = reviews.length || 1;
+    const ratings = Object.fromEntries(Object.entries(ratingCounts).map(([star, count]) => [star, (count / total) * 100]));
+
+    return ratings;
+  };
+
+  const ratings = getRatingDistribution(product.reviews);
 
   return !isFetching && product ? (
     <div className="w-full p-6">
@@ -56,14 +48,25 @@ const ProductDetailsPage = () => {
       <div className="w-2/3 flex flex-col gap-8">
         <div className="flex gap-6">
           {/* Product Picture */}
-          <div className="w-[356px] h-[320px] bg-grey-500 rounded-lg p-4 flex items-end">
-            <div className="flex gap-2">
-              <div className="h-14 w-14 rounded-sm bg-grey-100"></div>
-              <div className="h-14 w-14 rounded-sm bg-grey-100"></div>
-              <div className="h-14 w-14 rounded-sm bg-grey-100"></div>
-              <div className="h-14 w-14 rounded-sm bg-grey-100"></div>
+          {product.images.length <= 0 && (
+            <div className="w-[356px] h-[320px] bg-grey-500 rounded-lg p-4 flex items-end">
+              <div className="flex gap-2">
+                <div className="h-14 w-14 rounded-sm bg-grey-100"></div>
+                <div className="h-14 w-14 rounded-sm bg-grey-100"></div>
+                <div className="h-14 w-14 rounded-sm bg-grey-100"></div>
+                <div className="h-14 w-14 rounded-sm bg-grey-100"></div>
+              </div>
+            </div>
+          )}
+
+          <div className="w-[356px] h-[320px] rounded-lg p-4 flex items-end bg-cover bg-center overflow-hidden" style={{ backgroundImage: `url(${product.images[0].url})` }}>
+            <div className="flex gap-2 ">
+              {product.images.slice(1).map((img, index) => (
+                <img key={index} src={img.url} alt={`Product thumbnail ${index + 1}`} className="h-14 w-14 rounded-sm object-cover" />
+              ))}
             </div>
           </div>
+
           {/* Product Info */}
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-4">
@@ -99,7 +102,7 @@ const ProductDetailsPage = () => {
                   {/* Other Rating */}
                   <div>
                     <span className="text-grey-800 text-xs font-normal">
-                      {`[${product.averageRating} Ratings]`} | {`[${product.numberSold} Sold]`}
+                      {`[${product.stats.totalReviews} Ratings]`} | {`[${product.numberSold} Sold]`}
                     </span>
                   </div>
                 </div>
@@ -128,126 +131,78 @@ const ProductDetailsPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          {/* Tab Navigation */}
-          <div className="flex gap-3">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-2 pb-3 rounded-t-lg text-sm font-normal transition-colors ${activeTab === tab.id ? "bg-white text-grey-900 border-b-2 border-b-primary-500" : "text-grey-500"}`}>
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Tab Content */}
-          <div className="bg-white p-1 mt-[-1px]">
-            {activeTab === "description" && (
-              <div className="flex flex-col gap-4">
-                <p className="text-base/7 text-grey-700">{product.description}</p>
-                <div className="flex gap-2 items-center text-grey-400 text-sm cursor-pointer">
-                  <p>More</p>
-                  <ArrowDown2 size="16" />
-                </div>
-              </div>
-            )}
-            {activeTab === "features" && (
-              <div className="flex flex-col gap-4">
-                <p className="text-base/7 text-grey-700">
-                  Lorem ipsum dolor sit amet consectetur. Amet tempor id suspendisse id sed nibh felis ullamcorper in. Quis sit urna ornare id mattis praesent purus diam pretium. Vestibulum amet metus
-                  nec donec. Felis sed sodales risus donec risus proin. Velit in quisque diam libero elementum. Lectus at nunc ut mi ornare. Vitae volutpat aliquam erat sed quam consequat. Viverra
-                  blandit at penatibus diam. Eu odio vitae nunc urna adipiscing risus mi sed a. Sit orci enim rhoncus ut consectetur. Dapibus congue ut gravida vitae egestas hac. Nisl quis neque nibh
-                  augue in faucibus. Nec leo sit elementum leo magnis iaculis netus ultrices. <br /> Quam lobortis ultrices amet ipsum sem pharetra risus erat at. Dignissim urna felis sit faucibus
-                  quis. Lorem facilisis quis arcu et. Tincidunt scelerisque interdum scelerisque lectus nulla nibh non quam faucibus. Et arcu duis ac orci turpis nullam ut dictumst. Nulla sodales.
-                </p>
-                <div className="flex gap-2 items-center text-grey-400 text-sm cursor-pointer">
-                  <p>More</p>
-                  <ArrowDown2 size="16" />
-                </div>
-              </div>
-            )}
-            {activeTab === "reviews" && (
-              <div className="flex flex-col gap-4">
-                <p className="text-base/7 text-grey-700">
-                  Lorem ipsum dolor sit amet consectetur. Amet tempor id suspendisse id sed nibh felis ullamcorper in. Quis sit urna ornare id mattis praesent purus diam pretium. Vestibulum amet metus
-                  nec donec. Felis sed sodales risus donec risus proin. Velit in quisque diam libero elementum. Lectus at nunc ut mi ornare. Vitae volutpat aliquam erat sed quam consequat. Viverra
-                  blandit at penatibus diam. Eu odio vitae nunc urna adipiscing risus mi sed a. Sit orci enim rhoncus ut consectetur. Dapibus congue ut gravida vitae egestas hac. Nisl quis neque nibh
-                  augue in faucibus. Nec leo sit elementum leo magnis iaculis netus ultrices. <br /> Quam lobortis ultrices amet ipsum sem pharetra risus erat at. Dignissim urna felis sit faucibus
-                  quis. Lorem facilisis quis arcu et. Tincidunt scelerisque interdum scelerisque lectus nulla nibh non quam faucibus. Et arcu duis ac orci turpis nullam ut dictumst. Nulla sodales.
-                </p>
-                <div className="flex gap-2 items-center text-grey-400 text-sm cursor-pointer">
-                  <p>More</p>
-                  <ArrowDown2 size="16" />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Product Features */}
-        <div className="bg-[#FCFCFC] rounded-lg py-5 px-4 flex flex-col gap-4">
-          <h1 className="text-base font-medium text-grey-950">Features</h1>
+        <div className="mt-4 space-y-4">
+          {/* Product Description */}
           <div className="flex flex-col gap-2">
-            {product?.features.map((feature, i) => (
-              <div key={i} className="py-4 px-3 border-b border-b-grey-100 rounded-lg">
-                <p className="text-grey-700 text-base font-normal">{feature}</p>
-              </div>
-            ))}
+            <h1 className="text-base font-medium text-grey-950">Description</h1>
+            <p className="text-base/7 text-grey-700">{product.description}</p>
           </div>
-        </div>
 
-        {product?.reviews && product?.reviews.length > 0 && (
-          <>
-            {/* Product Ratings Overall */}
-            <div className="flex flex-col gap-6">
-              <div className="border-b border-b-grey-100 pb-6">
-                <h1 className="text-base font-medium text-grey-950">Reviews</h1>
-              </div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-[26px] font-semibold">{product.averageRating}</h1>
-                <div className="flex gap-1 flex-col">
-                  <div className="flex gap-1 items-center">
-                    <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                    <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                    <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                    <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                    <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
+          {/* Product Features */}
+          <div className="bg-[#FCFCFC] rounded-lg py-5 px-4 flex flex-col gap-4">
+            <h1 className="text-base font-medium text-grey-950">Features</h1>
+            <div className="flex flex-col gap-2">
+              {product?.features.map((feature, i) => (
+                <div key={i} className="py-4 px-3 border-b border-b-grey-100 rounded-lg">
+                  <p className="text-grey-700 text-base font-normal">{feature}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Product Ratings Overall */}
+          {product?.reviews && product?.reviews.length > 0 && (
+            <>
+              <div className="flex flex-col gap-6">
+                <div className="border-b border-b-grey-100 pb-6">
+                  <h1 className="text-base font-medium text-grey-950">Reviews</h1>
+                </div>
+                <div className="space-y-4">
+                  <div className="inline-flex gap-3">
+                    <h1 className="text-[26px] font-semibold">{product.stats.averageRating.toFixed(1)}</h1>
+                    <div className="space-y-2">
+                      <StarRating rating={product.stats.averageRating} size={14} />
+                      <p className="text-xs font-normal text-grey-800">{`([${product.stats.totalReviews} Ratings])`}</p>
+                    </div>
                   </div>
-                  <p className="text-xs font-normal text-grey-800">{`([${product.averageRating} Ratings])`}</p>
+                  <div className="flex gap-1 flex-col basis-full">
+                    {/* <div className="flex gap-1 items-center">
+                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
+                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
+                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
+                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
+                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
+                    </div> */}
+                    <RatingDistribution ratings={ratings} />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                  {product?.reviews.map((review) => (
+                    <div key={review.id} className="flex flex-col gap-6 py-6 px-4 border border-grey-100 rounded-lg">
+                      <StarRating rating={review.rating} />
+                      <div className="flex flex-col gap-3">
+                        {/* <h3 className="text-sm font-medium text-grey-950">{review.}</h3> */}
+                        <p className="text-base text-grey-700 font-normal">{review.comment}</p>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs text-grey-800 font-normal">Reviewed by {`${review.user.firstName} ${review.user.lastName}`}</p>
+                          {review.user.verified && (
+                            <div className="flex gap-1 items-center">
+                              <TickCircle size="16" className="text-success-600" variant="Bold" />
+                              <p className="text-xs text-grey-800 font-normal">Verified</p>
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-xs text-grey-800 font-normal">{formatDate(new Date(review.createdAt), "MMMM dd, yyyy")}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="flex flex-col gap-4">
-                {product?.reviews.map((review) => (
-                  <div key={review.id} className="flex flex-col gap-6 py-6 px-4 border border-grey-100 rounded-lg">
-                    <div className="flex gap-1 items-center">
-                      {[...Array(review.rating)].map((_, i) => (
-                        <Star1 key={i} className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                      ))}
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      {/* <h3 className="text-sm font-medium text-grey-950">{review.}</h3> */}
-                      <p className="text-base text-grey-700 font-normal">{review.comment}</p>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {/* <div className="flex items-center gap-2">
-            <p className="text-xs text-grey-800 font-normal">Reviewed by {review.reviewer}</p>
-            {review.verified && (
-              <div className="flex gap-1 items-center">
-                <TickCircle size="16" className="text-success-600" variant="Bold" />
-                <p className="text-xs text-grey-800 font-normal">Verified</p>
-              </div>
-            )}
-          </div> */}
-                      <p className="text-xs text-grey-800 font-normal">{review.createdAt}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
 
-            {/* Product Comments */}
-            <div className="flex flex-col gap-4">
+              {/* Product Comments */}
+              {/* <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-6 py-6 px-4 border border-grey-100 rounded-lg">
                   <div className="flex gap-1 items-center">
@@ -332,9 +287,10 @@ const ProductDetailsPage = () => {
                 <p>More</p>
                 <ArrowDown2 size="16" />
               </div>
-            </div>
-          </>
-        )}
+            </div> */}
+            </>
+          )}
+        </div>
       </div>
     </div>
   ) : (
