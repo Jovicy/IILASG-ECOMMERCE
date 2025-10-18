@@ -5,6 +5,8 @@ import { MoreVertical } from "lucide-react";
 import { useGetMyProducts } from "@/hooks/product";
 import { formatNaira, formatStatus } from "@/lib/utils";
 import { ProductStatus } from "@/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRestockProduct } from "@/hooks/product/useRestockProduct";
 
 // Reusable Card component
 const DashboardCard = ({ title, value, subtitle, icon: Icon, iconColor, variant, className }: any) => (
@@ -24,8 +26,10 @@ const DashboardCard = ({ title, value, subtitle, icon: Icon, iconColor, variant,
 
 const InventoryPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data, isFetching } = useGetMyProducts();
+  const { mutate: restockProductQuantity, isPending: restockingProduct } = useRestockProduct();
 
   // ✅ Safely handle undefined data
   const products = data?.data ?? [];
@@ -133,7 +137,7 @@ const InventoryPage = () => {
                 <td className="px-6 py-4">{formatNaira(product.price)}</td>
 
                 {/* Stock column */}
-                <td className="px-6 py-4 flex items-center gap-2">
+                <td className="px-6 py-4 space-x-2">
                   {product.quantity > 0 ? (
                     <>
                       <span className="font-medium items-center">{product.quantity}</span>
@@ -164,7 +168,7 @@ const InventoryPage = () => {
                         <li
                           className="flex items-center gap-2 px-4 py-2 cursor-pointer"
                           onClick={() => {
-                            setOpenProductId(null);
+                            setOpenProductId(product.id);
                             setRestockProduct(product);
                           }}>
                           <RepeateOne size="16" /> Restock
@@ -172,7 +176,6 @@ const InventoryPage = () => {
                         <li
                           className="flex items-center gap-2 px-4 py-2 cursor-pointer"
                           onClick={() => {
-                            setOpenProductId(null);
                             navigate(`/vendor/products/${product.id}`);
                           }}>
                           <Eye size="16" /> View Product
@@ -203,15 +206,31 @@ const InventoryPage = () => {
               onSubmit={(e) => {
                 e.preventDefault();
 
-                if (!productName || !newStock) {
+                if (!openProductId || !newStock) {
                   alert("Please fill out all fields before updating.");
                   return;
                 }
 
-                console.log("✅ Restock form submitted:", { productName, newStock });
-
-                setRestockProduct(null);
-                setShowSuccess(true);
+                restockProductQuantity(
+                  {
+                    productId: openProductId,
+                    data: {
+                      quantity: newStock,
+                    },
+                  },
+                  {
+                    onSuccess: () => {
+                      queryClient.invalidateQueries({ queryKey: ["my-products"] });
+                      setShowSuccess(true);
+                      setOpenProductId(null);
+                      setRestockProduct(null);
+                    },
+                    onError: (err) => {
+                      console.error("❌ Error restocking product:", err);
+                      alert("Failed to restock product.");
+                    },
+                  }
+                );
               }}>
               {/* Product Name */}
               <div className="flex flex-col gap-2">

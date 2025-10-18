@@ -285,6 +285,46 @@ export class ProductService {
     });
   }
 
+  async restockProduct(
+    userId: string,
+    productId: string,
+    restockQuantity: number,
+  ) {
+    const vendorProfileId =
+      await this.vendorService.getVendorProfileIdByUser(userId);
+
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      include: {
+        images: true,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    if (product.vendorProfileId !== vendorProfileId) {
+      throw new ForbiddenException('You can only restock your own products');
+    }
+
+    const newQuantity = (product.quantity || 0) + restockQuantity;
+
+    const updatedProduct = await this.prisma.product.update({
+      where: { id: productId },
+      data: {
+        quantity: newQuantity,
+        stockStatus: this.determineStockStatus(newQuantity),
+        updatedAt: new Date(),
+      },
+    });
+
+    return {
+      data: updatedProduct,
+      message: `Successfully restocked ${restockQuantity} units`,
+    };
+  }
+
   async deleteProduct(userId: string, productId: string) {
     const vendorProfileId =
       await this.vendorService.getVendorProfileIdByUser(userId);

@@ -24,6 +24,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'generated/prisma';
 import { AddReviewDto } from './dto/add-review.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { RestockProductDto } from './dto/restock-product';
 
 @ApiTags('Products')
 @ApiBearerAuth()
@@ -97,6 +98,25 @@ export class ProductController {
       message: 'Product updated successfully',
       data: updatedProduct,
     };
+  }
+
+  @Roles(Role.VENDOR)
+  @ApiOperation({ summary: 'Restok a product' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully restocked <restockQuantity> units',
+  })
+  @Post('restock/:productId')
+  async restockProduct(
+    @Request() req: { user: { userId: string } },
+    @Param('productId') productId: string,
+    @Body() restockDto: RestockProductDto,
+  ) {
+    return this.productService.restockProduct(
+      req.user.userId,
+      productId,
+      restockDto.quantity,
+    );
   }
 
   @Roles(Role.VENDOR)
