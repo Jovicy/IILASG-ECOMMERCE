@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Star1, Send2, ArrowDown2, TickCircle, ArrowLeft } from "iconsax-reactjs";
+import { Star1, Send2, TickCircle, ArrowLeft } from "iconsax-reactjs";
 import { useGetProduct } from "@/hooks/product";
 import { calculateDiscountedPrice } from "@/lib/utils";
 import { formatDate } from "date-fns";
-import { Star } from "lucide-react";
 import StarRating from "@/components/custom/StarRating";
 import RatingDistribution from "@/components/custom/RatingDistribution";
 import { Review } from "@/types/product";
@@ -14,10 +13,10 @@ const ProductDetailsPage = () => {
 
   const { data, isFetching } = useGetProduct(id);
   const product = data?.data;
+  const reviews = product?.reviews ?? [];
 
   // ✅ Fix: quantity logic
   const [quantity, setQuantity] = useState(1);
-  const ratingCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
 
   const increaseQty = () => setQuantity((prev) => prev + 1);
   const decreaseQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -37,7 +36,7 @@ const ProductDetailsPage = () => {
     return ratings;
   };
 
-  const ratings = getRatingDistribution(product.reviews);
+  const ratings = getRatingDistribution(reviews);
 
   return !isFetching && product ? (
     <div className="w-full p-6">
@@ -92,11 +91,7 @@ const ProductDetailsPage = () => {
                 <div className="flex items-center gap-2">
                   {/* Star Rating */}
                   <div className="flex gap-1 items-center">
-                    <Star1 className="text-primary-500 cursor-pointer" />
-                    <Star1 className="text-primary-500 cursor-pointer" />
-                    <Star1 className="text-primary-500 cursor-pointer" />
-                    <Star1 className="text-primary-500 cursor-pointer" />
-                    <Star1 className="text-primary-500 cursor-pointer" />
+                    <StarRating rating={product.stats.averageRating} size={24} />
                   </div>
 
                   {/* Other Rating */}
@@ -166,13 +161,6 @@ const ProductDetailsPage = () => {
                     </div>
                   </div>
                   <div className="flex gap-1 flex-col basis-full">
-                    {/* <div className="flex gap-1 items-center">
-                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                      <Star1 className="text-primary-500 cursor-pointer" size="16" variant="Bold" />
-                    </div> */}
                     <RatingDistribution ratings={ratings} />
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { GoogleLogin } from "@react-oauth/google";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { EyeSlash, Eye } from "iconsax-reactjs";
 import AuthLayout from "@/layouts/AuthLayout";
 import { useGoogleSign, useSignIn } from "@/hooks/useAuth";
@@ -10,8 +10,6 @@ import { setAuth, setUser } from "@/store/slices/authSlice";
 import apiClient from "@/api/apiClient";
 
 const SignInPage = () => {
-  const navigate = useNavigate();
-
   const { mutate: signIn } = useSignIn();
   const { mutate: googleSignIn } = useGoogleSign();
 
@@ -40,8 +38,6 @@ const SignInPage = () => {
     } catch (err) {
       console.error("Failed to fetch user profile:", err);
     }
-
-    navigate(`/${role}`);
   };
 
   const signinUserHandler = (e: React.FormEvent<HTMLFormElement>) => {

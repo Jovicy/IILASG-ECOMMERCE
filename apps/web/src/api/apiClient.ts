@@ -25,8 +25,6 @@ apiClient.interceptors.request.use(
   (config) => {
     const token = tokenService.getAccessToken();
 
-    console.log("SP1", token);
-
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     } else {
