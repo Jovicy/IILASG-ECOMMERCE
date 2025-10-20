@@ -6,6 +6,6 @@ export default registerAs('refresh-jwt', (): JwtSignOptions => {
 
   return {
     secret: process.env.REFRESH_JWT_SECRET as string,
-    expiresIn: expiresInEnv as string,
+    expiresIn: expiresInEnv as string | number | undefined,
   };
 });

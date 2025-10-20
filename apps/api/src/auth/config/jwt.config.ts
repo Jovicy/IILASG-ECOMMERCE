@@ -7,7 +7,7 @@ export default registerAs('jwt', (): JwtModuleOptions => {
   return {
     secret: secret as string,
     signOptions: {
-      expiresIn: expiresInEnv as string,
+      expiresIn: expiresInEnv as string | number | undefined,
     },
   };
 });
