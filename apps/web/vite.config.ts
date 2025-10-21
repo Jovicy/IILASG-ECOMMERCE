@@ -22,5 +22,6 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    allowedHosts: ["web-production-6cbf.up.railway.app"],
   },
 });
